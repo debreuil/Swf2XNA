@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
+using VexRuntime.V2D;
 
 namespace DDW.Display
 {
@@ -14,7 +15,7 @@ namespace DDW.Display
         public string definitonName;
         protected Vector2 origin;
         protected Rectangle sourceRectangle;
-        protected Rectangle destinationRectangle;
+        protected V2DRectangle destinationRectangle;
         protected float rotation = 0;
         protected Vector2 scale = Vector2.One;
         protected Color color = Color.White;
@@ -44,7 +45,7 @@ namespace DDW.Display
                 if (texture != null)
                 {
                     sourceRectangle = new Rectangle(0, 0, texture.Width, texture.Height);
-                    destinationRectangle = new Rectangle(0, 0, texture.Width, texture.Height);
+                    destinationRectangle = new V2DRectangle(0, 0, texture.Width, texture.Height);
                 }
                     
             }
@@ -93,7 +94,7 @@ namespace DDW.Display
                 sourceRectangle = value;
             }
         }
-        public int X
+        public float X
         {
             get
             {
@@ -104,7 +105,7 @@ namespace DDW.Display
                 destinationRectangle.X = value;
             }
         }
-        public int Y
+        public float Y
         {
             get
             {
@@ -115,7 +116,7 @@ namespace DDW.Display
                 destinationRectangle.Y = value;
             }
         }
-        public int Width
+        public float Width
         {
             get
             {
@@ -126,7 +127,7 @@ namespace DDW.Display
                 destinationRectangle.Width = value;
             }
         }
-        public int Height
+        public float Height
         {
             get
             {
@@ -137,7 +138,7 @@ namespace DDW.Display
                 destinationRectangle.Height = value;
             }
         }
-        public Rectangle DestinationRectangle
+        public V2DRectangle DestinationRectangle
         {
             get
             {

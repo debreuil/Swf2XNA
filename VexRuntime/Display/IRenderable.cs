@@ -10,10 +10,10 @@ namespace DDW.Display
 {
     interface IRenderable : IDrawable
     {
-        int X { get; set; }
-        int Y { get; set; }
-        int Width { get; set; }
-        int Height { get; set; }
+        float X { get; set; }
+        float Y { get; set; }
+        float Width { get; set; }
+        float Height { get; set; }
         float Rotation { get; set; }
         Vector2 Scale { get; set; }
         Color Color { get; set; }

@@ -8,6 +8,7 @@ using Microsoft.Xna.Framework;
 using Box2DX.Dynamics;
 using Box2DX.Collision;
 using Box2DX.Common;
+using VexRuntime.V2D;
 
 namespace DDW.V2D
 {
@@ -229,11 +230,11 @@ namespace DDW.V2D
             {
                 if (texture != null)
                 {
-                    this.destinationRectangle = new Rectangle((int)instance.X, (int)instance.Y, texture.Width, texture.Height);
+                    this.destinationRectangle = new V2DRectangle((int)instance.X, (int)instance.Y, texture.Width, texture.Height);
                 }
                 else
                 {
-                    this.destinationRectangle = new Rectangle((int)instance.X, (int)instance.Y, 0, 0);
+                    this.destinationRectangle = new V2DRectangle((int)instance.X, (int)instance.Y, 0, 0);
                 }
                 this.origin = new Vector2(-instance.Definition.OffsetX, -instance.Definition.OffsetY);
                 this.instanceName = instance.InstanceName;

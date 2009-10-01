@@ -38,7 +38,6 @@
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
-    <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
@@ -63,6 +62,7 @@
     <Compile Include="V2D\Serialization\V2DInstance.cs" />
     <Compile Include="V2D\Serialization\V2DJoint.cs" />
     <Compile Include="V2D\Serialization\V2DMatrix.cs" />
+    <Compile Include="V2D\Serialization\V2DRectangle.cs" />
     <Compile Include="V2D\Serialization\V2DShape.cs" />
     <Compile Include="V2D\Serialization\V2DShapeKind.cs" />
     <Compile Include="V2D\Serialization\V2DTexture.cs" />

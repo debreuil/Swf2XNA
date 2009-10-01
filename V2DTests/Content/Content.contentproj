@@ -1,0 +1,142 @@
+﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
+  <PropertyGroup>
+    <ProjectGuid>819f02bd-960e-4362-9add-e70c039aade5</ProjectGuid>
+    <ProjectTypeGuids>{96E2B04D-8817-42c6-938A-82C39BA4D311};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <XnaFrameworkVersion>v3.1</XnaFrameworkVersion>
+    <PlatformTarget>x86</PlatformTarget>
+    <OutputPath>bin\$(Platform)\$(Configuration)</OutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <XnaPlatform>Windows</XnaPlatform>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <XnaPlatform>Windows</XnaPlatform>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.Xna.Framework.Content.Pipeline.EffectImporter, Version=3.1.0.0, Culture=neutral, PublicKeyToken=6d5c3888ef60e27d, processorArchitecture=MSIL">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Microsoft.Xna.Framework.Content.Pipeline.FBXImporter, Version=3.1.0.0, Culture=neutral, PublicKeyToken=6d5c3888ef60e27d, processorArchitecture=MSIL">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Microsoft.Xna.Framework.Content.Pipeline.TextureImporter, Version=3.1.0.0, Culture=neutral, PublicKeyToken=6d5c3888ef60e27d, processorArchitecture=MSIL">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Microsoft.Xna.Framework.Content.Pipeline.XImporter, Version=3.1.0.0, Culture=neutral, PublicKeyToken=6d5c3888ef60e27d, processorArchitecture=MSIL">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Microsoft.Xna.Framework.Content.Pipeline.AudioImporters, Version=3.1.0.0, Culture=neutral, PublicKeyToken=6d5c3888ef60e27d, processorArchitecture=MSIL">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Microsoft.Xna.Framework.Content.Pipeline.VideoImporters, Version=3.1.0.0, Culture=neutral, PublicKeyToken=6d5c3888ef60e27d, processorArchitecture=MSIL">
+      <Private>False</Private>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="cursor.png">
+      <Name>cursor</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\VexPipeline\VexPipeline.csproj">
+      <Project>{7118D9A5-616B-4329-831B-C42624D711CE}</Project>
+      <Name>VexPipeline</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\VexRuntime\VexRuntime.csproj">
+      <Project>{75D33295-0B9A-4E03-83C3-2CC798741627}</Project>
+      <Name>VexRuntime</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="DistanceJoint.swf">
+      <Name>DistanceJoint</Name>
+      <Importer>SwfImporter</Importer>
+      <Processor>SwfProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Demo.swf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <Name>Demo</Name>
+      <Importer>SwfImporter</Importer>
+      <Processor>SwfProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="GearJoint.swf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <Name>GearJoint</Name>
+      <Importer>SwfImporter</Importer>
+      <Processor>SwfProcessor</Processor>
+    </Compile>
+    <Compile Include="Movieclip1.swf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <Name>Movieclip1</Name>
+      <Importer>SwfImporter</Importer>
+      <Processor>SwfProcessor</Processor>
+    </Compile>
+    <Compile Include="PrismaticJoint.swf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <Name>PrismaticJoint</Name>
+      <Importer>SwfImporter</Importer>
+      <Processor>SwfProcessor</Processor>
+    </Compile>
+    <Compile Include="PullyJoint.swf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <Name>PullyJoint</Name>
+      <Importer>SwfImporter</Importer>
+      <Processor>SwfProcessor</Processor>
+    </Compile>
+    <Compile Include="RevoluteJoint.swf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <Name>RevoluteJoint</Name>
+      <Importer>SwfImporter</Importer>
+      <Processor>SwfProcessor</Processor>
+    </Compile>
+    <Compile Include="Scene1Data.swf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <Name>Scene1Data</Name>
+      <Importer>SwfImporter</Importer>
+      <Processor>SwfProcessor</Processor>
+    </Compile>
+    <Compile Include="Scene2Data.swf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <Name>Scene2Data</Name>
+      <Importer>SwfImporter</Importer>
+      <Processor>SwfProcessor</Processor>
+    </Compile>
+    <Compile Include="Scene3Data.swf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <Name>Scene3Data</Name>
+      <Importer>SwfImporter</Importer>
+      <Processor>SwfProcessor</Processor>
+    </Compile>
+    <Compile Include="Scene4Data.swf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <Name>Scene4Data</Name>
+      <Importer>SwfImporter</Importer>
+      <Processor>SwfProcessor</Processor>
+    </Compile>
+    <Compile Include="SmuckLib.swf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <Name>SmuckLib</Name>
+      <Importer>SwfImporter</Importer>
+      <Processor>SwfProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\$(XnaFrameworkVersion)\Microsoft.Xna.GameStudio.ContentPipeline.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

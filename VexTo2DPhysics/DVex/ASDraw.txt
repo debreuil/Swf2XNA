@@ -1,0 +1,158 @@
+Actionscript Drawing Format - ASDraw
+====================================
+
+// this format will be parsed into normal (unpacked) arrays the first time used.
+
+0x10	LineTo				{bitpacked} 	lineX,lineY,lineX,lineY....
+0x11	LineToRelative		{bitpacked} 	lineX,lineY,lineX,lineY....
+0x14	CurveTo				{bitpacked}		aX,aY,cX,cY, aX,aY,cX,cY....
+0x15	CurveToRelative		{bitpacked}		aX,aY,cX,cY, aX,aY,cX,cY....
+0x18	MoveTo				{bitpacked}		moveX,moveY
+0x18	MoveToRelative		{bitpacked}		moveX,moveY
+
+0x20	RgbFill				{solidfill}
+0x21	RgbaFill			{solidfill}
+0x22	GradientFill		{gradfill}
+0x23	reserved (BmpFill)
+0x24	Stroke				{stroke}
+0x28	EndFill				{tagOnly}
+
+0x30	BeginFill			{ref}  	(local=indexed global=named)
+0x31	BeginStroke			{ref}	
+0x32	InsertPath			{ref}	
+0x33	InsertSymbol		{ref}	
+0x34	InsertControl		{ref}	
+0x38	LocalFillandStroke	{ref2}	
+0x38	GlobalFillandStroke	{ref2}	
+0x3A	AttachMovie			{attachmovie}
+
+0x40	FillDefinition		{def}
+0x41	StrokeDefinition	{def}
+0x42	PathDefinition		{def}
+0x43	SymbolDefinition	{def}
+0x44	ControlDefinition	{def}
+0x48	RGBColorDefs		{rgbs}
+0x49	RGBStrokeDefs		{wrgbs}
+0x4A	RGBAColorDefs		{rgbas}
+0x4B	RGBAStrokeDefs		{wrgbas}
+0x4C	GradientDefs		{grads}
+
+0x50	BeginSprite			{beginsprite}
+0x51	EndSprite			{endsprite}
+
+0x60	FillFilter			{filter}	(f)
+0x61	StrokeFilter		{filter}	(s)
+0x62	PathFilter			{filter}	(p)
+0x63	ColorFilter 		{filter}	(f,s)
+0x64	FullFilter 			{filter}	(f,s,p)
+
+0x70	CallFunction		{fncall}	(name, params)
+0x71	DefineFunction		{fndef}		(id 0xE0~0xFF, name) // allows calls to defined function by user id
+
+0x80~0xA0 reserved for timelines
+
+0xC0	Rectangle			{nativefn}
+0xC1	Ellipse				{nativefn}
+0xC2	Polygon				{nativefn}
+0xC3	Arrow				{nativefn}
+
+
+**********************************************************************
+
+{bitpacked}		id			UI8			// 0xFF00 0000 high byte
+				nBits		UI8 		// can be UI4 if needed
+				count		UI16		// number of records
+				data		...to end of array
+			
+{solidfill}		r			UI8
+				g			UI8
+				b			UI8
+				[a]			UI8
+
+
+{gradfill}		type		4bits 		// 0xF0 - 0 linear, 1 radial, 2~7 reserved
+				numSamples	4bits		// 0x0F - number of color samples + 1 (swf max is 8 samples)
+				samples[]	{rgba+ratio} // 5 bytes per sample, alpha always 0~100, ratio 0~255
+				matrix		{3X3matrix} // (byteArray of abXdeXghX values) (6 vals)
+
+{stroke}		id			UI8
+				hasAlpha	1bit		// 0 = use {rgbArray} for colors, 1 = use {rgbaArray}
+				thickness	7bits		// 0 = no stroke
+				color		{rgb[a]Array} depends on hasAlpha
+				
+{ref}			id			UI8
+				scope		2bits		// 0 = local, 1 = global, 2 = system, 3 = user
+				reserved	6bits		// set to 000000
+				index		16bits		// max 4095 - ends on 4 byte boundry
+
+{def}			id			UI8			// 0xFF00 0000 high byte
+				scope		2bits		// 0 = local, 1 = global, 2 = system, 3 = user
+				reserved	6bits		// bits set to b000000xx
+				count		16bits		// byte max 4095 - ends on 4 byte boundry
+				definition	{array}		// the stored definition (as a normal array)
+				
+{rgbs}			id			UI8			// 0xFF00 0000 high byte
+				reserved	UI8			// bytes align at 4
+				count		UI16		// number of colors
+				rgb[]		UI24		// one byte per color
+				
+{rgbas}			id			UI8			// 0xFF00 0000 high byte
+				reserved	UI8			// bytes align at 4
+				count		UI16		// number of colors
+				rgba[]		UI32		// one byte per color, alpha last
+				
+{rgbStrokes}	id			UI8			// 0xFF00 0000 high byte
+				count		UI16		// number of stroke defs
+				wrgb[]		UI24		// one byte for width, one byte per color
+				
+{rgbaStrokes}	id			UI8			// 0xFF00 0000 high byte
+				count		UI16		// number of stroke defs
+				wrgba[]		UI32		// one byte for width, one byte per color, alpha last
+				
+{grads}			id			UI8
+				count		UI16
+				gradFill[]	(depends on samples)
+				
+{beginsprite}	id			UI8
+				// all flags take one byte
+				hasDepth	1bit 		// next availible is false
+				hasName		1bit		// default if false
+				hasLocation	1bit		// defalut twips 0,0
+				hasScale	1bit		// percent, twips default 2000, 2000 (100, 100)
+				hasRotation	1bit		// default 0
+				hasColor	1bit		// default no
+				hasAlpha	1bit		// default 2000 (100 in twips)
+				isHidden	1bit 		// 0=visible (so 0 for this byte results in reasonable defaults)
+				
+				depth		UI16		// all present only if their bit is set
+				name		{string}
+				Location	I32 		// x=I16, y=I16 - twips
+				Scale		I32			// xScale=I16, yScale=I16 - twips
+				Rotation	I16			// in degrees - twips
+				Color		{colorMatrix} // 8 bytes
+				Alpha		I16			// default 2000 (100 twips)
+				
+				
+
+{endsprite}		id			UI8			// ends the last opened sprite def
+
+{filter}
+
+{nativefn}
+
+-----------------------------------------------------------------------
+
+{rgb[a]Array}	r			UI8			// 0x00-0xFF
+				g			UI8			// 0x00-0xFF
+				b			UI8			// 0x00-0xFF
+				[a			UI8] 		// a is clamped to 100 (percent)
+							 			// if value is 0, then color=none, rgb ignored
+							 			// if rgb only, then alpha=100
+							 		
+{string}		length		UI16
+				data		{byteArray}
+				
+{ident}			length		5bits
+				data		{byteArray}
+
+	

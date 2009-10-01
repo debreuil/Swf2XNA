@@ -1,0 +1,12 @@
+﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <StartArguments>
+    </StartArguments>
+    <StartWorkingDirectory>C:\csdev\SwfNetCodeplex\SwfDump\bin\Debug</StartWorkingDirectory>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <StartWorkingDirectory>C:\csdev\SwfNetCodeplex\SwfDump\bin\Debug</StartWorkingDirectory>
+    <StartArguments>
+    </StartArguments>
+  </PropertyGroup>
+</Project>

@@ -1,0 +1,295 @@
+﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.21022</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{04BB0485-133C-4B56-94C0-D1D9B3D6EC95}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>DDW.Swf</RootNamespace>
+    <AssemblyName>SwfReader</AssemblyName>
+    <SccProjectName>
+    </SccProjectName>
+    <SccLocalPath>
+    </SccLocalPath>
+    <SccAuxPath>
+    </SccAuxPath>
+    <SccProvider>
+    </SccProvider>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <OldToolsVersion>2.0</OldToolsVersion>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="NZipLib, Version=0.2.0.0, Culture=neutral" />
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="ActionPrimitives\PrimitiveBoolean.cs" />
+    <Compile Include="ActionPrimitives\PrimitiveConstant16.cs" />
+    <Compile Include="ActionPrimitives\PrimitiveConstant8.cs" />
+    <Compile Include="ActionPrimitives\PrimitiveDouble.cs" />
+    <Compile Include="ActionPrimitives\PrimitiveFloat.cs" />
+    <Compile Include="ActionPrimitives\PrimitiveInteger.cs" />
+    <Compile Include="ActionPrimitives\PrimitiveNull.cs" />
+    <Compile Include="ActionPrimitives\PrimitiveRegister.cs" />
+    <Compile Include="ActionPrimitives\PrimitiveString.cs" />
+    <Compile Include="ActionPrimitives\PrimitiveType.cs" />
+    <Compile Include="ActionPrimitives\PrimitiveUndefined.cs" />
+    <Compile Include="ActionPrimitives\SwfType.cs" />
+    <Compile Include="Actions\ActionKind.cs" />
+    <Compile Include="Actions\Add.cs" />
+    <Compile Include="Actions\Add2.cs" />
+    <Compile Include="Actions\And.cs" />
+    <Compile Include="Actions\AsciiToChar.cs" />
+    <Compile Include="Actions\BitAnd.cs" />
+    <Compile Include="Actions\BitLShift.cs" />
+    <Compile Include="Actions\BitOr.cs" />
+    <Compile Include="Actions\BitRShift.cs" />
+    <Compile Include="Actions\BitURShift.cs" />
+    <Compile Include="Actions\BitXor.cs" />
+    <Compile Include="Actions\Call.cs" />
+    <Compile Include="Actions\CallFunction.cs" />
+    <Compile Include="Actions\CallMethod.cs" />
+    <Compile Include="Actions\CastOp.cs" />
+    <Compile Include="Actions\CharToAscii.cs" />
+    <Compile Include="Actions\CloneSprite.cs" />
+    <Compile Include="Actions\ConstantPool.cs" />
+    <Compile Include="Actions\Decrement.cs" />
+    <Compile Include="Actions\DefineFunction.cs" />
+    <Compile Include="Actions\DefineFunction2.cs" />
+    <Compile Include="Actions\DefineLocal.cs" />
+    <Compile Include="Actions\DefineLocal2.cs" />
+    <Compile Include="Actions\Delete.cs" />
+    <Compile Include="Actions\Delete2.cs" />
+    <Compile Include="Actions\Divide.cs" />
+    <Compile Include="Actions\End.cs" />
+    <Compile Include="Actions\EndDrag.cs" />
+    <Compile Include="Actions\Enumerate.cs" />
+    <Compile Include="Actions\Enumerate2.cs" />
+    <Compile Include="Actions\Equals.cs" />
+    <Compile Include="Actions\Equals2.cs" />
+    <Compile Include="Actions\Extends.cs" />
+    <Compile Include="Actions\GetMember.cs" />
+    <Compile Include="Actions\GetProperty.cs" />
+    <Compile Include="Actions\GetTime.cs" />
+    <Compile Include="Actions\GetURL.cs" />
+    <Compile Include="Actions\GetURL2.cs" />
+    <Compile Include="Actions\GetVariable.cs" />
+    <Compile Include="Actions\GotoFrame.cs" />
+    <Compile Include="Actions\GotoFrame2.cs" />
+    <Compile Include="Actions\GoToLabel.cs" />
+    <Compile Include="Actions\Greater.cs" />
+    <Compile Include="Actions\IActionContainer.cs" />
+    <Compile Include="Actions\If.cs" />
+    <Compile Include="Actions\ImplementsOp.cs" />
+    <Compile Include="Actions\Increment.cs" />
+    <Compile Include="Actions\InitArray.cs" />
+    <Compile Include="Actions\InitObject.cs" />
+    <Compile Include="Actions\InstanceOf.cs" />
+    <Compile Include="Actions\IPrimitive.cs" />
+    <Compile Include="Actions\IStackManipulator.cs" />
+    <Compile Include="Actions\Jump.cs" />
+    <Compile Include="Actions\Less.cs" />
+    <Compile Include="Actions\Less2.cs" />
+    <Compile Include="Actions\MBAsciiToChar.cs" />
+    <Compile Include="Actions\MBCharToAscii.cs" />
+    <Compile Include="Actions\MBStringExtract.cs" />
+    <Compile Include="Actions\MBStringLength.cs" />
+    <Compile Include="Actions\Modulo.cs" />
+    <Compile Include="Actions\Multiply.cs" />
+    <Compile Include="Actions\NewMethod.cs" />
+    <Compile Include="Actions\NewObject.cs" />
+    <Compile Include="Actions\NextFrame.cs" />
+    <Compile Include="Actions\Not.cs" />
+    <Compile Include="Actions\Or.cs" />
+    <Compile Include="Actions\Play.cs" />
+    <Compile Include="Actions\Pop.cs" />
+    <Compile Include="Actions\PreloadFlags.cs" />
+    <Compile Include="Actions\PreviousFrame.cs" />
+    <Compile Include="Actions\Push.cs" />
+    <Compile Include="Actions\PushDuplicate.cs" />
+    <Compile Include="Actions\RandomNumber.cs" />
+    <Compile Include="Actions\RemoveSprite.cs" />
+    <Compile Include="Actions\Return.cs" />
+    <Compile Include="Actions\SetMember.cs" />
+    <Compile Include="Actions\SetProperty.cs" />
+    <Compile Include="Actions\SetTarget.cs" />
+    <Compile Include="Actions\SetTarget2.cs" />
+    <Compile Include="Actions\SetVariable.cs" />
+    <Compile Include="Actions\StackSwap.cs" />
+    <Compile Include="Actions\StartDrag.cs" />
+    <Compile Include="Actions\Stop.cs" />
+    <Compile Include="Actions\StopSounds.cs" />
+    <Compile Include="Actions\StoreRegister.cs" />
+    <Compile Include="Actions\StrictEquals.cs" />
+    <Compile Include="Actions\StringAdd.cs" />
+    <Compile Include="Actions\StringEquals.cs" />
+    <Compile Include="Actions\StringExtract.cs" />
+    <Compile Include="Actions\StringGreater.cs" />
+    <Compile Include="Actions\StringLength.cs" />
+    <Compile Include="Actions\StringLess.cs" />
+    <Compile Include="Actions\Subtract.cs" />
+    <Compile Include="Actions\TargetPath.cs" />
+    <Compile Include="Actions\ToggleQuality.cs" />
+    <Compile Include="Actions\ToInteger.cs" />
+    <Compile Include="Actions\ToNumber.cs" />
+    <Compile Include="Actions\ToString.cs" />
+    <Compile Include="Actions\Trace.cs" />
+    <Compile Include="Actions\TypeOf.cs" />
+    <Compile Include="Actions\WaitForFrame.cs" />
+    <Compile Include="Actions\WaitForFrame2.cs" />
+    <Compile Include="Actions\With.cs" />
+    <Compile Include="enums\BitmapFormat.cs" />
+    <Compile Include="enums\BlendMode.cs" />
+    <Compile Include="enums\CapStyle.cs" />
+    <Compile Include="enums\ClipEvents.cs" />
+    <Compile Include="enums\FillType.cs" />
+    <Compile Include="enums\FilterKind.cs" />
+    <Compile Include="enums\InterpolationMode.cs" />
+    <Compile Include="enums\JoinStyle.cs" />
+    <Compile Include="enums\ShapeType.cs" />
+    <Compile Include="enums\SoundCompressionType.cs" />
+    <Compile Include="enums\SpreadMode.cs" />
+    <Compile Include="IVexConvertable.cs" />
+    <Compile Include="Records\ButtonCondAction.cs" />
+    <Compile Include="Records\ClipActionRecord.cs" />
+    <Compile Include="Records\ColorTransform.cs" />
+    <Compile Include="Records\CurvedEdgeRecord.cs" />
+    <Compile Include="Records\FillStyleArray.cs" />
+    <Compile Include="Records\GradientRecord.cs" />
+    <Compile Include="Records\IRecord.cs" />
+    <Compile Include="Records\IShapeRecord.cs" />
+    <Compile Include="Records\KerningRecord.cs" />
+    <Compile Include="Records\LineStyleArray.cs" />
+    <Compile Include="Records\Matrix.cs" />
+    <Compile Include="Records\EndShapeRecord.cs" />
+    <Compile Include="Records\Mp3Frame.cs" />
+    <Compile Include="Records\RGBA.cs" />
+    <Compile Include="Records\SoundInfo.cs" />
+    <Compile Include="lib\Structures\ActionRecords.cs" />
+    <Compile Include="lib\Structures\ClipActions.cs" />
+    <Compile Include="lib\Structures\FilterBevel.cs" />
+    <Compile Include="lib\Structures\FilterBlur.cs" />
+    <Compile Include="lib\Structures\FilterColorMatrix.cs" />
+    <Compile Include="lib\Structures\FilterConvolution.cs" />
+    <Compile Include="lib\Structures\FilterDropShadow.cs" />
+    <Compile Include="lib\Structures\FilterGlow.cs" />
+    <Compile Include="lib\Structures\FilterGradientBevel.cs" />
+    <Compile Include="lib\Structures\FilterGradientGlow.cs" />
+    <Compile Include="lib\Structures\IFilter.cs" />
+    <Compile Include="lib\Structures\SoundEnvelope.cs" />
+    <Compile Include="Records\StraightEdgeRecord.cs" />
+    <Compile Include="Records\StyleChangedRecord.cs" />
+    <Compile Include="Records\TextRecord.cs" />
+    <Compile Include="Records\ZoneRecord.cs" />
+    <Compile Include="lib\Structures\BitmapFill.cs" />
+    <Compile Include="lib\Structures\GlyphEntry.cs" />
+    <Compile Include="lib\Structures\IFillStyle.cs" />
+    <Compile Include="lib\Structures\ILineStyle.cs" />
+    <Compile Include="lib\Structures\Gradient.cs" />
+    <Compile Include="lib\Structures\LineStyle.cs" />
+    <Compile Include="lib\Structures\LineStyle2.cs" />
+    <Compile Include="lib\Structures\Shape.cs" />
+    <Compile Include="lib\Structures\ShapeWithStyle.cs" />
+    <Compile Include="lib\Structures\SolidFill.cs" />
+    <Compile Include="SwfToVex.cs" />
+    <Compile Include="SwfWriter.cs" />
+    <Compile Include="Tags\BackgroundColorTag.cs" />
+    <Compile Include="enums\TagType.cs" />
+    <Compile Include="SwfCompilationUnit.cs" />
+    <Compile Include="SwfReader.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Records\ButtonRecord.cs" />
+    <Compile Include="Tags\CSMTextSettingsTag.cs" />
+    <Compile Include="Tags\DefineBitsLosslessTag.cs" />
+    <Compile Include="Tags\DefineBitsTag.cs" />
+    <Compile Include="Tags\DefineButton.cs" />
+    <Compile Include="Tags\DefineButton2.cs" />
+    <Compile Include="Tags\DefineButtonCxform.cs" />
+    <Compile Include="Tags\DefineButtonSound.cs" />
+    <Compile Include="Tags\DefineEditTextTag.cs" />
+    <Compile Include="Tags\DefineFont2_3.cs" />
+    <Compile Include="Tags\DefineFontName.cs" />
+    <Compile Include="Tags\DefineFontTag.cs" />
+    <Compile Include="Tags\DefineFontAlignZonesTag.cs" />
+    <Compile Include="Tags\DefineFontInfoTag.cs" />
+    <Compile Include="Tags\DefineShape.cs" />
+    <Compile Include="Tags\DefineShape2Tag.cs" />
+    <Compile Include="Tags\DefineShape3Tag.cs" />
+    <Compile Include="Tags\DefineShape4Tag.cs" />
+    <Compile Include="Tags\DefineSoundTag.cs" />
+    <Compile Include="Tags\DefineSpriteTag.cs" />
+    <Compile Include="Tags\DefineTextTag.cs" />
+    <Compile Include="Tags\DoActionTag.cs" />
+    <Compile Include="Tags\EndTag.cs" />
+    <Compile Include="Tags\ExportAssetsTag.cs" />
+    <Compile Include="Tags\FileAttributesTag.cs" />
+    <Compile Include="Actions\IAction.cs" />
+    <Compile Include="Tags\FrameLabelTag.cs" />
+    <Compile Include="Tags\IControlTag.cs" />
+    <Compile Include="Tags\IPlaceObject.cs" />
+    <Compile Include="Tags\ISwfTag.cs" />
+    <Compile Include="Records\Rect.cs" />
+    <Compile Include="Records\Mp3SoundData.cs" />
+    <Compile Include="Tags\JPEGTables.cs" />
+    <Compile Include="Tags\PlaceObject2Tag.cs" />
+    <Compile Include="Tags\PlaceObject3Tag.cs" />
+    <Compile Include="Tags\PlaceObjectTag.cs" />
+    <Compile Include="Tags\RemoveObject2Tag.cs" />
+    <Compile Include="Tags\RemoveObjectTag.cs" />
+    <Compile Include="Tags\ShowFrame.cs" />
+    <Compile Include="Tags\SoundStreamBlockTag.cs" />
+    <Compile Include="Tags\SoundStreamHeadTag.cs" />
+    <Compile Include="Tags\StartSoundTag.cs" />
+    <Compile Include="Tags\SwfHeader.cs" />
+    <Compile Include="Tags\UnsupportedDefinitionTag.cs" />
+    <Compile Include="Utils\FillPath.cs" />
+    <Compile Include="Utils\StrokePath.cs" />
+    <Compile Include="Utils\Utils.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="lib\NZipLib.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Vfx\Vex.csproj">
+      <Project>{9E0E5CBD-E7FC-4BD6-A9B0-DEEE4BA576C7}</Project>
+      <Name>Vex</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

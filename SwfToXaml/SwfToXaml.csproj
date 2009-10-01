@@ -1,0 +1,193 @@
+﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.50727</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{334C924E-219B-4DD5-BCCD-4AE6BEFBC364}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>SwfToXaml</RootNamespace>
+    <AssemblyName>SwfToXaml</AssemblyName>
+    <StartupObject>
+    </StartupObject>
+    <SccProjectName>
+    </SccProjectName>
+    <SccLocalPath>
+    </SccLocalPath>
+    <SccAuxPath>
+    </SccAuxPath>
+    <SccProvider>
+    </SccProvider>
+    <ApplicationIcon>theconverted.ico</ApplicationIcon>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <OldToolsVersion>2.0</OldToolsVersion>
+    <ApplicationRevision>0</ApplicationRevision>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="ConvertedUI.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ConvertedUI.Designer.cs">
+      <DependentUpon>ConvertedUI.cs</DependentUpon>
+    </Compile>
+    <Compile Include="LogPage.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="LogPage.Designer.cs">
+      <DependentUpon>LogPage.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="SettingsPage.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="SettingsPage.Designer.cs">
+      <DependentUpon>SettingsPage.cs</DependentUpon>
+    </Compile>
+    <Compile Include="SwfToXaml.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TrialExpired.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="TrialExpired.Designer.cs">
+      <DependentUpon>TrialExpired.cs</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="ConvertedUI.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>ConvertedUI.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="LogPage.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>LogPage.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <SubType>Designer</SubType>
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SettingsPage.resx">
+      <DependentUpon>SettingsPage.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TrialExpired.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>TrialExpired.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SwfReader\SwfFormat.csproj">
+      <Project>{04BB0485-133C-4B56-94C0-D1D9B3D6EC95}</Project>
+      <Name>SwfFormat</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Vfx\Vex.csproj">
+      <Project>{9E0E5CBD-E7FC-4BD6-A9B0-DEEE4BA576C7}</Project>
+      <Name>Vex</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\XamlRenderer\XamlRenderer.csproj">
+      <Project>{FB3073F6-2B0F-4D18-AEE3-EBFEAADFC848}</Project>
+      <Name>XamlRenderer</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\main.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\converting1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\hand0.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\fin5.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\hand1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\hand2.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\hand3.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\fin0.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\fin1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\fin2.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\fin3.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\fin4.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\btnSettings.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\btnSettings1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\btnLog.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\minOver.png" />
+    <None Include="Resources\winOver.png" />
+    <None Include="Resources\closeOver.png" />
+    <None Include="Resources\settingsOver.png" />
+    <None Include="Resources\logOver.png" />
+    <None Include="Resources\log.png" />
+    <None Include="Resources\settingsBkg.png" />
+    <None Include="Resources\knob.png" />
+    <None Include="Resources\trialExpired.png" />
+    <None Include="Resources\visitSiteOver.png" />
+    <None Include="Resources\btn_website.png" />
+    <None Include="Resources\website_over.png" />
+    <Content Include="theconverted.ico" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

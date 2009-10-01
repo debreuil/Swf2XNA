@@ -20,7 +20,7 @@ namespace DDW.Placeholder
         public uint Id;
         public string DefinitionName;
         public string LinkageName;
-        public int FrameCount;
+        public uint FrameCount;
         //public int Duration;
         public Rectangle Bounds;
         public List<Instance2D> Children = new List<Instance2D>();

@@ -248,6 +248,8 @@ namespace DDW.V2D
                 this.density = instance.Density;
                 this.friction = instance.Friction;
                 this.restitution = instance.Restitution;
+                this.StartFrame = instance.StartFrame;
+                this.TotalFrames = instance.TotalFrames;
             }
         }
 

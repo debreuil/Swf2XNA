@@ -19,7 +19,7 @@ namespace DDW.V2D
         [XmlAttribute]
         public float OffsetY;
         [XmlAttribute]
-        public float FrameCount;
+        public uint FrameCount;
         [XmlAttribute]
         public float Duration;
 

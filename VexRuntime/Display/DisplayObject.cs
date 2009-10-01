@@ -13,6 +13,12 @@ namespace DDW.Display
         protected Texture2D texture; // texture evetually will be a 'graphics' generic class
         public string instanceName;
         public string definitonName;
+
+        public uint FrameCount = 1;
+        public uint StartFrame = 0;
+        public uint TotalFrames = 1;
+        public uint CurFrame = 0;
+
         protected Vector2 origin;
         protected Rectangle sourceRectangle;
         protected V2DRectangle destinationRectangle;
@@ -399,6 +405,7 @@ namespace DDW.Display
 
         public virtual void Update(GameTime gameTime)
         {
+            CurFrame = ((uint)(gameTime.TotalRealTime.TotalMilliseconds / 500)) % (FrameCount);
         }
         public virtual void Draw(SpriteBatch batch)
         {

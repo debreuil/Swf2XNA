@@ -12,7 +12,6 @@ namespace DDW.Display
 {
     public class Sprite : DisplayObjectContainer, IRenderable
     {
-        public int FrameCount;
         public Sprite(Texture2D texture)
         {
             Texture = texture;
@@ -26,6 +25,9 @@ namespace DDW.Display
             this.Alpha = inst.Alpha;
             this.Scale = new Vector2(inst.ScaleX, inst.ScaleY);
             this.Visible = inst.Visible;
+            this.FrameCount = inst.Definition.FrameCount;
+            this.StartFrame = inst.StartFrame;
+            this.TotalFrames = inst.TotalFrames;
         }
 
     }

@@ -29,9 +29,9 @@ namespace DDW.V2D
         [XmlAttribute]
         public float ScaleY = 1.0f;
         [XmlAttribute]
-        public int StartFrame;
+        public uint StartFrame;
         [XmlAttribute]
-        public int TotalFrames;
+        public uint TotalFrames;
 
         [XmlAttribute]
         public float Alpha = 1.0f;

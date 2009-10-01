@@ -232,7 +232,7 @@ namespace DDW.VexTo2DPhysics
             result.Transforms = inst.Transformations;
             result.Definition = definitions.Find(d => d.Id == inst.DefinitionId);
             result.StartFrame = curVo.GetFrameFromMilliseconds(inst.StartTime);
-            result.TotalFrames = curVo.GetFrameFromMilliseconds(inst.EndTime) - result.StartFrame - 1; // end frame is last ms of frame, so -1
+            result.TotalFrames = curVo.GetFrameFromMilliseconds(inst.EndTime) - result.StartFrame; // end frame is last ms of frame, so -1
             return result;
         }
         private Definition2D CreateDefinition2D(Instance inst, IDefinition def)
@@ -247,11 +247,11 @@ namespace DDW.VexTo2DPhysics
             if (def is Timeline)
             {
                 Timeline tlDef = (Timeline)def;
-                result.FrameCount = (int)tlDef.FrameCount;
+                result.FrameCount = tlDef.FrameCount;
             }
             else if (def is Symbol)
             {
-                Symbol instDef = (Symbol)def;
+//              Symbol instDef = (Symbol)def;
 //              result.StartTime = (int)instDef.StartTime;
 //              result.EndTime = (int)instDef.EndTime;
                 ParseBodyImage(result, def, inst);

@@ -117,6 +117,14 @@ namespace DDW.Display
             }
         }
 
+        public override void Update(GameTime gameTime)
+        {
+            base.Update(gameTime);
+            foreach (DisplayObject d in children)
+            {
+                d.Update(gameTime);
+            }
+        }
         public override void Draw(SpriteBatch batch)
         {
             base.Draw(batch);
@@ -124,7 +132,10 @@ namespace DDW.Display
             {
                 if (d.Visible && d.Alpha > 0)
                 {
-                    d.Draw(batch);
+                    if (CurFrame >= d.StartFrame && CurFrame < d.StartFrame + d.TotalFrames)
+                    {
+                        d.Draw(batch);
+                    }
                 }
             }
         }

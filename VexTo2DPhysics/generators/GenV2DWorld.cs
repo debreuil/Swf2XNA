@@ -122,8 +122,8 @@ namespace DDW.VexTo2DPhysics
             result.Rotation = inst.Rotation;
             result.ScaleX = inst.ScaleX;
             result.ScaleY = inst.ScaleY;
-            result.StartFrame = (int)inst.StartFrame;
-            result.TotalFrames = (int)inst.TotalFrames;
+            result.StartFrame = inst.StartFrame;
+            result.TotalFrames = inst.TotalFrames;
             //result.Transform = inst.Transforms;
             result.Visible = inst.Visible;
             result.X = inst.X;

@@ -27,8 +27,8 @@ namespace DDW.Placeholder
         public Matrix Matrix;
         public List<Transform> Transforms = new List<Transform>();
 
-        public uint StartFrame;
-        public uint TotalFrames;
+        public uint StartFrame = 0;
+        public uint TotalFrames = 1;
 
         public float Density = 2.0f;
         public float Friction;

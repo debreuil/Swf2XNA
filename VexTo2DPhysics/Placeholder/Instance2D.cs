@@ -51,8 +51,7 @@ namespace DDW.Placeholder
         public virtual bool IsPointInside(Point p)
         {
             bool result = false;
-            System.Drawing.Drawing2D.Matrix m =
-                this.Transforms[0].Matrix.GetDrawing2DMatrix();
+            System.Drawing.Drawing2D.Matrix m = this.Transforms[0].Matrix.GetDrawing2DMatrix();
             m.Invert();
             System.Drawing.PointF[] p2 = new System.Drawing.PointF[] { new System.Drawing.PointF(p.X, p.Y) };
             m.TransformPoints(p2);

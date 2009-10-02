@@ -66,6 +66,7 @@
     <Compile Include="V2D\Serialization\V2DShape.cs" />
     <Compile Include="V2D\Serialization\V2DShapeKind.cs" />
     <Compile Include="V2D\Serialization\V2DTexture.cs" />
+    <Compile Include="V2D\Serialization\V2DTransform.cs" />
     <Compile Include="V2D\Serialization\V2DWorld.cs" />
     <Compile Include="V2D\V2DGame.cs" />
     <Compile Include="V2D\V2DScreen.cs" />

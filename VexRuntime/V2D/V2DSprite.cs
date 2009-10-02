@@ -15,7 +15,7 @@ namespace DDW.V2D
     public class V2DSprite : Sprite
     {
         protected V2DInstance instance;
-        protected Body body;
+        public Body body;
         protected List<Joint> jointRefs = new List<Joint>();
         protected float worldScale;
         protected float density;
@@ -243,7 +243,7 @@ namespace DDW.V2D
                 this.scale = new Vector2(instance.ScaleX, instance.ScaleY);
                 this.alpha = instance.Alpha;
                 this.visible = instance.Visible;
-                this.transform = MatrixFromArray(instance.Transform);
+                this.transforms = instance.Transforms;
                 this.polygons = instance.Definition.V2DShapes;
                 this.density = instance.Density;
                 this.friction = instance.Friction;
@@ -251,20 +251,6 @@ namespace DDW.V2D
                 this.StartFrame = instance.StartFrame;
                 this.TotalFrames = instance.TotalFrames;
             }
-        }
-
-        public static Matrix MatrixFromArray(V2DMatrix mx)
-        {
-            Matrix result = Matrix.Identity;
-            result.M11 = mx.ScaleX;
-            result.M12 = mx.Rotate0;
-            result.M21 = mx.Rotate1;
-            result.M22 = mx.ScaleY;
-            result.M31 = mx.TranslateX;
-            result.M32 = mx.TranslateY;
-            result.M33 = 1;
-
-            return result;
         }
     }
 }

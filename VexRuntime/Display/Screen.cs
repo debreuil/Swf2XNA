@@ -12,6 +12,7 @@ namespace DDW.Display
     public class Screen : DisplayObjectContainer
     {
         public V2DWorld v2dWorld;
+        public float MillisecondsPerFrame = 1000f / 12f;
         public Dictionary<string, Texture2D> textures = new Dictionary<string,Texture2D>();
         private SymbolImport symbolImport;
         

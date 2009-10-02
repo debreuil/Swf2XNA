@@ -13,6 +13,8 @@ namespace V2DTest
     {
         public Sprite bkg;
         public List<V2DSprite> hex;
+        public V2DSprite star;
+        public V2DSprite star2;
         
         public DistanceJointDemo()
         {
@@ -24,7 +26,12 @@ namespace V2DTest
         public override void Initialize()
         {
             base.Initialize();
+            //hex[0].Alpha = .5f;
+            //bkg.Play();
+            //star.Play();
+            star2.Play();
             //bkg.Visible = false;
+            //star.body.SetMassFromShapes();
         }
     }
 }

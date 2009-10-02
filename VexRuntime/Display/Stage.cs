@@ -9,8 +9,11 @@ namespace DDW.Display
 {
     public class Stage : DisplayObjectContainer
     {
+        public float MillisecondsPerFrame = 1000f / 12f;
+
         protected Stage()
         {
+            stage = this;
         }
         internal virtual void ObjectAddedToStage(DisplayObject o)
         {

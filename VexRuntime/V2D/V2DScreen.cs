@@ -386,7 +386,7 @@ namespace DDW.V2D
             return result;
         }
 
-        protected Regex lastDigits = new Regex(@"([a-zA-Z$_]*)([0-9]+)", RegexOptions.Compiled);
+        protected Regex lastDigits = new Regex(@"^([a-zA-Z$_]*)([0-9]+)$", RegexOptions.Compiled);
         protected DisplayObject SetFieldWithReflection(V2DInstance inst, DisplayObjectContainer parent, Texture2D texture)
         {
             DisplayObject result = null;
@@ -395,7 +395,7 @@ namespace DDW.V2D
             int index = -1;
 
             Match m = lastDigits.Match(instName);
-            if(m.Groups.Count > 2)
+            if (m.Groups.Count > 2 && t.GetField(instName) == null)
             {
                 instName = m.Groups[1].Value;
                 index =  int.Parse(m.Groups[2].Value);
@@ -427,6 +427,7 @@ namespace DDW.V2D
                         {
                             ConstructorInfo ci = ft.GetConstructor(new Type[] {});
                             o = ci.Invoke(new object[] {});
+                            fi.SetValue(parent, o);
                         }
 
                         if (gt.Equals(typeof(V2DSprite)) || gt.IsSubclassOf(typeof(V2DSprite)))

@@ -17,6 +17,8 @@ namespace DDW.V2D.Serialization
         public int Width = 800;
         [XmlAttribute]
         public int Height = 600;
+        [XmlAttribute]
+        public int FrameRate = 12;
 
         [XmlElement("V2DTexture")]
         public List<V2DTexture> textures = new List<V2DTexture>();

@@ -117,14 +117,14 @@ namespace DDW.VexTo2DPhysics
             result.InstanceName = inst.InstanceName;
             //result.Joints = inst.Joints;
             DDW.Vex.Matrix m = inst.Matrix;
-            result.Transform = new V2DMatrix(m.ScaleX, m.Rotate0, m.Rotate1, m.ScaleY, m.TranslateX, m.TranslateY);
+            result.Matrix = new V2DMatrix(m.ScaleX, m.Rotate0, m.Rotate1, m.ScaleY, m.TranslateX, m.TranslateY);
             result.Restitution = inst.Restitution;
             result.Rotation = inst.Rotation;
             result.ScaleX = inst.ScaleX;
             result.ScaleY = inst.ScaleY;
             result.StartFrame = inst.StartFrame;
             result.TotalFrames = inst.TotalFrames;
-            //result.Transform = inst.Transforms;
+            result.Transforms = TransformsConversion(inst.Transforms);
             result.Visible = inst.Visible;
             result.X = inst.X;
             result.Y = inst.Y;
@@ -136,6 +136,34 @@ namespace DDW.VexTo2DPhysics
             //    dict = v2d.codeData[inst.InstanceName];
             //}
             //return inst.GetV2DInstance(dict);
+        }
+        public static V2DTransform[] TransformsConversion(List<Transform> trs)
+        {
+            V2DTransform[] result = new V2DTransform[trs.Count];
+            if (trs.Count > 1)
+            {
+                int x = 5;
+            }
+            for (int i = 0; i < trs.Count; i++)
+            {
+                Transform tin = trs[i];
+
+                MatrixComponents mc = tin.Matrix.GetMatrixComponents();
+                V2DTransform tout = new V2DTransform(
+                    tin.StartTime, 
+                    tin.EndTime, 
+                    mc.ScaleX, 
+                    mc.ScaleY, 
+                    mc.Rotation, 
+                    mc.TranslateX, 
+                    mc.TranslateY, 
+                    tin.Alpha);
+
+                tout.IsTweening = tin.IsTweening;
+
+                result[i] = tout;
+            }
+            return result;
         }
     }
 }

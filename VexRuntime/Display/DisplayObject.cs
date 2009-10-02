@@ -5,6 +5,7 @@ using System.Text;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
 using VexRuntime.V2D;
+using DDW.V2D;
 
 namespace DDW.Display
 {
@@ -18,6 +19,9 @@ namespace DDW.Display
         public uint StartFrame = 0;
         public uint TotalFrames = 1;
         public uint CurFrame = 0;
+        public float CurFrameTime = 0;
+        public int totalMilliseconds = (int)(1000f / 12f);
+        protected bool isPlaying = false;
 
         protected Vector2 origin;
         protected Rectangle sourceRectangle;
@@ -30,9 +34,11 @@ namespace DDW.Display
 
         protected float alpha = 1;
         protected bool visible = true;
-        protected Matrix transform;
+        protected V2DTransform[] transforms;
         protected DisplayObjectContainer parent;
         protected Stage stage;
+        protected Screen screen;
+        protected float mspf;
 
         private int id;
         private static int idCounter = int.MinValue;
@@ -232,15 +238,15 @@ namespace DDW.Display
                 visible = value;
             }
         }
-        public Matrix Transform
+        public V2DTransform[] Transforms
         {
             get
             {
-                return transform;
+                return transforms;
             }
             set
             {
-                transform = value;
+                transforms = value;
             }
         }
         public DisplayObjectContainer Parent
@@ -291,11 +297,130 @@ namespace DDW.Display
             result.spriteEffects = spriteEffects;
             result.alpha = alpha;
             result.visible = visible;
-            result.transform = transform;
+            result.transforms = transforms;
             result.parent = parent;
             result.stage = stage;
             result.id = idCounter++;
             return result;
+        }
+
+        private Stage GetStage()
+        {
+            Stage result = null;
+            if (parent != null)
+            {
+                result = parent.GetStage();
+            }
+            else
+            {
+                result = (this is Stage) ? (Stage)this : null;
+            }
+            return result;
+        }
+        private Screen GetScreen()
+        {
+            Screen result = null;
+            if (this is Screen)
+            {
+                result = (Screen)this;
+            }
+            else if (parent != null)
+            {
+                result = parent.GetScreen();
+            }
+            else
+            {
+                result = null;
+            }
+            return result;
+        }
+        protected Screen GetContainerScreen(DisplayObject obj)
+        {
+            Screen result = null;
+            while (obj.parent != null && !(obj.parent is Screen) && obj.parent is DisplayObjectContainer)
+            {
+                obj = (DisplayObjectContainer)obj.parent;
+            }
+
+            if (obj.parent is Screen)
+            {
+                result = (Screen)obj.parent;
+            }
+            return result;
+        }
+
+        public virtual void Play()
+        {
+            isPlaying = true;
+        }
+        public virtual void Stop()
+        {
+            isPlaying = false;
+        }
+        public virtual void GotoAndPlay(uint frame)
+        {
+            CurFrame = frame < 1 ? 1 : frame > TotalFrames ? TotalFrames : frame;
+            isPlaying = true;
+        }
+        public virtual void GotoAndStop(uint frame)
+        {
+            CurFrame = frame < 1 ? 1 : frame > TotalFrames ? TotalFrames : frame;
+            isPlaying = false;
+        }
+
+        public virtual void Added(EventArgs e)
+        {
+            if (!isOnStage)
+            {
+                stage = GetStage();
+                screen = GetScreen();
+                mspf = (screen == null) ? stage.MillisecondsPerFrame : screen.MillisecondsPerFrame;
+                this.AddedToStage(e);
+                isOnStage = true;
+            }
+        }
+        public virtual void Removed(EventArgs e)
+        {
+            if (isOnStage)
+            {
+                this.RemovedFromStage(e);
+                isOnStage = false;
+                stage = null;
+            }
+            this.parent = null;
+        }
+        public virtual void AddedToStage(EventArgs e)
+        {
+            stage.ObjectAddedToStage(this);
+        }
+        public virtual void RemovedFromStage(EventArgs e)
+        {
+           stage.ObjectRemovedFromStage(this);
+        }
+
+        public virtual void Update(GameTime gameTime)
+        {
+            if (parent != null && parent.isPlaying)
+            {
+                CurFrameTime += (float)gameTime.ElapsedGameTime.TotalMilliseconds;
+                CurFrameTime %= totalMilliseconds;
+                CurFrame = ((uint)(CurFrameTime / mspf)) % (TotalFrames);
+                Rotation = this.transforms[CurFrame].Rotation;
+            }
+        }
+        public virtual void Draw(SpriteBatch batch)
+        {
+                if (CurFrame > 1)
+                {
+                    int x = 5;
+                }
+            if (texture != null)
+            {
+                Vector2 gOffset = GetGlobalOffset(Vector2.Zero);
+                float gRotation = GetGlobalRotation(rotation);
+                batch.Draw(texture, gOffset, sourceRectangle, color,
+                    gRotation, origin, scale, spriteEffects, layerDepth);
+            }
         }
 
         public void LocalToGlobal(ref float x, ref float y)
@@ -335,87 +460,6 @@ namespace DDW.Display
             }
             rot += this.rotation;
             return rot;
-        }
-
-        private Stage GetStage()
-        {
-            Stage result = null;
-            if (parent != null)
-            {
-                result = parent.GetStage();
-            }
-            else
-            {
-                result = (this is Stage) ? (Stage)this : null;
-            }
-            return result;
-        }
-
-        protected Screen GetContainerScreen(DisplayObject obj)
-        {
-            Screen result = null;
-            while (obj.parent != null && !(obj.parent is Screen) && obj.parent is DisplayObjectContainer)
-            {
-                obj = (DisplayObjectContainer)obj.parent;
-            }
-
-            if (obj.parent is Screen)
-            {
-                result = (Screen)obj.parent;
-            }
-            return result;
-        }
-
-        public virtual void Added(EventArgs e)
-        {
-            if (!isOnStage)
-            {
-                stage = GetStage();
-                if (stage != null)
-                {
-                    this.AddedToStage(e);
-                    isOnStage = true;
-                }
-            }
-        }
-        public virtual void Removed(EventArgs e)
-        {
-            if (isOnStage)
-            {
-                this.RemovedFromStage(e);
-                isOnStage = false;
-                stage = null;
-            }
-            this.parent = null;
-        }
-        public virtual void AddedToStage(EventArgs e)
-        {
-            if (stage != null) // should never be null
-            {
-                stage.ObjectAddedToStage(this);
-            }
-        }
-        public virtual void RemovedFromStage(EventArgs e)
-        {
-            if (stage != null) // should never be null
-            {
-                stage.ObjectRemovedFromStage(this);
-            }
-        }
-
-        public virtual void Update(GameTime gameTime)
-        {
-            CurFrame = ((uint)(gameTime.TotalRealTime.TotalMilliseconds / 500)) % (FrameCount);
-        }
-        public virtual void Draw(SpriteBatch batch)
-        {
-            if (texture != null)
-            {
-                Vector2 gOffset = GetGlobalOffset(Vector2.Zero); //Vector2.Zero;// 
-                float gRotation = GetGlobalRotation(rotation);
-                batch.Draw(texture, gOffset, sourceRectangle, color,
-                    gRotation, origin, scale, spriteEffects, layerDepth);
-            }
         }
 
         public override bool Equals(object obj)

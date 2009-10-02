@@ -11,6 +11,7 @@ namespace DDW.Display
     {
         protected List<DisplayObject> children = new List<DisplayObject>();
 
+
         public int NumChildren
         {
             get
@@ -119,6 +120,7 @@ namespace DDW.Display
 
         public override void Update(GameTime gameTime)
         {
+            //todo: use a display list
             base.Update(gameTime);
             foreach (DisplayObject d in children)
             {
@@ -136,7 +138,15 @@ namespace DDW.Display
                     {
                         d.Draw(batch);
                     }
+                    else
+                    {
+                        int x = 5;
+                    }
                 }
+                //if (d.Visible && d.Alpha > 0)
+                //{
+                //    d.Draw(batch);
+                //}
             }
         }
 
@@ -147,6 +157,7 @@ namespace DDW.Display
                 d.Added(e);
             }
             base.Added(e);
+            totalMilliseconds = (int)(stage.MillisecondsPerFrame * TotalFrames);
         }
         public override void Removed(EventArgs e)
         {

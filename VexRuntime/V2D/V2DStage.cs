@@ -173,8 +173,6 @@ namespace DDW.V2D
 
         public override void Update(GameTime gameTime)
         {
-            base.Update(gameTime);
-
             float timeStep = hz > 0.0f ? 1.0f / hz : 0.0f;
             if (pause)
             {

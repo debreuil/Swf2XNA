@@ -86,6 +86,61 @@ namespace DDW.V2D
             }
         }
 
+        public override void Play()
+        {
+            if (isWrappedB2DObject())
+            {
+                ((DisplayObjectContainer)children[0]).isPlaying = true;
+            }
+            else
+            {
+                isPlaying = true;
+            }
+        }
+        public override void Stop()
+        {
+            if (isWrappedB2DObject())
+            {
+                ((DisplayObjectContainer)children[0]).isPlaying = false;
+            }
+            else
+            {
+                isPlaying = false;
+            }
+        }
+        public override void GotoAndPlay(uint frame)
+        {
+            if (isWrappedB2DObject())
+            {
+                DisplayObjectContainer doc = ((DisplayObjectContainer)children[0]);
+                doc.CurChildFrame = frame < 0 ? 0 : frame > doc.LastChildFrame ? doc.LastChildFrame : frame;
+                doc.isPlaying = true;
+            }
+            else
+            {
+                ((DisplayObjectContainer)children[0]).isPlaying = true;
+                CurChildFrame = frame < 0 ? 0 : frame > LastChildFrame ? LastChildFrame : frame;
+            }
+        }
+        public override void GotoAndStop(uint frame)
+        {
+            if (isWrappedB2DObject())
+            {
+                DisplayObjectContainer doc = ((DisplayObjectContainer)children[0]);
+                doc.CurChildFrame = frame < 0 ? 0 : frame > doc.LastChildFrame ? doc.LastChildFrame : frame;
+                doc.isPlaying = false;
+            }
+            else
+            {
+                ((DisplayObjectContainer)children[0]).isPlaying = false;
+                CurChildFrame = frame < 0 ? 0 : frame > LastChildFrame ? LastChildFrame : frame;
+            }
+        }
+        private bool isWrappedB2DObject()
+        {
+            return polygons.Count > 0 && LastChildFrame == 0 && children.Count == 1 && children[0] is DisplayObjectContainer;
+        }
+
         public void RemoveInstanceFromRuntime()
         {
             Screen scr = GetContainerScreen(this);
@@ -230,10 +285,12 @@ namespace DDW.V2D
             {
                 if (texture != null)
                 {
+                    //this.destinationRectangle = new V2DRectangle(0, 0, texture.Width, texture.Height);
                     this.destinationRectangle = new V2DRectangle((int)instance.X, (int)instance.Y, texture.Width, texture.Height);
                 }
                 else
                 {
+                    //this.destinationRectangle = new V2DRectangle(0, 0, 0, 0);
                     this.destinationRectangle = new V2DRectangle((int)instance.X, (int)instance.Y, 0, 0);
                 }
                 this.origin = new Vector2(-instance.Definition.OffsetX, -instance.Definition.OffsetY);
@@ -243,13 +300,24 @@ namespace DDW.V2D
                 this.scale = new Vector2(instance.ScaleX, instance.ScaleY);
                 this.alpha = instance.Alpha;
                 this.visible = instance.Visible;
-                this.transforms = instance.Transforms;
+                this.Depth = instance.Depth;
+
+                // normalize all transforms to base position
+                this.transforms = new V2DTransform[instance.Transforms.Length];
+                float ox = instance.X;
+                float oy = instance.Y;
+                for (int i = 0; i < instance.Transforms.Length; i++)
+                {
+                    this.transforms[i] = instance.Transforms[i].Clone();
+                    this.transforms[i].TranslationX -= ox;
+                    this.transforms[i].TranslationY -= oy;
+                }
                 this.polygons = instance.Definition.V2DShapes;
                 this.density = instance.Density;
                 this.friction = instance.Friction;
                 this.restitution = instance.Restitution;
                 this.StartFrame = instance.StartFrame;
-                this.TotalFrames = instance.TotalFrames;
+                this.EndFrame = instance.EndFrame;
             }
         }
     }

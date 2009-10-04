@@ -41,7 +41,7 @@ namespace DDW.Swf
 
 			this.curTimeline = RootTimeline;
 			curTimeline.FrameCount = swf.Header.FrameCount;
-			curTimeline.Duration = (uint)(((swf.Header.FrameCount + 1) * (1 / swf.Header.FrameRate)) * 1000);
+			curTimeline.Duration = GetDuration(swf.Header.FrameCount);
 
 			v.Root = curTimeline;
 			this.curDepthChart = rootDepthChart;
@@ -461,8 +461,8 @@ namespace DDW.Swf
 			curFrame = 0;
 			curTimeline = new Timeline(v.NextId());
 			curTimeline.FrameCount = tag.FrameCount;
-			curTimeline.Id = tag.SpriteId;
-			curTimeline.Duration = (uint)(( (tag.FrameCount + 1) * (1 / swf.Header.FrameRate)) * 1000); // ms
+            curTimeline.Id = tag.SpriteId;
+            curTimeline.Duration = GetDuration(tag.FrameCount);
 
 			v.Definitions.Add(curTimeline.Id, curTimeline);
 			curDepthChart = new SortedDictionary<uint, Instance>();
@@ -492,7 +492,7 @@ namespace DDW.Swf
 		private void ParsePlaceObjectTag(PlaceObjectTag tag)
 		{
 			uint curTime = (uint)((curFrame * (1 / swf.Header.FrameRate)) * 1000);
-			uint totalTime = (uint)(((this.curTimeline.FrameCount + 1) * (1 / swf.Header.FrameRate)) * 1000);
+            uint totalTime = GetDuration(this.curTimeline.FrameCount);
 
 			Vex.Matrix mx = ParseMatrix(tag.Matrix);
 			float alpha = 1;
@@ -524,8 +524,8 @@ namespace DDW.Swf
 
 		private void ParsePlaceObject2Tag(PlaceObject2Tag tag)
 		{
-			uint curTime = (uint)((curFrame * (1 / swf.Header.FrameRate)) * 1000);
-			uint totalTime = (uint)(((this.curTimeline.FrameCount + 1) * (1 / swf.Header.FrameRate)) * 1000);
+            uint curTime = (uint)((curFrame * (1 / swf.Header.FrameRate)) * 1000);
+            uint totalTime = GetDuration(this.curTimeline.FrameCount); 
 
 			Vex.Matrix mx = ParseMatrix(tag.Matrix);
 			float alpha = 1;
@@ -763,7 +763,7 @@ namespace DDW.Swf
 		private void ParseDefineText(DefineTextTag tag)
 		{
 			Text t = new Text(v.NextId());
-
+            
 			t.StrokeBounds = ParseRect(tag.TextBounds);
 			t.Matrix = ParseMatrix(tag.TextMatrix);
 			GetTextFromRecords(tag.TextRecords, t.TextRuns);
@@ -1078,6 +1078,11 @@ namespace DDW.Swf
 			header[43] = (byte)((dataChunkSize >> 24) & 0xFF);
 
 			return header;
+		}
+		private uint GetDuration(uint frameCount)
+		{
+            // was (framecount + 1), changed oct3 2009 // robin
+            return (uint)(frameCount * (1 / swf.Header.FrameRate) * 1000);
 		}
 
 		#endregion

@@ -118,7 +118,25 @@ namespace DDW.Gdi
                 }
                 else if (def is Text)
                 {
-                    //DrawText((Text)def, inst.Transformations[0].Matrix);
+                    Text tx = (Text)def;
+                    List<Bitmap> bmpFrames = new List<Bitmap>();
+
+                    Bitmap myBitmap = new Bitmap(
+                        (int)tx.StrokeBounds.Size.Width + 1,
+                        (int)tx.StrokeBounds.Size.Height + 1);
+
+                    myBitmap.SetResolution(96, 96);
+                    translateMatrix = new System.Drawing.Drawing2D.Matrix(
+                        1, 0, 0, 1, -tx.StrokeBounds.Point.X, -tx.StrokeBounds.Point.Y);
+                    g = Graphics.FromImage(myBitmap);
+                    g.SmoothingMode = SmoothingMode.AntiAlias;
+
+                    DrawText(tx, tx.Matrix);
+                    translateMatrix.Dispose();
+                    bmpFrames.Add(myBitmap);
+
+                    string name = s + "#" + tx.Id;
+                    genImages.Add(name, bmpFrames);
                 }
 			}
 		}

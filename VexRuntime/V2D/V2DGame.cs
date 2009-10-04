@@ -157,7 +157,7 @@ namespace DDW.V2D
         {
             //GraphicsDevice.Clear(ClearOptions.Stencil, bkgColor, 1, 1);
             GraphicsDevice.Clear(bkgColor);
-
+            
             stage.Draw(spriteBatch);
 
             base.Draw(gameTime);

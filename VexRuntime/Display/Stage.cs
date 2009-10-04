@@ -23,11 +23,16 @@ namespace DDW.Display
         }
         public override void Update(GameTime gameTime)
         {
-            base.Update(gameTime);
+            //base.Update(gameTime); // dont update stage itself as it is fixed pos
+            foreach (DisplayObject d in children)
+            {
+                d.Update(gameTime);
+            }
         }
         public override void Draw(SpriteBatch batch)
         {
-            batch.Begin();
+            //batch.Begin();
+            batch.Begin(SpriteBlendMode.AlphaBlend, SpriteSortMode.BackToFront, SaveStateMode.None);
             base.Draw(batch);
             batch.End();
         }

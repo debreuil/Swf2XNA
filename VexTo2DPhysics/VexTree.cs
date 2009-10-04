@@ -118,7 +118,7 @@ namespace DDW.VexTo2DPhysics
             rootInstance.Definition = root;
             rootInstance.Transforms.Add(new Transform(
                 0, 
-                (uint)(scu.Header.FrameCount * (1 / scu.Header.FrameRate)), 
+                (uint)(scu.Header.FrameCount * (1000 / scu.Header.FrameRate)), 
                 new Matrix(1, 0, 0, 1, 0, 0), 
                 1, 
                 ColorTransform.Identity));
@@ -167,22 +167,19 @@ namespace DDW.VexTo2DPhysics
                 if ((dk & DefinitionKind.TextField) != 0)
                 {
                     Text txt = (Text)def;
-
+                    if (def.Name == null)
+                    {
+                        def.Name = "$tx_" + def.Id;
+                    }
+                    Definition2D d2d = GetDefinition2D(inst, def, false);
+                    AddSymbolImage(inst, def);
+                    AddInstance(inst, def);
                 }
 
                 if ((dk & DefinitionKind.Timeline) != 0)
                 {
-                    Definition2D d2d = definitions.Find(d => d.DefinitionName == def.Name);
-                    if (inst.Transformations.Count > 1)
-                    {
-                        int x = 5;
-                    }
-                    if (d2d == null)
-                    {
-                        d2d = CreateDefinition2D(inst, def);
-                        definitions.Add(d2d);
-                    }
-                    Instance2D i2d = AddInstances(inst, def);
+                    Definition2D d2d = GetDefinition2D(inst, def, false);
+                    Instance2D i2d = AddInstance(inst, def);
 
                     parentStack.Push(i2d);
                     ParseTimeline((Timeline)def);
@@ -197,26 +194,15 @@ namespace DDW.VexTo2DPhysics
                     {
                         def.Name = "$sym_" + def.Id;
                     }
-                    Definition2D d2d = definitions.Find(d => d.DefinitionName == def.Name);
-                    if (d2d == null)
-                    {
-                        d2d = CreateDefinition2D(inst, def);
-                        definitions.Add(d2d);
-                    }
+                    Definition2D d2d = GetDefinition2D(inst, def, false);
                     AddSymbolImage(inst, def);
-                    AddInstances(inst, def);
+                    AddInstance(inst, def);
                 }
 
                 if ((dk & DefinitionKind.Vex2D) != 0)
                 {
-                    Definition2D d2d = definitions.Find(d => d.DefinitionName == def.Name);
-                    if (d2d == null)
-                    {
-                        d2d = CreateDefinition2D(inst, def);
-                        definitions.Add(d2d);
-                        d2d.AddShapes(curVo, def, inst);
-                    }
-                    Instance2D i2d = AddInstances(inst, def);
+                    Definition2D d2d = GetDefinition2D(inst, def, true);
+                    Instance2D i2d = AddInstance(inst, def);
 
                     parentStack.Push(i2d);
                     ParseTimeline((Timeline)def);
@@ -225,7 +211,7 @@ namespace DDW.VexTo2DPhysics
             }
             GenerateJointData(parentStack.Peek().Definition);
         }
-        private Instance2D AddInstances(Instance inst, IDefinition def)
+        private Instance2D AddInstance(Instance inst, IDefinition def)
         {
             Instance2D i2d = CreateInstance2D(inst, def);
             parentStack.Peek().Definition.Children.Add(i2d);
@@ -239,7 +225,21 @@ namespace DDW.VexTo2DPhysics
             result.Transforms = inst.Transformations;
             result.Definition = definitions.Find(d => d.Id == inst.DefinitionId);
             result.StartFrame = curVo.GetFrameFromMilliseconds(inst.StartTime);
-            result.TotalFrames = Math.Max(1, curVo.GetFrameFromMilliseconds(inst.EndTime) - result.StartFrame - 1); // end frame is last ms of frame, so -1
+            result.TotalFrames = curVo.GetFrameFromMilliseconds(inst.EndTime) - result.StartFrame - 1; // end frame is last ms of frame, so -1
+            return result;
+        }
+        private Definition2D GetDefinition2D(Instance inst, IDefinition def, bool addShapes)
+        {
+            Definition2D result = definitions.Find(d => d.DefinitionName == def.Name);
+            if (result == null)
+            {
+                result = CreateDefinition2D(inst, def);
+                definitions.Add(result);
+                if (addShapes)
+                {
+                    result.AddShapes(curVo, def, inst);
+                }
+            }
             return result;
         }
         private Definition2D CreateDefinition2D(Instance inst, IDefinition def)
@@ -753,6 +753,7 @@ namespace DDW.VexTo2DPhysics
                         if ((sf.Color == outlineColor) && (sf.LineWidth <= outlineWidth))
                         {
                             result = true;
+                            def.UserData = (int)DefinitionKind.OutlineStroke;
                             break;
                         }
                     }

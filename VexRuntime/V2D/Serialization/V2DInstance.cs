@@ -31,7 +31,7 @@ namespace DDW.V2D
         [XmlAttribute]
         public uint StartFrame;
         [XmlAttribute]
-        public uint TotalFrames;
+        public uint EndFrame;
 
         [XmlAttribute]
         public float Alpha = 1.0f;

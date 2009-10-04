@@ -16,6 +16,7 @@ namespace DDW.VexTo2DPhysics
         TextField = 16,
         Timeline = 32,
         Symbol = 64,
+        OutlineStroke = 128,
     }
 
 }

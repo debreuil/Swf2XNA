@@ -17,6 +17,6 @@ namespace DDW.Display
         float Rotation { get; set; }
         Vector2 Scale { get; set; }
         Color Color { get; set; }
-        float LayerDepth { get; set; }
+        float Depth { get; set; }
     }
 }

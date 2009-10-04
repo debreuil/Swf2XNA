@@ -15,6 +15,7 @@ namespace V2DTest
         public List<V2DSprite> hex;
         public V2DSprite star;
         public V2DSprite star2;
+        public V2DSprite car;
         
         public DistanceJointDemo()
         {
@@ -26,12 +27,21 @@ namespace V2DTest
         public override void Initialize()
         {
             base.Initialize();
-            //hex[0].Alpha = .5f;
-            //bkg.Play();
-            //star.Play();
+            bkg.Play();
             star2.Play();
-            //bkg.Visible = false;
-            //star.body.SetMassFromShapes();
+            //star2.Alpha = .5f;
+            star.Play();
+            car.GotoAndStop(4);
+            //hex[0].Alpha = .5f;
+           // hex[1].Alpha = .5f;
         }
     }
 }
+
+
+
+
+
+
+
+

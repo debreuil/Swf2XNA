@@ -123,7 +123,7 @@ namespace DDW.VexTo2DPhysics
             result.ScaleX = inst.ScaleX;
             result.ScaleY = inst.ScaleY;
             result.StartFrame = inst.StartFrame;
-            result.TotalFrames = inst.TotalFrames;
+            result.EndFrame = inst.TotalFrames + inst.StartFrame;
             result.Transforms = TransformsConversion(inst.Transforms);
             result.Visible = inst.Visible;
             result.X = inst.X;
@@ -137,24 +137,20 @@ namespace DDW.VexTo2DPhysics
             //}
             //return inst.GetV2DInstance(dict);
         }
-        public static V2DTransform[] TransformsConversion(List<Transform> trs)
+        public V2DTransform[] TransformsConversion(List<Transform> trs)
         {
             V2DTransform[] result = new V2DTransform[trs.Count];
-            if (trs.Count > 1)
-            {
-                int x = 5;
-            }
             for (int i = 0; i < trs.Count; i++)
             {
                 Transform tin = trs[i];
 
                 MatrixComponents mc = tin.Matrix.GetMatrixComponents();
                 V2DTransform tout = new V2DTransform(
-                    tin.StartTime, 
-                    tin.EndTime, 
+                    (uint)Math.Floor(tin.StartTime / (1000d / v2dWorld.FrameRate)), 
+                    (uint)Math.Floor(tin.EndTime / (1000d / v2dWorld.FrameRate)), 
                     mc.ScaleX, 
                     mc.ScaleY, 
-                    mc.Rotation, 
+                    (float)(mc.Rotation * 3.14159265 / 180), 
                     mc.TranslateX, 
                     mc.TranslateY, 
                     tin.Alpha);

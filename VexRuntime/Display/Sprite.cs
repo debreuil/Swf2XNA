@@ -27,7 +27,7 @@ namespace DDW.Display
             this.Visible = inst.Visible;
             this.FrameCount = inst.Definition.FrameCount;
             this.StartFrame = inst.StartFrame;
-            this.TotalFrames = inst.TotalFrames;
+            this.EndFrame = inst.EndFrame;
         }
 
     }

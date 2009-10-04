@@ -17,34 +17,34 @@ namespace DDW.Display
 
         public uint FrameCount = 1;
         public uint StartFrame = 0;
-        public uint TotalFrames = 1;
+        public uint EndFrame = 1;
         public uint CurFrame = 0;
         public float CurFrameTime = 0;
-        public int totalMilliseconds = (int)(1000f / 12f);
-        protected bool isPlaying = false;
+        public bool isPlaying = false;
 
+        protected Screen screen;
+        protected float mspf;
+
+        private int id;
+        private static int idCounter = 0;//int.MinValue;
+        private bool isOnStage = false;
+
+        #region Properties
         protected Vector2 origin;
         protected Rectangle sourceRectangle;
         protected V2DRectangle destinationRectangle;
         protected float rotation = 0;
         protected Vector2 scale = Vector2.One;
         protected Color color = Color.White;
-        protected float layerDepth;
+        protected float depth;
         protected SpriteEffects spriteEffects = SpriteEffects.None;
-
         protected float alpha = 1;
+
         protected bool visible = true;
         protected V2DTransform[] transforms;
         protected DisplayObjectContainer parent;
         protected Stage stage;
-        protected Screen screen;
-        protected float mspf;
 
-        private int id;
-        private static int idCounter = int.MinValue;
-        private bool isOnStage = false;
-
-        #region Properties
         public Texture2D Texture
         {
             get
@@ -194,15 +194,15 @@ namespace DDW.Display
                 color = value;
             }
         }
-        public float LayerDepth
+        public float Depth
         {
             get
             {
-                return layerDepth;
+                return depth;
             }
             set
             {
-                layerDepth = value;
+                depth = value;
             }
         }
         public SpriteEffects SpriteEffects
@@ -225,6 +225,7 @@ namespace DDW.Display
             set
             {
                 alpha = value;
+                color.A = (byte)(alpha * 255);
             }
         }
         public virtual bool Visible
@@ -293,11 +294,11 @@ namespace DDW.Display
             result.rotation = rotation;
             result.scale = scale;
             result.color = color;
-            result.layerDepth = layerDepth;
+            result.depth = depth;
             result.spriteEffects = spriteEffects;
             result.alpha = alpha;
             result.visible = visible;
-            result.transforms = transforms;
+            result.transforms = (V2DTransform[])transforms.Clone();
             result.parent = parent;
             result.stage = stage;
             result.id = idCounter++;
@@ -349,25 +350,6 @@ namespace DDW.Display
             return result;
         }
 
-        public virtual void Play()
-        {
-            isPlaying = true;
-        }
-        public virtual void Stop()
-        {
-            isPlaying = false;
-        }
-        public virtual void GotoAndPlay(uint frame)
-        {
-            CurFrame = frame < 1 ? 1 : frame > TotalFrames ? TotalFrames : frame;
-            isPlaying = true;
-        }
-        public virtual void GotoAndStop(uint frame)
-        {
-            CurFrame = frame < 1 ? 1 : frame > TotalFrames ? TotalFrames : frame;
-            isPlaying = false;
-        }
-
         public virtual void Added(EventArgs e)
         {
             if (!isOnStage)
@@ -400,26 +382,19 @@ namespace DDW.Display
 
         public virtual void Update(GameTime gameTime)
         {
-            if (parent != null && parent.isPlaying)
-            {
-                CurFrameTime += (float)gameTime.ElapsedGameTime.TotalMilliseconds;
-                CurFrameTime %= totalMilliseconds;
-                CurFrame = ((uint)(CurFrameTime / mspf)) % (TotalFrames);
-                Rotation = this.transforms[CurFrame].Rotation;
-            }
         }
         public virtual void Draw(SpriteBatch batch)
         {
-                if (CurFrame > 1)
-                {
-                    int x = 5;
-                }
             if (texture != null)
             {
                 Vector2 gOffset = GetGlobalOffset(Vector2.Zero);
-                float gRotation = GetGlobalRotation(rotation);
+                // todo: change transform time to frame
+                V2DTransform t = this.transforms.First(tr =>
+                    tr.StartFrame    <= (parent.CurChildFrame) &&
+                    tr.EndFrame      >= (parent.CurChildFrame));
+                float gRotation = (GetGlobalRotation(t.Rotation));
                 batch.Draw(texture, gOffset, sourceRectangle, color,
-                    gRotation, origin, scale, spriteEffects, layerDepth);
+                    gRotation, origin, scale, spriteEffects, depth/1000f);
             }
         }
 
@@ -447,9 +422,19 @@ namespace DDW.Display
             if (parent != null)
             {
                 offset = parent.GetGlobalOffset(offset);
+                if (transforms != null)
+                {
+                    V2DTransform t = transforms.First(tr =>
+                        tr.StartFrame <= (parent.CurChildFrame) && tr.EndFrame >= (parent.CurChildFrame));
+                    offset.X += t.TranslationX + destinationRectangle.X;
+                    offset.Y += t.TranslationY + destinationRectangle.Y;
+                }
+                else
+                {
+                    offset.X += destinationRectangle.X;
+                    offset.Y += destinationRectangle.Y;
+                }
             }
-            offset.X += this.destinationRectangle.X;
-            offset.Y += this.destinationRectangle.Y;
             return offset;
         }
         public float GetGlobalRotation(float rot)
@@ -457,8 +442,17 @@ namespace DDW.Display
             if (parent != null)
             {
                 rot = parent.GetGlobalRotation(rot);
+                if (transforms != null)
+                {
+                    V2DTransform t = transforms.First(tr =>
+                        tr.StartFrame <= (parent.CurChildFrame) && tr.EndFrame >= (parent.CurChildFrame));
+                    rot += t.Rotation + rotation;
+                }
+                else
+                {
+                    rot += rotation;
+                }
             }
-            rot += this.rotation;
             return rot;
         }
 
@@ -477,3 +471,9 @@ namespace DDW.Display
         }
     }
 }
+
+
+
+
+
+

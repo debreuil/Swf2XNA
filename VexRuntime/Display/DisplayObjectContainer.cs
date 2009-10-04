@@ -21,16 +21,23 @@ namespace DDW.Display
         }       
 	    public virtual void AddChild(DisplayObject o)
         {
-            o.Parent = this;
 		    children.Add(o);
-            o.Added(EventArgs.Empty);
+            LinkChild(o);
 	    }
         public virtual void AddChildAt(int index, DisplayObject o)
         {
-            o.Parent = this;
 		    children.Insert(index, o);
-            o.Added(EventArgs.Empty);
+            LinkChild(o);
 	    }
+        private void LinkChild(DisplayObject o)
+        {
+            o.Parent = this;
+            if (o.EndFrame > LastChildFrame)
+            {
+                LastChildFrame = o.EndFrame;
+            }
+            o.Added(EventArgs.Empty);
+        }
         public virtual bool Contains(DisplayObject o)
 	    {
 		    return children.Contains(o);
@@ -67,7 +74,7 @@ namespace DDW.Display
         }
         public virtual void RemoveChild(DisplayObject o)
         {
-            o.Removed(EventArgs.Empty);
+            DelinkChild(o);
 		    children.Remove(o);
         }
         public virtual void RemoveChildAt(int index)
@@ -75,6 +82,14 @@ namespace DDW.Display
             if (index > 0 && index < children.Count)
             {
                 RemoveChild(children[index]); // todo: display objects may need to compare on depth
+            }
+        }
+        public virtual void DelinkChild(DisplayObject o)
+        {
+            o.Removed(EventArgs.Empty);
+            if (o.EndFrame >= LastChildFrame)
+            {
+                LastChildFrame = children.Count == 0 ? 0 : children.Max(ef => ef.EndFrame);
             }
         }
         public virtual void Clear()
@@ -118,13 +133,47 @@ namespace DDW.Display
             }
         }
 
+        public virtual void Play()
+        {
+            isPlaying = true;
+        }
+        public virtual void Stop()
+        {
+            isPlaying = false;
+        }
+        public virtual void GotoAndPlay(uint frame)
+        {
+            CurChildFrame = frame < 0 ? 0 : frame > LastChildFrame ? LastChildFrame : frame;
+            isPlaying = true;
+        }
+        public virtual void GotoAndStop(uint frame)
+        {
+            CurChildFrame = frame < 0 ? 0 : frame > LastChildFrame ? LastChildFrame : frame;
+            isPlaying = false;
+        }
+
+        protected List<DisplayObject> DisplayList = new List<DisplayObject>();
+        public uint CurChildFrame;
+        public uint LastChildFrame;
         public override void Update(GameTime gameTime)
         {
-            //todo: use a display list
             base.Update(gameTime);
+
+            if (isPlaying && LastChildFrame > 0)
+            {
+                CurFrameTime += (float)gameTime.ElapsedGameTime.TotalMilliseconds;
+                CurChildFrame = ((uint)(CurFrameTime / mspf));
+                if (CurChildFrame > LastChildFrame)
+                {
+                    CurChildFrame = 0;
+                    CurFrameTime %= (mspf * LastChildFrame);
+                }
+            }
+
             foreach (DisplayObject d in children)
             {
                 d.Update(gameTime);
+
             }
         }
         public override void Draw(SpriteBatch batch)
@@ -134,19 +183,11 @@ namespace DDW.Display
             {
                 if (d.Visible && d.Alpha > 0)
                 {
-                    if (CurFrame >= d.StartFrame && CurFrame < d.StartFrame + d.TotalFrames)
+                    if (CurChildFrame >= d.StartFrame && CurChildFrame <= d.EndFrame)
                     {
                         d.Draw(batch);
                     }
-                    else
-                    {
-                        int x = 5;
-                    }
                 }
-                //if (d.Visible && d.Alpha > 0)
-                //{
-                //    d.Draw(batch);
-                //}
             }
         }
 
@@ -157,7 +198,6 @@ namespace DDW.Display
                 d.Added(e);
             }
             base.Added(e);
-            totalMilliseconds = (int)(stage.MillisecondsPerFrame * TotalFrames);
         }
         public override void Removed(EventArgs e)
         {

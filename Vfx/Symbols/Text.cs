@@ -18,7 +18,8 @@ namespace DDW.Vex
         public int UserData { get { return userData; } set { userData = value; } }
 
 		private Rectangle strokeBounds;
-		public Rectangle StrokeBounds { get { return strokeBounds; } set { strokeBounds = value; } }
+		public Rectangle StrokeBounds { get { return strokeBounds; } 
+            set { strokeBounds = value; } }
 
 		public List<TextRun> TextRuns = new List<TextRun>();
 		public Matrix Matrix;

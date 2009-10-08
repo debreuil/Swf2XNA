@@ -410,7 +410,8 @@ namespace DDW.V2D
                     ConstructorInfo ci = ft.GetConstructor(new Type[] { typeof(Texture2D), typeof(V2DInstance) });
                     result = (V2DSprite)ci.Invoke(new object[] { texture, inst });
                     fi.SetValue(parent, result);
-                }else if (ft.Equals(typeof(Sprite)) || ft.IsSubclassOf(typeof(Sprite)))
+                }
+                else if (ft.Equals(typeof(Sprite)) || ft.IsSubclassOf(typeof(Sprite)))
                 {
                     ConstructorInfo ci = ft.GetConstructor(new Type[] { typeof(Texture2D), typeof(V2DInstance) });
                     result = (Sprite)ci.Invoke(new object[] { texture, inst  });

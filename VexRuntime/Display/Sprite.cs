@@ -19,6 +19,7 @@ namespace DDW.Display
         public Sprite(Texture2D texture, V2DInstance inst)
         {
             Texture = texture;
+            this.Depth = inst.Depth;
             this.X = (int)inst.X;
             this.Y = (int)inst.Y;
             this.Rotation = inst.Rotation;

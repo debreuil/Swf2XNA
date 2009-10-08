@@ -6,6 +6,7 @@ using DDW.V2D;
 using DDW.V2D.Serialization;
 using Box2DX.Dynamics;
 using DDW.Display;
+using VexRuntime.Components;
 
 namespace V2DTest
 {
@@ -16,6 +17,7 @@ namespace V2DTest
         public V2DSprite star;
         public V2DSprite star2;
         public V2DSprite car;
+        public Button btPlay;
         
         public DistanceJointDemo()
         {
@@ -27,13 +29,15 @@ namespace V2DTest
         public override void Initialize()
         {
             base.Initialize();
+            //bkg.Visible = false;
             bkg.Play();
             star2.Play();
-            //star2.Alpha = .5f;
             star.Play();
             car.GotoAndStop(4);
+            //star2.Alpha = .5f;
             //hex[0].Alpha = .5f;
-           // hex[1].Alpha = .5f;
+            //hex[1].Alpha = .5f;
+            btPlay.Select();
         }
     }
 }

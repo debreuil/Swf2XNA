@@ -36,6 +36,8 @@ namespace DDW.Display
             {
                 LastChildFrame = o.EndFrame;
             }
+            children.Sort((a, b) => a.Depth.CompareTo(b.Depth));
+
             o.Added(EventArgs.Empty);
         }
         public virtual bool Contains(DisplayObject o)

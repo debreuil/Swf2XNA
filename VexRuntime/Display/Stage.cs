@@ -32,6 +32,7 @@ namespace DDW.Display
         public override void Draw(SpriteBatch batch)
         {
             //batch.Begin();
+            depthCounter = 1;
             batch.Begin(SpriteBlendMode.AlphaBlend, SpriteSortMode.BackToFront, SaveStateMode.None);
             base.Draw(batch);
             batch.End();

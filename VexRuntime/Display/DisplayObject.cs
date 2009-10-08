@@ -11,6 +11,7 @@ namespace DDW.Display
 {
     public class DisplayObject : IDrawable
     {
+        public static uint depthCounter;
         protected Texture2D texture; // texture evetually will be a 'graphics' generic class
         public string instanceName;
         public string definitonName;
@@ -20,7 +21,7 @@ namespace DDW.Display
         public uint EndFrame = 1;
         public uint CurFrame = 0;
         public float CurFrameTime = 0;
-        public bool isPlaying = false;
+        public bool isPlaying = true;//false;//
 
         protected Screen screen;
         protected float mspf;
@@ -380,24 +381,6 @@ namespace DDW.Display
            stage.ObjectRemovedFromStage(this);
         }
 
-        public virtual void Update(GameTime gameTime)
-        {
-        }
-        public virtual void Draw(SpriteBatch batch)
-        {
-            if (texture != null)
-            {
-                Vector2 gOffset = GetGlobalOffset(Vector2.Zero);
-                // todo: change transform time to frame
-                V2DTransform t = this.transforms.First(tr =>
-                    tr.StartFrame    <= (parent.CurChildFrame) &&
-                    tr.EndFrame      >= (parent.CurChildFrame));
-                float gRotation = (GetGlobalRotation(t.Rotation));
-                batch.Draw(texture, gOffset, sourceRectangle, color,
-                    gRotation, origin, scale, spriteEffects, depth/1000f);
-            }
-        }
-
         public void LocalToGlobal(ref float x, ref float y)
         {
             if (parent != null)
@@ -454,6 +437,24 @@ namespace DDW.Display
                 }
             }
             return rot;
+        }
+
+        public virtual void Update(GameTime gameTime)
+        {
+        }
+        public virtual void Draw(SpriteBatch batch)
+        {
+            if (texture != null)
+            {
+                Vector2 gOffset = GetGlobalOffset(Vector2.Zero);
+                // todo: change transform time to frame
+                V2DTransform t = this.transforms.First(tr =>
+                    tr.StartFrame    <= (parent.CurChildFrame) &&
+                    tr.EndFrame      >= (parent.CurChildFrame));
+                float gRotation = (GetGlobalRotation(t.Rotation));
+                batch.Draw(texture, gOffset, sourceRectangle, color,
+                    gRotation, origin, scale, spriteEffects, 1f/depthCounter++);
+            }
         }
 
         public override bool Equals(object obj)

@@ -13,7 +13,7 @@ namespace V2DTest
             using (V2DGame game = new TestGame())
             {
                 game.Window.Title = "Flash to XNA with Box2D";
-
+                game.IsFixedTimeStep = false;
                 game.Run();
             }
         }

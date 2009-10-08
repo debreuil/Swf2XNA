@@ -141,6 +141,10 @@ namespace DDW.VexTo2DPhysics
                     continue;
                 }
                 Instance inst = (Instance)instance;
+                if (!curVo.Definitions.ContainsKey(inst.DefinitionId))
+                {
+                    throw new KeyNotFoundException("Defs have no key: " + inst.DefinitionId + " named: " + inst.Name);
+                }
                 IDefinition def = curVo.Definitions[inst.DefinitionId];
                 if (inst.Name == null)
                 {

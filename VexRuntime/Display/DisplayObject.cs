@@ -429,7 +429,7 @@ namespace DDW.Display
                 {
                     V2DTransform t = transforms.First(tr =>
                         tr.StartFrame <= (parent.CurChildFrame) && tr.EndFrame >= (parent.CurChildFrame));
-                    rot += t.Rotation + rotation;
+                    rot += t.Rotation + rotation/180f * 3.14159265f;
                 }
                 else
                 {
@@ -437,6 +437,25 @@ namespace DDW.Display
                 }
             }
             return rot;
+        }
+
+        public Vector2 GetGlobalScale(Vector2 sc)
+        {
+            if (parent != null)
+            {
+                sc = parent.GetGlobalScale(sc);
+                if (transforms != null)
+                {
+                    V2DTransform t = transforms.First(tr =>
+                        tr.StartFrame <= (parent.CurChildFrame) && tr.EndFrame >= (parent.CurChildFrame));
+                    sc.X *= t.ScaleX;
+                    sc.Y *= t.ScaleY;
+                }
+                else
+                {
+                }
+            }
+            return sc;
         }
 
         public virtual void Update(GameTime gameTime)
@@ -447,13 +466,32 @@ namespace DDW.Display
             if (texture != null)
             {
                 Vector2 gOffset = GetGlobalOffset(Vector2.Zero);
-                // todo: change transform time to frame
-                V2DTransform t = this.transforms.First(tr =>
-                    tr.StartFrame    <= (parent.CurChildFrame) &&
-                    tr.EndFrame      >= (parent.CurChildFrame));
-                float gRotation = (GetGlobalRotation(t.Rotation));
+                float gRotation = GetGlobalRotation(0);//t.Rotation);
+                Vector2 gScale =  GetGlobalScale(new Vector2(1, 1));//
+                Vector2 gOrigin = origin;
+
+                SpriteEffects se = SpriteEffects.None;
+                float xdif = 0;
+                float ydif = 0;
+                if (gScale.X < 0)
+                {
+                    se |= SpriteEffects.FlipHorizontally;
+                    gScale.X = Math.Abs(gScale.X);
+                    xdif = Width - (Width - origin.X) * 2;
+                    gOrigin.X += xdif;
+                    gRotation /= 2f;
+                }
+                if (gScale.Y < 0)
+                {
+                   se |= SpriteEffects.FlipVertically;
+                    gScale.Y = Math.Abs(gScale.Y);
+                    ydif = Height - (Height - origin.Y) * 2;
+                    gOrigin.Y -= ydif;
+                    gRotation /= 2f;
+                }
+
                 batch.Draw(texture, gOffset, sourceRectangle, color,
-                    gRotation, origin, scale, spriteEffects, 1f/depthCounter++);
+                    gRotation, gOrigin, gScale, se, 1f / depthCounter++);
             }
         }
 

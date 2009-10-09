@@ -224,7 +224,8 @@ namespace DDW.VexTo2DPhysics
         private Instance2D CreateInstance2D(Instance inst, IDefinition def)
         {
             MatrixComponents mc = inst.Transformations[0].Matrix.GetMatrixComponents();
-            Instance2D result = new Instance2D(inst.Name, def.Name, mc.TranslateX, mc.TranslateY, mc.Rotation, mc.ScaleX, mc.ScaleY);
+            //Instance2D result = new Instance2D(inst.Name, def.Name, mc.TranslateX, mc.TranslateY, mc.Rotation, mc.ScaleX, mc.ScaleY);
+            Instance2D result = new Instance2D(inst.Name, def.Name, 0,0,0,1,1);
             result.Depth = inst.Depth;
             result.Transforms = inst.Transformations;
             result.Definition = definitions.Find(d => d.Id == inst.DefinitionId);

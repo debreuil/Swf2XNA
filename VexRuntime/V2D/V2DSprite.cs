@@ -9,7 +9,6 @@ using Box2DX.Dynamics;
 using Box2DX.Collision;
 using Box2DX.Common;
 using VexRuntime.V2D;
-using VexRuntime.Display;
 
 namespace DDW.V2D
 {
@@ -30,7 +29,8 @@ namespace DDW.V2D
         protected static short groupIndexCounter = 1;
 
 
-        public V2DSprite(Texture2D texture, V2DInstance instance) : base(texture)
+        public V2DSprite(Texture2D texture, V2DInstance instance)
+            : base(texture)
         {
             this.texture = texture;
             this.instance = instance;
@@ -304,14 +304,14 @@ namespace DDW.V2D
                 this.Depth = instance.Depth;
 
                 // normalize all transforms to base position
-                this.transforms = new Transform[instance.Transforms.Length];
+                this.transforms = new V2DTransform[instance.Transforms.Length];
                 float ox = instance.X;
                 float oy = instance.Y;
                 for (int i = 0; i < instance.Transforms.Length; i++)
                 {
-                    this.transforms[i] = new Transform(instance.Transforms[i]);
-                    //this.transforms[i].TranslationX -= ox;
-                    //this.transforms[i].TranslationY -= oy;
+                    this.transforms[i] = instance.Transforms[i].Clone();
+                    this.transforms[i].TranslationX -= ox;
+                    this.transforms[i].TranslationY -= oy;
                 }
                 this.polygons = instance.Definition.V2DShapes;
                 this.density = instance.Density;

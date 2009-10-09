@@ -144,15 +144,22 @@ namespace DDW.VexTo2DPhysics
             {
                 Transform tin = trs[i];
 
-                MatrixComponents mc = tin.Matrix.GetMatrixComponents();
+                //MatrixComponents mc = tin.Matrix.GetMatrixComponents();
+                //V2DTransform tout = new V2DTransform(
+                //    (uint)Math.Floor(tin.StartTime / (1000d / v2dWorld.FrameRate)), 
+                //    (uint)Math.Floor(tin.EndTime / (1000d / v2dWorld.FrameRate)), 
+                //    mc.ScaleX, 
+                //    mc.ScaleY, 
+                //    (float)(mc.Rotation * 3.14159265 / 180), 
+                //    mc.TranslateX, 
+                //    mc.TranslateY, 
+                //    tin.Alpha);
+                
                 V2DTransform tout = new V2DTransform(
                     (uint)Math.Floor(tin.StartTime / (1000d / v2dWorld.FrameRate)), 
-                    (uint)Math.Floor(tin.EndTime / (1000d / v2dWorld.FrameRate)), 
-                    mc.ScaleX, 
-                    mc.ScaleY, 
-                    (float)(mc.Rotation * 3.14159265 / 180), 
-                    mc.TranslateX, 
-                    mc.TranslateY, 
+                    (uint)Math.Floor(tin.EndTime / (1000d / v2dWorld.FrameRate)),
+                    new V2DMatrix(  tin.Matrix.ScaleX, tin.Matrix.Rotate0, tin.Matrix.Rotate1, tin.Matrix.ScaleX, 
+                                    tin.Matrix.TranslateX, tin.Matrix.TranslateY),
                     tin.Alpha);
 
                 tout.IsTweening = tin.IsTweening;

@@ -6,6 +6,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
 using VexRuntime.V2D;
 using DDW.V2D;
+using VexRuntime.Display;
 
 namespace DDW.Display
 {
@@ -42,7 +43,7 @@ namespace DDW.Display
         protected float alpha = 1;
 
         protected bool visible = true;
-        protected V2DTransform[] transforms;
+        protected Transform[] transforms;
         protected DisplayObjectContainer parent;
         protected Stage stage;
 
@@ -240,7 +241,7 @@ namespace DDW.Display
                 visible = value;
             }
         }
-        public V2DTransform[] Transforms
+        public Transform[] Transforms
         {
             get
             {
@@ -299,7 +300,7 @@ namespace DDW.Display
             result.spriteEffects = spriteEffects;
             result.alpha = alpha;
             result.visible = visible;
-            result.transforms = (V2DTransform[])transforms.Clone();
+            result.transforms = (Transform[])transforms.Clone();
             result.parent = parent;
             result.stage = stage;
             result.id = idCounter++;
@@ -407,10 +408,10 @@ namespace DDW.Display
                 offset = parent.GetGlobalOffset(offset);
                 if (transforms != null)
                 {
-                    V2DTransform t = transforms.First(tr =>
-                        tr.StartFrame <= (parent.CurChildFrame) && tr.EndFrame >= (parent.CurChildFrame));
-                    offset.X += t.TranslationX + destinationRectangle.X;
-                    offset.Y += t.TranslationY + destinationRectangle.Y;
+                    Transform t = transforms.First(tr => tr.StartFrame <= (parent.CurChildFrame) && tr.EndFrame >= (parent.CurChildFrame));
+
+                    offset.X += t.Matrix.M31 + destinationRectangle.X;
+                    offset.Y += t.Matrix.M32 + destinationRectangle.Y;
                 }
                 else
                 {
@@ -427,9 +428,18 @@ namespace DDW.Display
                 rot = parent.GetGlobalRotation(rot);
                 if (transforms != null)
                 {
-                    V2DTransform t = transforms.First(tr =>
-                        tr.StartFrame <= (parent.CurChildFrame) && tr.EndFrame >= (parent.CurChildFrame));
-                    rot += t.Rotation + rotation;
+                    Transform t = transforms.First(tr => tr.StartFrame <= (parent.CurChildFrame) && tr.EndFrame >= (parent.CurChildFrame));
+                    Vector3 sc;
+                    Quaternion qu;
+                    Vector3 trs;
+                    t.Matrix.Decompose(out sc, out qu, out trs);
+
+                    //rot = (float)Math.Atan2(modPts[1].Y, modPts[1].X); // x axis
+                    //rot = (float)(rot / Math.PI * 180);
+                    //if (rot == -0) rot = 0;
+                    //if (rot == -180) rot = 180;
+                  
+                    rot += 0 + rotation; //t.Rotation + rotation;
                 }
                 else
                 {
@@ -447,11 +457,11 @@ namespace DDW.Display
             if (texture != null)
             {
                 Vector2 gOffset = GetGlobalOffset(Vector2.Zero);
-                // todo: change transform time to frame
-                V2DTransform t = this.transforms.First(tr =>
+                // todo: change transform time to frame, use matrix
+                Transform t = this.transforms.First(tr =>
                     tr.StartFrame    <= (parent.CurChildFrame) &&
                     tr.EndFrame      >= (parent.CurChildFrame));
-                float gRotation = (GetGlobalRotation(t.Rotation));
+                float gRotation = 0;// (GetGlobalRotation(t.Matrix)); 
                 batch.Draw(texture, gOffset, sourceRectangle, color,
                     gRotation, origin, scale, spriteEffects, 1f/depthCounter++);
             }

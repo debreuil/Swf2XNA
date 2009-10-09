@@ -476,7 +476,7 @@ namespace DDW.Display
                 if (gScale.X < 0)
                 {
                     se |= SpriteEffects.FlipHorizontally;
-                    gScale.X = Math.Abs(gScale.X);
+                    gScale.X = Math.Abs(gScale.X); 
                     xdif = Width - (Width - origin.X) * 2;
                     gOrigin.X += xdif;
                     gRotation /= 2f;

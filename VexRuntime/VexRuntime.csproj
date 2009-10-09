@@ -54,6 +54,7 @@
     <Compile Include="Display\Screen.cs" />
     <Compile Include="Display\Sprite.cs" />
     <Compile Include="Display\Stage.cs" />
+    <Compile Include="Display\Transform.cs" />
     <Compile Include="Input\Cursor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="V2D\Serialization\V2DJointKind.cs" />

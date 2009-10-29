@@ -3,7 +3,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.21022</ProductVersion>
+    <ProductVersion>9.0.30729</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{75D33295-0B9A-4E03-83C3-2CC798741627}</ProjectGuid>
     <OutputType>Library</OutputType>
@@ -47,6 +47,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Components\Button.cs" />
+    <Compile Include="Components\ButtonTabGroup.cs" />
+    <Compile Include="Components\Group.cs" />
     <Compile Include="Display\DisplayObject.cs" />
     <Compile Include="Display\DisplayObjectContainer.cs" />
     <Compile Include="Display\IDrawable.cs" />
@@ -54,8 +56,11 @@
     <Compile Include="Display\Screen.cs" />
     <Compile Include="Display\Sprite.cs" />
     <Compile Include="Display\Stage.cs" />
-    <Compile Include="Display\Transform.cs" />
     <Compile Include="Input\Cursor.cs" />
+    <Compile Include="Input\Direction.cs" />
+    <Compile Include="Input\InputManager.cs" />
+    <Compile Include="Input\Move.cs" />
+    <Compile Include="Input\MoveList.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="V2D\Serialization\V2DJointKind.cs" />
     <Compile Include="V2D\Serialization\SymbolImport.cs" />

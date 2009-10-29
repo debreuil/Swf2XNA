@@ -11,8 +11,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XamlRenderer", "XamlRendere
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SwfToXaml", "SwfToXaml\SwfToXaml.csproj", "{334C924E-219B-4DD5-BCCD-4AE6BEFBC364}"
 EndProject
-Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "TheConverted", "TheConverted\TheConverted.vdproj", "{AB16D0A4-5FD4-40A0-90F2-A9227178DAD7}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XamlViewer", "XamlViewer\XamlViewer.csproj", "{C17A9FBE-B06E-4D3F-8E4C-5F8CDE4E37B9}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SwfDump", "SwfDump\SwfDump.csproj", "{70BE9310-9EF9-4553-9A6F-68B25D71368A}"
@@ -30,6 +28,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VexPipeline", "VexPipeline\VexPipeline.csproj", "{7118D9A5-616B-4329-831B-C42624D711CE}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Box2DX", "..\Box2D\src\Box2DX.csproj", "{C157BCA5-BAC7-455F-A7DE-59D506D46ECF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VexPipelineReader", "VexPipelineReader\VexPipelineReader.csproj", "{5A3DFD5E-6972-4252-B800-C884FCCB3C33}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "V2DTests", "V2DTests\V2DTests.csproj", "{DC6234AB-6264-45C0-82F5-4FCD9D14AA3D}"
 EndProject
@@ -117,16 +117,6 @@ Global
 		{334C924E-219B-4DD5-BCCD-4AE6BEFBC364}.Release|x86.ActiveCfg = Release|Any CPU
 		{334C924E-219B-4DD5-BCCD-4AE6BEFBC364}.Release|Xbox 360.ActiveCfg = Release|Any CPU
 		{334C924E-219B-4DD5-BCCD-4AE6BEFBC364}.Release|Zune.ActiveCfg = Release|Any CPU
-		{AB16D0A4-5FD4-40A0-90F2-A9227178DAD7}.Debug|Any CPU.ActiveCfg = Debug
-		{AB16D0A4-5FD4-40A0-90F2-A9227178DAD7}.Debug|Mixed Platforms.ActiveCfg = Debug
-		{AB16D0A4-5FD4-40A0-90F2-A9227178DAD7}.Debug|x86.ActiveCfg = Debug
-		{AB16D0A4-5FD4-40A0-90F2-A9227178DAD7}.Debug|Xbox 360.ActiveCfg = Debug
-		{AB16D0A4-5FD4-40A0-90F2-A9227178DAD7}.Debug|Zune.ActiveCfg = Debug
-		{AB16D0A4-5FD4-40A0-90F2-A9227178DAD7}.Release|Any CPU.ActiveCfg = Release
-		{AB16D0A4-5FD4-40A0-90F2-A9227178DAD7}.Release|Mixed Platforms.ActiveCfg = Release
-		{AB16D0A4-5FD4-40A0-90F2-A9227178DAD7}.Release|x86.ActiveCfg = Release
-		{AB16D0A4-5FD4-40A0-90F2-A9227178DAD7}.Release|Xbox 360.ActiveCfg = Release
-		{AB16D0A4-5FD4-40A0-90F2-A9227178DAD7}.Release|Zune.ActiveCfg = Release
 		{C17A9FBE-B06E-4D3F-8E4C-5F8CDE4E37B9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{C17A9FBE-B06E-4D3F-8E4C-5F8CDE4E37B9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C17A9FBE-B06E-4D3F-8E4C-5F8CDE4E37B9}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
@@ -257,6 +247,20 @@ Global
 		{C157BCA5-BAC7-455F-A7DE-59D506D46ECF}.Release|x86.ActiveCfg = Release|Any CPU
 		{C157BCA5-BAC7-455F-A7DE-59D506D46ECF}.Release|Xbox 360.ActiveCfg = Release|Any CPU
 		{C157BCA5-BAC7-455F-A7DE-59D506D46ECF}.Release|Zune.ActiveCfg = Release|Any CPU
+		{5A3DFD5E-6972-4252-B800-C884FCCB3C33}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5A3DFD5E-6972-4252-B800-C884FCCB3C33}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5A3DFD5E-6972-4252-B800-C884FCCB3C33}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{5A3DFD5E-6972-4252-B800-C884FCCB3C33}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{5A3DFD5E-6972-4252-B800-C884FCCB3C33}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{5A3DFD5E-6972-4252-B800-C884FCCB3C33}.Debug|Xbox 360.ActiveCfg = Debug|Any CPU
+		{5A3DFD5E-6972-4252-B800-C884FCCB3C33}.Debug|Zune.ActiveCfg = Debug|Any CPU
+		{5A3DFD5E-6972-4252-B800-C884FCCB3C33}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5A3DFD5E-6972-4252-B800-C884FCCB3C33}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5A3DFD5E-6972-4252-B800-C884FCCB3C33}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{5A3DFD5E-6972-4252-B800-C884FCCB3C33}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{5A3DFD5E-6972-4252-B800-C884FCCB3C33}.Release|x86.ActiveCfg = Release|Any CPU
+		{5A3DFD5E-6972-4252-B800-C884FCCB3C33}.Release|Xbox 360.ActiveCfg = Release|Any CPU
+		{5A3DFD5E-6972-4252-B800-C884FCCB3C33}.Release|Zune.ActiveCfg = Release|Any CPU
 		{DC6234AB-6264-45C0-82F5-4FCD9D14AA3D}.Debug|Any CPU.ActiveCfg = Debug|x86
 		{DC6234AB-6264-45C0-82F5-4FCD9D14AA3D}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
 		{DC6234AB-6264-45C0-82F5-4FCD9D14AA3D}.Debug|Mixed Platforms.Build.0 = Debug|x86

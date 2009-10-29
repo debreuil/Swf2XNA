@@ -10,6 +10,7 @@ using DDW.Vex;
 
 using Ms = System.Drawing;
 using Vex = DDW.Vex;
+using System.Drawing.Text;
 
 namespace DDW.Gdi
 {
@@ -49,6 +50,9 @@ namespace DDW.Gdi
                         1, 0, 0, 1, -symbol.StrokeBounds.Point.X, -symbol.StrokeBounds.Point.Y);
                     g = Graphics.FromImage(myBitmap);
                     g.SmoothingMode = SmoothingMode.AntiAlias;
+                    g.InterpolationMode = InterpolationMode.HighQualityBicubic;
+                    g.CompositingMode = CompositingMode.SourceOver;
+                    g.CompositingQuality = CompositingQuality.AssumeLinear;
 
                     DrawSymbol(symbol);
 
@@ -84,6 +88,9 @@ namespace DDW.Gdi
                                 1, 0, 0, 1, -namedSymbol.StrokeBounds.Point.X, -namedSymbol.StrokeBounds.Point.Y);
                             g = Graphics.FromImage(myBitmap);
                             g.SmoothingMode = SmoothingMode.AntiAlias;
+                            g.InterpolationMode = InterpolationMode.HighQualityBicubic;
+                            g.CompositingMode = CompositingMode.SourceOver;
+                            g.CompositingQuality = CompositingQuality.AssumeLinear;
 
                             DrawFilteredTimeline(v, namedSymbol);
                             translateMatrix.Dispose();
@@ -108,6 +115,9 @@ namespace DDW.Gdi
                         1, 0, 0, 1, -sy.StrokeBounds.Point.X, -sy.StrokeBounds.Point.Y);
                     g = Graphics.FromImage(myBitmap);
                     g.SmoothingMode = SmoothingMode.AntiAlias;
+                    g.InterpolationMode = InterpolationMode.HighQualityBicubic;
+                    g.CompositingMode = CompositingMode.SourceOver;
+                    g.CompositingQuality = CompositingQuality.AssumeLinear;
 
                     DrawFilteredSymbol(sy);
                     translateMatrix.Dispose();
@@ -130,10 +140,9 @@ namespace DDW.Gdi
 
                     myBitmap.SetResolution(96, 96);
                     g = Graphics.FromImage(myBitmap);
-                    g.SmoothingMode = SmoothingMode.AntiAlias;
 
                     DrawText(tx, new DDW.Vex.Matrix(1, 0, 0, 1, -tx.StrokeBounds.Point.X, -tx.StrokeBounds.Point.Y));
-                    translateMatrix.Dispose();
+                    //translateMatrix.Dispose();
                     bmpFrames.Add(myBitmap);
 
                     string name = s + "#" + tx.Id;
@@ -210,7 +219,6 @@ namespace DDW.Gdi
         {
             this.g = g;
             translateMatrix = new System.Drawing.Drawing2D.Matrix();
-            g.SmoothingMode = SmoothingMode.AntiAlias;
             DrawSymbol(symbol);
             translateMatrix.Dispose();
         }
@@ -309,6 +317,13 @@ namespace DDW.Gdi
 
                 System.Drawing.Color col = System.Drawing.Color.FromArgb(tr.Color.A, tr.Color.R, tr.Color.G, tr.Color.B);
                 Brush b = new SolidBrush(col);
+
+                g.SmoothingMode = SmoothingMode.HighQuality;
+                g.InterpolationMode = InterpolationMode.HighQualityBicubic;
+                g.TextRenderingHint = TextRenderingHint.AntiAliasGridFit;
+                g.CompositingMode = CompositingMode.SourceOver;
+                g.CompositingQuality = CompositingQuality.HighQuality;
+
                 g.DrawString(s, font, b, tx.Matrix.TranslateX + m.TranslateX, tx.Matrix.TranslateY + m.TranslateY);
 
                 b.Dispose();

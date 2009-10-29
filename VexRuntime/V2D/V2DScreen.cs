@@ -14,6 +14,7 @@ using Box2DX.Dynamics;
 
 using DDW.Display;
 using DDW.V2D.Serialization;
+using DDW.Input;
 
 namespace DDW.V2D
 {
@@ -159,6 +160,7 @@ namespace DDW.V2D
             //}
         }
 
+        Stack<V2DDefinition> defStack = new Stack<V2DDefinition>();
         protected void AddInstance(V2DInstance inst, DisplayObjectContainer parent)
         {
             if (inst != null)
@@ -187,6 +189,7 @@ namespace DDW.V2D
                     }
 
 
+                    defStack.Push(def);
                     // instances
                     for (int i = 0; i < def.Instances.Count; i++)
                     {
@@ -197,9 +200,11 @@ namespace DDW.V2D
                     {
                         AddJoint(def.Joints[i], sp.X, sp.Y);
                     }
+                    defStack.Pop();
                 }
             }
         }
+
         protected void RemoveInstance(V2DInstance instance)
         {
             RemoveInstanceByName(instance.InstanceName);
@@ -401,21 +406,38 @@ namespace DDW.V2D
                 index =  int.Parse(m.Groups[2].Value);
             }
 
-            FieldInfo fi = t.GetField(instName);
+            FieldInfo fi = t.GetField(instName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
             if (fi != null)
             {
                 Type ft = fi.FieldType;
-                if (ft.Equals(typeof(V2DSprite)) || ft.IsSubclassOf(typeof(V2DSprite)))
+
+                if ( ft.BaseType.Name == typeof(VexRuntime.Components.Group<>).Name && // IsSubclassOf etc doesn't work on generics?
+                     ft.BaseType.Namespace == typeof(VexRuntime.Components.Group<>).Namespace)
                 {
-                    ConstructorInfo ci = ft.GetConstructor(new Type[] { typeof(Texture2D), typeof(V2DInstance) });
-                    result = (V2DSprite)ci.Invoke(new object[] { texture, inst });
-                    fi.SetValue(parent, result);
+                    if(fi.GetValue(parent) == null)
+                    {
+                        ConstructorInfo ci = ft.GetConstructor(new Type[] { typeof(Texture2D), typeof(V2DInstance) });
+                        result = (DisplayObject)ci.Invoke(new object[] { texture, inst });
+                        fi.SetValue(parent, result);
+                    }
+
                 }
-                else if (ft.Equals(typeof(Sprite)) || ft.IsSubclassOf(typeof(Sprite)))
+                else if (ft.IsArray)
                 {
-                    ConstructorInfo ci = ft.GetConstructor(new Type[] { typeof(Texture2D), typeof(V2DInstance) });
-                    result = (Sprite)ci.Invoke(new object[] { texture, inst  });
-                    fi.SetValue(parent, result);
+                    object array = fi.GetValue(parent);
+                    Type elementType = ft.GetElementType();
+                    if (array == null)
+                    {
+                        int arrayLength = GetArrayLength(instName);
+                        array = Array.CreateInstance(elementType, arrayLength);
+                        fi.SetValue(parent, array);
+                    }
+                    // add element
+                    ConstructorInfo elementCtor = elementType.GetConstructor(new Type[] { typeof(Texture2D), typeof(V2DInstance) });
+                    result = (DisplayObject)elementCtor.Invoke(new object[] { texture, inst });
+
+                    MethodInfo mi = array.GetType().GetMethod("SetValue", new Type[] { elementType, index.GetType() });
+                    mi.Invoke(array, new object[] { result, index });
                 }
                 else if (typeof(System.Collections.ICollection).IsAssignableFrom(ft))
                 {
@@ -423,27 +445,26 @@ namespace DDW.V2D
                     if (genTypes.Length == 1) // only support single type generics (eg List<>) for now
                     {
                         Type gt = genTypes[0];
-                        object o = fi.GetValue(parent);
-                        if (o == null) // ensure list created
+                        object collection = fi.GetValue(parent);
+                        if (collection == null) // ensure list created
                         {
                             ConstructorInfo ci = ft.GetConstructor(new Type[] {});
-                            o = ci.Invoke(new object[] {});
-                            fi.SetValue(parent, o);
+                            collection = ci.Invoke(new object[] { });
+                            fi.SetValue(parent, collection);
                         }
 
-                        if (gt.Equals(typeof(V2DSprite)) || gt.IsSubclassOf(typeof(V2DSprite)))
-                        {
-                            ConstructorInfo ci = gt.GetConstructor(new Type[] { typeof(Texture2D), typeof(V2DInstance) });
-                            result = (V2DSprite)ci.Invoke(new object[] { texture, inst });
-                            ((ICollection<V2DSprite>)o).Add((V2DSprite)result);
-                        }
-                        else if (gt.Equals(typeof(Sprite)) || gt.IsSubclassOf(typeof(Sprite)))
-                        {
-                            ConstructorInfo ci = gt.GetConstructor(new Type[] { typeof(Texture2D), typeof(V2DInstance) });
-                            result = (Sprite)ci.Invoke(new object[] { texture, inst });
-                            ((ICollection<Sprite>)o).Add((Sprite)result);
-                        }                        
+                        // add element
+                        ConstructorInfo elementCtor = gt.GetConstructor(new Type[] { typeof(Texture2D), typeof(V2DInstance) });
+                        result = (DisplayObject)elementCtor.Invoke(new object[] { texture, inst });
+                        MethodInfo mi = collection.GetType().GetMethod("Add");
+                        mi.Invoke(collection, new object[] { result });
                     }
+                }
+                else if (ft.Equals(typeof(DisplayObject)) || ft.IsSubclassOf(typeof(DisplayObject)))
+                {
+                    ConstructorInfo ci = ft.GetConstructor(new Type[] { typeof(Texture2D), typeof(V2DInstance) });
+                    result = (DisplayObject)ci.Invoke(new object[] { texture, inst  });
+                    fi.SetValue(parent, result);
                 }
                 else
                 {
@@ -451,6 +472,23 @@ namespace DDW.V2D
                 }
             }
 
+            return result;
+        }
+        private int GetArrayLength(string instName)
+        {
+            int result = 1; // will always be at least one, allows dopping index in def for single arrays
+            foreach (V2DInstance vi in defStack.Peek().Instances)
+            {
+                if(vi.InstanceName.StartsWith(instName))
+                {
+                    string s = vi.InstanceName.Substring(instName.Length);
+                    int val;
+                    if(int.TryParse(s, out val))
+                    {
+                        result = System.Math.Max(val + 1, result);
+                    }
+                }
+            }
             return result;
         }
     }

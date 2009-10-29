@@ -199,9 +199,10 @@ namespace DDW.V2D
                 }
                 else
                 {
-                    //view.X = this.X;
-                    //view.Y = this.Y;
-                    //view.Rotation = (float)(this.rotation / System.Math.PI * 180);
+                    //this.X = 0;
+                    //this.Y = 0;
+                    //this.Rotation = 0;
+                    //this.Scale = new Vector2(1, 1);
                 }
 
                 if (body != null)

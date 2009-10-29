@@ -56,7 +56,8 @@ namespace DDW.Swf
 		public ClipActions ClipActions;
 
 		public PlaceObject2Tag()
-		{
+        {
+            tagType = TagType.PlaceObject2;
 		}
 		public PlaceObject2Tag(SwfReader r, byte swfVersion)
 		{

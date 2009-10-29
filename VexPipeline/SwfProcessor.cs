@@ -15,8 +15,9 @@ namespace DDW.VexPipeline
     public class SwfProcessor : ContentProcessor<string, V2DContent>
     {
         public override V2DContent Process(string fileName, ContentProcessorContext context)
-        {
+        { 
             V2DContent result = null;
+            //System.Diagnostics.Debugger.Launch();
 
             if (File.Exists(fileName))
             {

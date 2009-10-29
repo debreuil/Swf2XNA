@@ -62,10 +62,13 @@ namespace DDW.V2D
             world = new World(worldAABB, Gravity, doSleep);
             SetBounds(0, 0, ClientSize.X, ClientSize.Y);
 
-            cursor = V2DGame.instance.GetCursor();
-            cursor.MouseDown += MouseDown;
-            cursor.MouseMove += MouseMove;
-            cursor.MouseUp += MouseUp;
+            if (V2DGame.instance.HasCursor)
+            {
+                cursor = V2DGame.instance.GetCursor();
+                cursor.MouseDown += MouseDown;
+                cursor.MouseMove += MouseMove;
+                cursor.MouseUp += MouseUp;
+            }
         }
 
         public void MouseDown(Vector2 position)

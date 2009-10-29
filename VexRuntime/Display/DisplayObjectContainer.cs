@@ -175,7 +175,6 @@ namespace DDW.Display
             foreach (DisplayObject d in children)
             {
                 d.Update(gameTime);
-
             }
         }
         public override void Draw(SpriteBatch batch)

@@ -21,7 +21,7 @@ namespace DDW.Display
         public uint EndFrame = 1;
         public uint CurFrame = 0;
         public float CurFrameTime = 0;
-        public bool isPlaying = true;//false;//
+        public bool isPlaying = false;//true;//
 
         protected Screen screen;
         protected float mspf;
@@ -374,11 +374,17 @@ namespace DDW.Display
         }
         public virtual void AddedToStage(EventArgs e)
         {
-            stage.ObjectAddedToStage(this);
+            if (stage != null)
+            {
+                stage.ObjectAddedToStage(this);
+            }
         }
         public virtual void RemovedFromStage(EventArgs e)
         {
-           stage.ObjectRemovedFromStage(this);
+            if (stage != null)
+            {
+                stage.ObjectRemovedFromStage(this);
+            }
         }
 
         public void LocalToGlobal(ref float x, ref float y)
@@ -429,7 +435,7 @@ namespace DDW.Display
                 {
                     V2DTransform t = transforms.First(tr =>
                         tr.StartFrame <= (parent.CurChildFrame) && tr.EndFrame >= (parent.CurChildFrame));
-                    rot += t.Rotation + rotation/180f * 3.14159265f;
+                    rot += t.Rotation + rotation;//180f * 3.14159265f;
                 }
                 else
                 {

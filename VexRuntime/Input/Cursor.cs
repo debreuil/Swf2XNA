@@ -15,6 +15,7 @@ namespace DDW.Input
         public event MouseEvent MouseUp;
         public event MouseEvent MouseMove;
 
+        public bool isInitalized = false;
         public bool isMouseDown = false;
 
         const float CursorSpeed = 250.0f;
@@ -53,21 +54,23 @@ namespace DDW.Input
         {
             cursorTexture = Game.Content.Load<Texture2D>("cursor");
             textureCenter = new Vector2(0, 0); //cursorTexture.Width / 2, cursorTexture.Height / 2);
-
             spriteBatch = new SpriteBatch(GraphicsDevice);
+            isInitalized = true;
 
             base.LoadContent();
         }
 
         public override void Draw(GameTime gameTime)
         {
-            spriteBatch.Begin();
+            if (isInitalized)
+            {
+                spriteBatch.Begin();
 
-            spriteBatch.Draw(cursorTexture, Position, null, Color.White, 0.0f,
-                textureCenter, 1.0f, SpriteEffects.None, 0.0f);
+                spriteBatch.Draw(cursorTexture, Position, null, Color.White, 0.0f,
+                    textureCenter, 1.0f, SpriteEffects.None, 0.0f);
 
-            spriteBatch.End();
-
+                spriteBatch.End();
+            }
             base.Draw(gameTime);
         }
 
@@ -129,7 +132,7 @@ namespace DDW.Input
             position.X = mouseState.X;
             position.Y = mouseState.Y;
 
-            if (Game.IsActive)
+            if (Game.IsActive && isInitalized)
             {
                 // modify position using delta, the CursorSpeed constant defined above,
                 // and the elapsed game time, only if the cursor is on the screen

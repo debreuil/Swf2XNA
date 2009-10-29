@@ -32,24 +32,28 @@ namespace DDW.V2D
 
         protected V2DGame()
         {
-            graphics = new GraphicsDeviceManager(this);
-            Content.RootDirectory = "Content";
-            contentManager = Content;
-            GetCursor();
-            stage = V2DStage.GetInstance();
             if (instance != null)
             {
                 throw new Exception("There can be only one game class.");
             }
             instance = this;
+
+            graphics = new GraphicsDeviceManager(this);
+            contentManager = Content;
+            Content.RootDirectory = "Content";
+            stage = V2DStage.GetInstance();
+            GetCursor();
         }
-        
+
+        public virtual bool HasCursor { get { return false; } }
+
         private Cursor cursor;
         public Cursor GetCursor()
         {
-            if (cursor == null)
+            if (HasCursor && cursor == null)
             {
                 cursor = new Cursor(this);
+                //Components.Insert(0, cursor);
                 Components.Add(cursor);
             }
             return cursor;
@@ -62,6 +66,7 @@ namespace DDW.V2D
         protected override void Initialize()
         {
             base.Initialize();
+
             stage.Initialize();
             InitializeScreens();
             SetScreen(0);
@@ -157,10 +162,11 @@ namespace DDW.V2D
         {
             //GraphicsDevice.Clear(ClearOptions.Stencil, bkgColor, 1, 1);
             GraphicsDevice.Clear(bkgColor);
-            
+
             stage.Draw(spriteBatch);
 
             base.Draw(gameTime);
         }
+
     }
 }

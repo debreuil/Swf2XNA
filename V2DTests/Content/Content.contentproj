@@ -62,6 +62,33 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ss0.X">
+      <Name>ss0</Name>
+      <Importer>XImporter</Importer>
+      <Processor>ModelProcessor</Processor>
+    </Compile>
+    <Compile Include="ss1.X">
+      <Name>ss1</Name>
+      <Importer>XImporter</Importer>
+      <Processor>ModelProcessor</Processor>
+    </Compile>
+    <Compile Include="ss2.X">
+      <Name>ss2</Name>
+      <Importer>XImporter</Importer>
+      <Processor>ModelProcessor</Processor>
+    </Compile>
+    <Compile Include="ss3.X">
+      <Name>ss3</Name>
+      <Importer>XImporter</Importer>
+      <Processor>ModelProcessor</Processor>
+    </Compile>
+    <Compile Include="ss4.X">
+      <Name>ss4</Name>
+      <Importer>XImporter</Importer>
+      <Processor>ModelProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
     <Compile Include="germs.swf">
       <Name>germs</Name>
       <Importer>SwfImporter</Importer>

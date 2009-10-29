@@ -97,6 +97,10 @@ namespace VexRuntime.Components
             {
                 this.GotoAndStop(4);
             }
+            else if (isSelected && this.FrameCount >= 3)  // use down if no select
+            {
+                this.GotoAndStop(2);
+            }
             else
             {
                 this.GotoAndStop(0);

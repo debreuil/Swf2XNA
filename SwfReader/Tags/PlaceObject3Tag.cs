@@ -19,7 +19,9 @@ namespace DDW.Swf
 		//public ClipActions ClipActions;
 
 		public PlaceObject3Tag(SwfReader r)
-		{
+        {
+            tagType = TagType.PlaceObject3;
+
 			HasClipActions = r.GetBit();
 			HasClipDepth = r.GetBit();
 			HasName = r.GetBit();

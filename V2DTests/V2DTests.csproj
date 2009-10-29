@@ -132,9 +132,9 @@
       <Project>{C157BCA5-BAC7-455F-A7DE-59D506D46ECF}</Project>
       <Name>Box2DX</Name>
     </ProjectReference>
-    <ProjectReference Include="..\VexPipeline\VexPipeline.csproj">
-      <Project>{7118D9A5-616B-4329-831B-C42624D711CE}</Project>
-      <Name>VexPipeline</Name>
+    <ProjectReference Include="..\VexPipelineReader\VexPipelineReader.csproj">
+      <Project>{5A3DFD5E-6972-4252-B800-C884FCCB3C33}</Project>
+      <Name>VexPipelineReader</Name>
     </ProjectReference>
     <ProjectReference Include="..\VexRuntime\VexRuntime.csproj">
       <Project>{75D33295-0B9A-4E03-83C3-2CC798741627}</Project>

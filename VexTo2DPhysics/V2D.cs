@@ -41,7 +41,8 @@ namespace DDW.VexTo2DPhysics
 #endif
             if (File.Exists(fileName))
             {
-                ProcessFile(fileName);
+                VexTree vt = ProcessFile(fileName);
+                vt.WriteToXml();
             }
             else if (Directory.Exists(fileName))
             {
@@ -102,7 +103,7 @@ namespace DDW.VexTo2DPhysics
                 
                 if (scu.IsValid)
                 {
-                    ProcessSwf(scu);
+                    v2tree = ProcessSwf(scu);
 //SwfToV2DContent(scu, null);
 
                     Console.WriteLine("");

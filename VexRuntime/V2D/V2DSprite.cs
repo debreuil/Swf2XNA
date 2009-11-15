@@ -21,6 +21,8 @@ namespace DDW.V2D
         protected float density;
         protected float friction;
         protected float restitution;
+        protected float linearDamping;
+        protected float angularDamping;
         protected bool isStatic;
         protected short groupIndex = 0;
         protected bool fixedRotation;
@@ -29,8 +31,7 @@ namespace DDW.V2D
         protected static short groupIndexCounter = 1;
 
 
-        public V2DSprite(Texture2D texture, V2DInstance instance)
-            : base(texture)
+        public V2DSprite(Texture2D texture, V2DInstance instance) : base(texture)
         {
             this.texture = texture;
             this.instance = instance;
@@ -154,7 +155,7 @@ namespace DDW.V2D
                     screen.RemoveJoint(jointRefs[i]);
                 }
 
-                if (body != null)
+                if (body != null && screen.bodyMap.ContainsKey(this.instanceName))
                 {
                     screen.world.DestroyBody(body);
                     screen.bodyMap.Remove(this.instanceName);
@@ -182,18 +183,34 @@ namespace DDW.V2D
                     bodyDef.Position.Set(localX / worldScale, localY / worldScale);
                     bodyDef.Angle = this.rotation;
                     bodyDef.FixedRotation = this.fixedRotation;
+                    bodyDef.AngularDamping = this.angularDamping;
+                    bodyDef.LinearDamping = this.linearDamping;
+
+                    if (!fixedRotation &&
+                        rotation != 0 && 
+                        this.transforms != null && 
+                        this.transforms.Length > 0 && 
+                        this.transforms[0].Rotation == this.rotation)
+                    {
+                        for (int i = 0; i < transforms.Length; i++)
+                        {
+                            this.transforms[0].Rotation -= rotation;
+                        }
+                    }
 
                     body = screen.world.CreateBody(bodyDef);
                     screen.bodies.Add(body);
-
+                    
                     for (int i = 0; i < this.polygons.Count; i++)
                     {
                         AddPoly(body, this.polygons[i]);
                     }
+
                     if (groupIndex != 0)
                     {
                         SetGroupIndex(groupIndex);
                     }
+
                     body.SetMassFromShapes();
                     body.SetUserData(this);
                 }
@@ -250,9 +267,12 @@ namespace DDW.V2D
 
                 for (int i = 0; i < polyDef.VertexCount; i++)
                 {
+                    float px = pts[i * 2];
+                    float py = pts[i * 2 + 1];
+
                     polyDef.Vertices[i].Set(
-                        pts[i * 2] / worldScale * scale.X,
-                        pts[i * 2 + 1] / worldScale * scale.Y);
+                        px / worldScale * scale.X,
+                        py / worldScale * scale.Y);
                 }
             }
 
@@ -297,7 +317,7 @@ namespace DDW.V2D
                 }
                 this.origin = new Vector2(-instance.Definition.OffsetX, -instance.Definition.OffsetY);
                 this.instanceName = instance.InstanceName;
-                this.definitonName = instance.DefinitionName;
+                this.DefinitonName = instance.DefinitionName;
                 this.rotation = instance.Rotation;
                 this.scale = new Vector2(instance.ScaleX, instance.ScaleY);
                 this.alpha = instance.Alpha;

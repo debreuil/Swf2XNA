@@ -17,7 +17,12 @@ namespace V2DTest
         protected override void InitializeScreens()
         {
             //screens.Add(new V2DScreen(contentManager.Load<V2DContent>("germs"))); 
-            screens.Add(new DistanceJointDemo(contentManager.Load<V2DContent>("DistanceJoint")));
+            //screens.Add(new DistanceJointDemo(contentManager.Load<V2DContent>("DistanceJoint")));
+            SymbolImport si = new SymbolImport("DistanceJoint", "djBkg");
+            stage.AddScreen(new DistanceJointDemo(si));
+            si = new SymbolImport("DistanceJoint", "scr2");
+            stage.AddScreen(new DistanceJointDemo(si));
+
             //screens.Add(new V2DScreen(contentManager.Load<V2DContent>("Demo")));
             //screens.Add(new V2DScreen(contentManager.Load<V2DContent>("GearJoint")));
             //screens.Add(new V2DScreen(contentManager.Load<V2DContent>("SmuckLib")));

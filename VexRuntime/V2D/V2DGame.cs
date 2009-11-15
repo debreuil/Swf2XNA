@@ -20,14 +20,13 @@ namespace DDW.V2D
         public static V2DStage stage;
         public static ContentManager contentManager;
         public const string ROOT_NAME = "_root";
+        public static string currentRootName = "_root";
 
         public static V2DGame instance;
         protected GraphicsDeviceManager graphics;
         protected SpriteBatch spriteBatch;
-        protected List<Screen> screens = new List<Screen>();
-        protected int curScreenIndex = 0;
-        protected Screen curScreen;
-        bool keyDown = false;
+        protected bool keyDown = false;
+        protected bool isFullScreen = false;
         Microsoft.Xna.Framework.Graphics.Color bkgColor = new Microsoft.Xna.Framework.Graphics.Color(60, 60, 80);
 
         protected V2DGame()
@@ -53,7 +52,6 @@ namespace DDW.V2D
             if (HasCursor && cursor == null)
             {
                 cursor = new Cursor(this);
-                //Components.Insert(0, cursor);
                 Components.Add(cursor);
             }
             return cursor;
@@ -69,46 +67,7 @@ namespace DDW.V2D
 
             stage.Initialize();
             InitializeScreens();
-            SetScreen(0);
-        }
-
-        public void SetScreen(int index)
-        {
-            if (curScreen != null)
-            {
-                stage.RemoveChild(curScreen);
-            }
-            curScreenIndex = index;
-            if (curScreenIndex >= screens.Count)
-            {
-                curScreenIndex = 0;
-            }
-            else if (curScreenIndex < 0)
-            {
-                curScreenIndex = screens.Count - 1;
-            }
-
-            curScreen = screens[curScreenIndex];
-            stage.AddChild(curScreen);
-            if (curScreen is V2DScreen)
-            {
-                SetSize(((V2DScreen)curScreen).v2dWorld.Width, ((V2DScreen)curScreen).v2dWorld.Height);
-            }
-            // temp
-            //if (curScreenIndex == 1)
-            //{
-            //    DisplayObject d = curScreen.GetChildByName("nest2Inst");
-            //    d.Visible = false;
-            //}
-
-        }
-        public void NextScreen()
-        {
-            SetScreen(curScreenIndex + 1);
-        }
-        public void PreviousScreen()
-        {
-            SetScreen(curScreenIndex - 1);
+            stage.SetScreen(0);
         }
 
         public void SetSize(int width, int height)
@@ -117,7 +76,7 @@ namespace DDW.V2D
             {
                 graphics.PreferredBackBufferWidth = width;
                 graphics.PreferredBackBufferHeight = height;
-                graphics.IsFullScreen = false;
+                graphics.IsFullScreen = this.isFullScreen;
                 graphics.ApplyChanges();
                 stage.SetBounds(0, 0, width, height);
             }
@@ -141,12 +100,12 @@ namespace DDW.V2D
             if (!keyDown && ks.IsKeyDown(Keys.Left))
             {
                 keyDown = true;
-                PreviousScreen();
+                stage.PreviousScreen();
             }
             else if (!keyDown && ks.IsKeyDown(Keys.Right))
             {
                 keyDown = true;
-                NextScreen();
+                stage.NextScreen();
             }
             else if (keyDown && (ks.IsKeyUp(Keys.Left) && ks.IsKeyUp(Keys.Right)))
             {

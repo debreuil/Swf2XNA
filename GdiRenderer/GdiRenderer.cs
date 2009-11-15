@@ -324,7 +324,7 @@ namespace DDW.Gdi
                 g.CompositingMode = CompositingMode.SourceOver;
                 g.CompositingQuality = CompositingQuality.HighQuality;
 
-                g.DrawString(s, font, b, tx.Matrix.TranslateX + m.TranslateX, tx.Matrix.TranslateY + m.TranslateY);
+                g.DrawString(s, font, b, tx.Matrix.TranslateX + m.TranslateX + tr.Left, tx.Matrix.TranslateY + m.TranslateY + tr.Top);
 
                 b.Dispose();
             }

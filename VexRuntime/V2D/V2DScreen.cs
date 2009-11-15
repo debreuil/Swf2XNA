@@ -41,9 +41,12 @@ namespace DDW.V2D
 
         private void EnsureV2dWorld()
         {
-            if (SymbolImport != null)
+            if (SymbolImport != null && v2dWorld == null)
             {
-                this.v2dWorld = V2DWorld.CreateFromXml(SymbolImport.fileName);
+                V2DContent c = V2DGame.instance.Content.Load<V2DContent>(SymbolImport.assetName);
+                v2dWorld = c.v2dWorld;
+                textures = c.textures;
+                v2dWorld.RootInstance.Definition = v2dWorld.GetDefinitionByName(V2DGame.ROOT_NAME);
             }
         }
         private V2DInstance FindRootInstance(V2DInstance inst, string rootName)
@@ -55,7 +58,7 @@ namespace DDW.V2D
             {
                 result = inst;
             }
-            else
+            else if(inst.Definition != null)
             {
                 for (int i = 0; i < inst.Definition.Instances.Count; i++)
                 {
@@ -67,7 +70,7 @@ namespace DDW.V2D
                 }
             }
 
-            if (result == null)
+            if (result == null && inst.Definition != null)
             {
                 for (int i = 0; i < inst.Definition.Instances.Count; i++)
                 {
@@ -86,11 +89,7 @@ namespace DDW.V2D
             this.world = world;
             EnsureV2dWorld();
 
-            bodyMap.Clear();
-            bodyMap.Add(V2DGame.ROOT_NAME, world.GetGroundBody());
-
-
-            if (SymbolImport == null || SymbolImport.instanceName == V2DGame.ROOT_NAME)
+            if (SymbolImport == null || SymbolImport.instanceName == V2DGame.currentRootName)
             {
                 rootInstance = v2dWorld.RootInstance;
             }
@@ -98,29 +97,29 @@ namespace DDW.V2D
             {
                 rootInstance = FindRootInstance(v2dWorld.RootInstance, SymbolImport.instanceName);
             }
-            rootInstance.InstanceName = V2DGame.ROOT_NAME;
+
+            V2DGame.currentRootName = rootInstance.InstanceName == null ? V2DGame.ROOT_NAME : rootInstance.InstanceName;
+
+            bodyMap.Clear();
+            bodyMap.Add(V2DGame.currentRootName, world.GetGroundBody());
 
             Clear();
 
-            this.Visible = true;
             this.Width = v2dWorld.Width;
             this.Height = v2dWorld.Height;
             
             AddInstance(rootInstance, this);
 
             Initialize();
+            isActive = true;
+            Visible = true;
         }
+
         public void Deactivate()
         {
-            this.Visible = false;
-            //RemoveInstance(rootInstance);            
-            //bodyMap.Clear();
-            //Clear();
-            //this.v2dWorld = null;
-            //this.world = null;
-            //rootInstance = null;
-        }
-                
+            isActive = false;
+            Visible = false;
+        }  
         public virtual Body GetBodyByName(string name)
         {
             Body result = null;
@@ -160,9 +159,40 @@ namespace DDW.V2D
             //}
         }
 
-        Stack<V2DDefinition> defStack = new Stack<V2DDefinition>();
-        protected void AddInstance(V2DInstance inst, DisplayObjectContainer parent)
+        public DisplayObject CreateInstance(string definitionName, string instanceName, float x, float y, float rot)
         {
+            DisplayObject result = null;
+
+            V2DDefinition def = v2dWorld.GetDefinitionByName(definitionName);
+            if (def != null)
+            {
+                V2DInstance v2dInst = new V2DInstance();
+                v2dInst.Definition = def;
+                v2dInst.DefinitionName = def.Name;
+                v2dInst.InstanceName = instanceName;
+                v2dInst.X = x; // body
+                v2dInst.Y = y;
+                v2dInst.Rotation = rot;
+                v2dInst.Matrix = V2DMatrix.Identity;
+                v2dInst.Transforms = new V2DTransform[1];
+                v2dInst.Transforms[0] = new V2DTransform(0, 0, 1, 1, 0, x, y, 1); // image
+                v2dInst.Visible = true;
+
+                result = AddInstanceToTop(v2dInst, this);
+            }
+
+            return result;
+        }
+
+        Stack<V2DDefinition> defStack = new Stack<V2DDefinition>();
+        protected DisplayObject AddInstanceToTop(V2DInstance inst, DisplayObjectContainer parent)
+        {
+            inst.Depth = this.children.Count;
+            return AddInstance(inst, parent);
+        }
+        protected DisplayObject AddInstance(V2DInstance inst, DisplayObjectContainer parent)
+        {
+            DisplayObject result = null;
             if (inst != null)
             {
                 V2DDefinition def = v2dWorld.GetDefinitionByName(inst.DefinitionName);
@@ -171,21 +201,20 @@ namespace DDW.V2D
                     Texture2D texture = this.GetTexture(def.LinkageName);
                     inst.Definition = def;
 
-                    DisplayObject sp = null;
 
-                    if (inst.InstanceName == V2DGame.ROOT_NAME)
+                    if (inst.InstanceName == V2DGame.currentRootName)
                     {
-                        sp = this;
+                        result = this;
                     }
                     else
                     {
-                        sp = SetFieldWithReflection(inst, parent, texture);
+                        result = SetFieldWithReflection(inst, parent, texture);
 
-                        if (sp == null)
+                        if (result == null)
                         {
-                            sp = new V2DSprite(texture, inst);
+                            result = new V2DSprite(texture, inst);
                         }
-                        parent.AddChild(sp);
+                        parent.AddChild(result);
                     }
 
 
@@ -193,16 +222,20 @@ namespace DDW.V2D
                     // instances
                     for (int i = 0; i < def.Instances.Count; i++)
                     {
-                        AddInstance(def.Instances[i], (DisplayObjectContainer)sp);
+                        AddInstance(def.Instances[i], (DisplayObjectContainer)result);
                     }
                     // joints
                     for (int i = 0; i < def.Joints.Count; i++)
                     {
-                        AddJoint(def.Joints[i], sp.X, sp.Y);
+                        AddJoint(def.Joints[i], result.X, result.Y);
                     }
                     defStack.Pop();
+
+					result.AddedToStage(EventArgs.Empty);
                 }
             }
+
+            return result;
         }
 
         protected void RemoveInstance(V2DInstance instance)
@@ -215,23 +248,26 @@ namespace DDW.V2D
             
             if(bd != null)
             {
-                bodyMap.Remove(name);
+				if (bodyMap.ContainsKey(name))
+				{
+					bodyMap.Remove(name);
 
-                List<Joint> relatedJoints = new List<Joint>();
-                for(int j = joints.Count - 1; j >= 0; j--)
-                {
-                    if(joints[j].GetBody1() == bd || joints[j].GetBody2() == bd)
-                    {
-                        joints.RemoveAt(j);
-                        relatedJoints.Add(joints[j]);
-                    }
-                }	 
-           
-                for(int j = relatedJoints.Count - 1; j >= 0; j--)
-                {
-                    world.DestroyJoint(relatedJoints[j]);            	
-                }
-                world.DestroyBody(bd);
+					List<Joint> relatedJoints = new List<Joint>();
+					for (int j = joints.Count - 1; j >= 0; j--)
+					{
+						if (joints[j].GetBody1() == bd || joints[j].GetBody2() == bd)
+						{
+							joints.RemoveAt(j);
+							relatedJoints.Add(joints[j]);
+						}
+					}
+
+					for (int j = relatedJoints.Count - 1; j >= 0; j--)
+					{
+						world.DestroyJoint(relatedJoints[j]);
+					}
+					world.DestroyBody(bd);
+				}
 
                 // todo: this isn't removing non v2d displayObjects
                 object o = bd.GetUserData();
@@ -239,6 +275,8 @@ namespace DDW.V2D
                 {
                     this.RemoveChild(((DisplayObject)o));
                 }
+				bd.SetUserData(null);
+				//bd.Dispose();
             }
 
         }
@@ -420,7 +458,6 @@ namespace DDW.V2D
                         result = (DisplayObject)ci.Invoke(new object[] { texture, inst });
                         fi.SetValue(parent, result);
                     }
-
                 }
                 else if (ft.IsArray)
                 {
@@ -471,7 +508,10 @@ namespace DDW.V2D
                     throw new ArgumentException("Not supported field type. " + ft.ToString() + " " + instName);
                 }
             }
-
+            if (result != null)
+            {
+                result.Index = index; // set for all object, -1 if not in collection
+            }
             return result;
         }
         private int GetArrayLength(string instName)

@@ -11,6 +11,7 @@ using Microsoft.Xna.Framework.Graphics;
 using DDW.Display;
 using Microsoft.Xna.Framework.Input;
 using DDW.Input;
+using VexRuntime.Enums;
 
 namespace DDW.V2D
 {
@@ -148,6 +149,11 @@ namespace DDW.V2D
             boundsBodies[1] = CreateBox(-overlap, h, w + overlap * 2, thickness);
             boundsBodies[2] = CreateBox(-thickness, -overlap, thickness, h + overlap * 2);
             boundsBodies[3] = CreateBox(w, -overlap, thickness, h + overlap * 2);
+
+			boundsBodies[0].SetUserData(EdgeName.Top);
+			boundsBodies[1].SetUserData(EdgeName.Bottom);
+			boundsBodies[2].SetUserData(EdgeName.Left);
+			boundsBodies[3].SetUserData(EdgeName.Right);
 
         }
         protected Body CreateBox(float x, float y, float w, float h)

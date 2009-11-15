@@ -4,13 +4,13 @@ using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
+using DDW.Input;
 
 namespace DDW.Display
 {
     public class DisplayObjectContainer : DisplayObject
     {
         protected List<DisplayObject> children = new List<DisplayObject>();
-
 
         public int NumChildren
         {
@@ -59,16 +59,17 @@ namespace DDW.Display
         }
         public virtual DisplayObject GetChildByName(string name)
         {
-            DisplayObject result = null;
-            for (int i = 0; i < children.Count; i++)
-		    {
-                if (children[i].InstanceName == name)
-                {
-                    result = children[i];
-                    break;
-                }
-		    }
-            return result;
+            return children.Find(n => n.InstanceName == name);
+            //DisplayObject result = null;
+            //for (int i = 0; i < children.Count; i++)
+            //{
+            //    if (children[i].InstanceName == name)
+            //    {
+            //        result = children[i];
+            //        break;
+            //    }
+            //}
+            //return result;
         }
         public virtual int GetChildIndex(DisplayObject o)
         {
@@ -157,6 +158,15 @@ namespace DDW.Display
         protected List<DisplayObject> DisplayList = new List<DisplayObject>();
         public uint CurChildFrame;
         public uint LastChildFrame;
+
+        public override void OnPlayerInput(int playerIndex, Move move, TimeSpan time)
+        {
+            base.OnPlayerInput(playerIndex, move, time);
+            foreach (DisplayObject d in children)
+            {
+                d.OnPlayerInput(playerIndex, move, time);
+            }
+        }
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
@@ -192,6 +202,14 @@ namespace DDW.Display
             }
         }
 
+        public override void Initialize()
+        {
+            base.Initialize();
+            foreach (DisplayObject d in children)
+            {
+                d.Initialize();
+            }
+        }
         public override void Added(EventArgs e)
         {
             foreach (DisplayObject d in children)
@@ -208,14 +226,14 @@ namespace DDW.Display
             }
             base.Removed(e);
         }
-        public override void AddedToStage(EventArgs e)
-        {
-            foreach (DisplayObject d in children)
-            {
-                d.AddedToStage(e);
-            }
-            base.AddedToStage(e);
-        }
+		//public override void AddedToStage(EventArgs e)
+		//{
+		//    foreach (DisplayObject d in children)
+		//    {
+		//        d.AddedToStage(e);
+		//    }
+		//    base.AddedToStage(e);
+		//}
         public override void RemovedFromStage(EventArgs e)
         {
             foreach (DisplayObject d in children)

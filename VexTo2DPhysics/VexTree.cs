@@ -54,18 +54,16 @@ namespace DDW.VexTo2DPhysics
         public List<Definition2D> definitions = new List<Definition2D>();
         //public Dictionary<string, Joint2D> joints = new Dictionary<string, Joint2D>();
         public Dictionary<string, Dictionary<string, string>> codeData = new Dictionary<string, Dictionary<string, string>>();
-
         public Stack<Instance2D> parentStack = new Stack<Instance2D>();
         public Definition2D root;
         public Instance2D rootInstance;
-
         private Dictionary<string, IDefinition> usedImages = new Dictionary<string, IDefinition>();
-
         private GenV2DWorld genV2d;
 
         public VexTree()
         {
         }
+
         public void Convert(VexObject vo, DDW.Swf.SwfCompilationUnit scu)
         {
             curVo = vo;
@@ -73,6 +71,7 @@ namespace DDW.VexTo2DPhysics
             FilterMarkers();
             ParseActions(scu);
             ParseRootTimeline();
+            ParseNamedDefinitions();
             GenerateWorldActionData();
 
             Gdi.GdiRenderer gr = new Gdi.GdiRenderer();
@@ -84,6 +83,21 @@ namespace DDW.VexTo2DPhysics
 
             genV2d = new GenV2DWorld(this, usedImages);
             genV2d.Generate();
+        }
+        public void WriteToXml()
+        {
+            if (genV2d != null && genV2d.v2dWorld != null)
+            {
+                XmlSerializer xs = new XmlSerializer(typeof(V2DWorld));
+                StringWriter sw = new StringWriter();
+                xs.Serialize(sw, genV2d.v2dWorld);
+
+                string xmlPath = resourceFolder + @"\" + curVo.Name + @"\data.xml";
+                TextWriter tw = new StreamWriter(xmlPath);
+                tw.Write(sw.ToString());
+                tw.Close();
+                sw.Close();  
+            }
         }
         public V2DContent GetV2DContent(ContentProcessorContext context)
         {
@@ -127,6 +141,20 @@ namespace DDW.VexTo2DPhysics
             
         }
 
+        private void ParseNamedDefinitions()
+        {
+            foreach(uint key in curVo.Definitions.Keys)
+            {
+                IDefinition def = curVo.Definitions[key];
+
+                if (def.Name != null &&
+                    !def.Name.StartsWith("$") &&
+                    definitions.Find(d => d.DefinitionName == def.Name) == null)
+                {
+                    EnsureDefinition(null, def);
+                }                
+            }
+        }
         private void ParseRootTimeline()
         {
             ParseTimeline(curVo.Root);
@@ -145,27 +173,30 @@ namespace DDW.VexTo2DPhysics
                 {
                     throw new KeyNotFoundException("Defs have no key: " + inst.DefinitionId + " named: " + inst.Name);
                 }
-                IDefinition def = curVo.Definitions[inst.DefinitionId];
                 if (inst.Name == null)
                 {
                     inst.Name = "$" + instAutoNumber++ + "$";
                 }
 
-                DefinitionKind dk = (DefinitionKind)def.UserData;
+                IDefinition def = curVo.Definitions[inst.DefinitionId];
 
-                if ((dk & DefinitionKind.Ignore) != 0)
-                {
-                    continue;
-                }
+                EnsureDefinition(inst, def);
+            }
+            GenerateJointData(parentStack.Peek().Definition);
+        }
 
-                if ((dk & DefinitionKind.JointMarker) != 0)
+        private void EnsureDefinition(Instance inst, IDefinition def)
+        {
+            DefinitionKind dk = (DefinitionKind)def.UserData;
+            bool addInst = (inst != null);
+            Matrix m = (inst == null) ? Matrix.Identitiy : inst.Transformations[0].Matrix;
+
+            if ((dk & DefinitionKind.Ignore) == 0)
+            {
+                if ( ((dk & DefinitionKind.JointMarker) != 0) && (inst != null))
                 {
                     V2DJointKind jointKind = jointKindMap[jointKinds.IndexOf(def.Name)];
                     ParseJoint(jointKind, inst);
-                }
-
-                if ((dk & DefinitionKind.ShapeMarker) != 0)
-                {
                 }
 
                 if ((dk & DefinitionKind.TextField) != 0)
@@ -175,16 +206,28 @@ namespace DDW.VexTo2DPhysics
                     {
                         def.Name = "$tx_" + def.Id;
                     }
-                    Definition2D d2d = GetDefinition2D(inst, def, false);
-                    AddSymbolImage(inst, def);
-                    AddInstance(inst, def);
+                    Definition2D d2d = GetDefinition2D(m, def, false);
+                    AddSymbolImage(def);
+
+                    if (addInst)
+                    {
+                        AddInstance(inst, def);
+                    }
                 }
 
                 if ((dk & DefinitionKind.Timeline) != 0)
                 {
-                    Definition2D d2d = GetDefinition2D(inst, def, false);
-                    Instance2D i2d = AddInstance(inst, def);
-
+                    Definition2D d2d = GetDefinition2D(m, def, false);
+        
+                    Instance2D i2d;
+                    if (addInst)
+                    {
+                        i2d = AddInstance(inst, def);
+                    }
+                    else
+                    {
+                        i2d = CreateInstance2D(def);
+                    }
                     parentStack.Push(i2d);
                     ParseTimeline((Timeline)def);
                     parentStack.Pop();
@@ -198,28 +241,45 @@ namespace DDW.VexTo2DPhysics
                     {
                         def.Name = "$sym_" + def.Id;
                     }
-                    Definition2D d2d = GetDefinition2D(inst, def, false);
-                    AddSymbolImage(inst, def);
-                    AddInstance(inst, def);
+                    Definition2D d2d = GetDefinition2D(m, def, false);
+                    AddSymbolImage(def);
+
+                    if (addInst)
+                    {
+                        AddInstance(inst, def);
+                    }
                 }
 
                 if ((dk & DefinitionKind.Vex2D) != 0)
                 {
-                    Definition2D d2d = GetDefinition2D(inst, def, true);
-                    Instance2D i2d = AddInstance(inst, def);
+                    Definition2D d2d = GetDefinition2D(m, def, true);
+
+                    Instance2D i2d;
+                    if (addInst)
+                    {
+                        i2d = AddInstance(inst, def);
+                    }
+                    else
+                    {
+                        i2d = CreateInstance2D(def);
+                    }
 
                     parentStack.Push(i2d);
                     ParseTimeline((Timeline)def);
                     parentStack.Pop();
                 }
             }
-            GenerateJointData(parentStack.Peek().Definition);
+
         }
         private Instance2D AddInstance(Instance inst, IDefinition def)
         {
-            Instance2D i2d = CreateInstance2D(inst, def);
-            parentStack.Peek().Definition.Children.Add(i2d);
-            return i2d;
+            Instance2D result = null;
+            if (inst != null)
+            {
+                result = CreateInstance2D(inst, def);
+                parentStack.Peek().Definition.Children.Add(result);
+            }
+            return result;
         }
         private Instance2D CreateInstance2D(Instance inst, IDefinition def)
         {
@@ -233,23 +293,37 @@ namespace DDW.VexTo2DPhysics
             result.TotalFrames = curVo.GetFrameFromMilliseconds(inst.EndTime) - result.StartFrame - 1; // end frame is last ms of frame, so -1
             return result;
         }
-        private Definition2D GetDefinition2D(Instance inst, IDefinition def, bool addShapes)
+        private Instance2D CreateInstance2D(IDefinition def)
+        {
+            MatrixComponents mc = Matrix.Identitiy.GetMatrixComponents();
+            Instance2D result = new Instance2D(def.Name, def.Name, mc.TranslateX, mc.TranslateY, (float)(mc.Rotation * Math.PI / 180), mc.ScaleX, mc.ScaleY);
+            //Instance2D result = new Instance2D(inst.Name, def.Name, 0,0,0,1,1);
+            result.Depth = 0;
+            result.Transforms = new List<Transform>();
+            result.Transforms.Add(new Transform(0, 0, Matrix.Identitiy, 1, ColorTransform.Identity));
+            result.Definition = definitions.Find(d => d.Id == def.Id);
+            result.StartFrame = 0;
+            result.TotalFrames = 0; 
+            return result;
+        }
+        private Definition2D GetDefinition2D(Matrix m, IDefinition def, bool addShapes)
         {
             Definition2D result = definitions.Find(d => d.DefinitionName == def.Name);
             if (result == null)
             {
-                result = CreateDefinition2D(inst, def);
+                result = CreateDefinition2D(def);
                 definitions.Add(result);
                 if (addShapes)
                 {
-                    result.AddShapes(curVo, def, inst);
+                    result.AddShapes(curVo, def, m);//inst.Transformations[0].Matrix);
                 }
             }
             return result;
         }
-        private Definition2D CreateDefinition2D(Instance inst, IDefinition def)
+        private Definition2D CreateDefinition2D(IDefinition def)
         {
             Definition2D result = new Definition2D();
+
             result.Id = def.Id;
             result.DefinitionName = def.Name; 
             // todo: get linkage names from export assests tags (in vex format) 
@@ -266,9 +340,8 @@ namespace DDW.VexTo2DPhysics
 //              Symbol instDef = (Symbol)def;
 //              result.StartTime = (int)instDef.StartTime;
 //              result.EndTime = (int)instDef.EndTime;
-                ParseBodyImage(result, def, inst);
+                ParseBodyImage(result, def);
             }
-
 
             return result;
         }
@@ -303,11 +376,11 @@ namespace DDW.VexTo2DPhysics
                     inst.Transformations[1].Matrix.TranslateY));
             }
         }
-        private void ParseBodyImage(Definition2D b2d, IDefinition sy, Instance inst)
+        private void ParseBodyImage(Definition2D b2d, IDefinition sy)
         {
-            string bmpPath = AddSymbolImage(inst, sy);
+            string bmpPath = AddSymbolImage(sy);
         }
-        private string AddSymbolImage(Instance inst, IDefinition sy)
+        private string AddSymbolImage(IDefinition sy)
         {
             string nm = (sy.Name == null) ? "sym_" + sy.Id.ToString() : sy.Name;
             string bmpPath = resourceFolder + @"\" + curVo.Name + @"\" + nm + ".png";

@@ -9,6 +9,7 @@ using System.Xml;
 using DDW.Vex;
 using DDW.V2D;
 using System.Reflection;
+using DDW.VexTo2DPhysics;
 
 namespace DDW.Placeholder
 {
@@ -58,18 +59,18 @@ namespace DDW.Placeholder
         {
             return Shapes.Count > 0;
         }
-        public void AddShapes(VexObject vo, IDefinition def, Instance orgInst)
+        public void AddShapes(VexObject vo, IDefinition def, Matrix m)
         {
             if (def.Name == "circleShape")
             {
-                Matrix m = orgInst.Transformations[0].Matrix;
+                //Matrix m = orgInst.Transformations[0].Matrix;
                 Point c = new Point(m.TranslateX, m.TranslateY);
                 float r = m.ScaleX * 100 / 2;
                 Shapes.Add(new CircleShape2D(def.Name, c, r));
             }
             else if (def is Symbol)
             {
-                Matrix m = orgInst.Transformations[0].Matrix;
+                //Matrix m = orgInst.Transformations[0].Matrix;
                 AddShape(def.Name, (Symbol)def, m);
             }
             else if (def is Timeline)
@@ -77,10 +78,10 @@ namespace DDW.Placeholder
                 foreach (Instance inst in ((Timeline)def).Instances)
                 {
                     IDefinition def2 = vo.Definitions[inst.DefinitionId];
-                    if (def2 is Symbol)
+                    if (def2 is Symbol && def2.UserData == (int)DefinitionKind.OutlineStroke)
                     {
-                        Matrix m = inst.Transformations[0].Matrix;
-                        AddShape(def.Name, (Symbol)def2, m);
+                        //Matrix m = inst.Transformations[0].Matrix;
+                        AddShape(def.Name, (Symbol)def2, inst.Transformations[0].Matrix);
                     }
                 }
             }

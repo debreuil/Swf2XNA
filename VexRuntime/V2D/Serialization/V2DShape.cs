@@ -103,6 +103,10 @@ namespace DDW.V2D
             float r = (p.Y - aY) * (bX - aX) - (p.X - aX) * (bY - aY);
             return (r <= 0);
         }
+        private void ApplyMatrix(Matrix m)
+        {
+            //m.
+        }
 
         //[ContentSerializerIgnore]
         //[XmlIgnore]

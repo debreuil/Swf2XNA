@@ -47,7 +47,7 @@ namespace DDW.V2D.Serialization
                 {
                     rootInstance = new V2DInstance();
                     rootInstance.DefinitionName = V2DGame.ROOT_NAME;
-                    rootInstance.Definition = GetDefinitionByName(V2DGame.ROOT_NAME);
+                    rootInstance.InstanceName = V2DGame.ROOT_NAME;
                 }
                 return rootInstance;
             }

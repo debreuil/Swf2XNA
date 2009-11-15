@@ -6,16 +6,18 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
 using VexRuntime.V2D;
 using DDW.V2D;
+using DDW.Input;
 
 namespace DDW.Display
 {
     public class DisplayObject : IDrawable
     {
-        public static uint depthCounter;
         protected Texture2D texture; // texture evetually will be a 'graphics' generic class
-        public string instanceName;
-        public string definitonName;
+        protected string instanceName;
 
+        public static uint DepthCounter;
+        public string DefinitonName;
+        public int Index = -1;
         public uint FrameCount = 1;
         public uint StartFrame = 0;
         public uint EndFrame = 1;
@@ -78,11 +80,11 @@ namespace DDW.Display
         {
             get
             {
-                return definitonName;
+                return DefinitonName;
             }
             set
             {
-                definitonName = value;
+                DefinitonName = value;
             }
         }
         public Vector2 Origin
@@ -162,7 +164,7 @@ namespace DDW.Display
                 destinationRectangle = value;
             }
         }
-        public float Rotation
+        public virtual float Rotation
         {
             get
             {
@@ -358,8 +360,11 @@ namespace DDW.Display
                 stage = GetStage();
                 screen = GetScreen();
                 mspf = (screen == null) ? stage.MillisecondsPerFrame : screen.MillisecondsPerFrame;
-                this.AddedToStage(e);
-                isOnStage = true;
+                //this.AddedToStage(e);
+				if (stage != null)
+				{
+					stage.ObjectAddedToStage(this);
+				}
             }
         }
         public virtual void Removed(EventArgs e)
@@ -374,10 +379,7 @@ namespace DDW.Display
         }
         public virtual void AddedToStage(EventArgs e)
         {
-            if (stage != null)
-            {
-                stage.ObjectAddedToStage(this);
-            }
+			isOnStage = true;
         }
         public virtual void RemovedFromStage(EventArgs e)
         {
@@ -464,6 +466,9 @@ namespace DDW.Display
             return sc;
         }
 
+        public virtual void OnPlayerInput(int playerIndex, Move move, TimeSpan time)
+        {
+        }
         public virtual void Update(GameTime gameTime)
         {
         }
@@ -472,8 +477,8 @@ namespace DDW.Display
             if (texture != null)
             {
                 Vector2 gOffset = GetGlobalOffset(Vector2.Zero);
-                float gRotation = GetGlobalRotation(0);//t.Rotation);
-                Vector2 gScale =  GetGlobalScale(new Vector2(1, 1));//
+                float gRotation = GetGlobalRotation(0);
+                Vector2 gScale =  GetGlobalScale(new Vector2(1, 1));
                 Vector2 gOrigin = origin;
 
                 SpriteEffects se = SpriteEffects.None;
@@ -497,7 +502,7 @@ namespace DDW.Display
                 }
 
                 batch.Draw(texture, gOffset, sourceRectangle, color,
-                    gRotation, gOrigin, gScale, se, 1f / depthCounter++);
+                    gRotation, gOrigin, gScale, se, 1f / DepthCounter++);
             }
         }
 

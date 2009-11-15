@@ -17,6 +17,7 @@ namespace DDW.Display
         public float MillisecondsPerFrame = 1000f / 12f;
         public Dictionary<string, Texture2D> textures = new Dictionary<string,Texture2D>();
         private SymbolImport symbolImport;
+        public bool isActive = false;
 
         protected MoveList moveList;
         InputManager[] inputManagers;
@@ -32,6 +33,7 @@ namespace DDW.Display
             if (symbolImport != null)
             {
                 this.SymbolImport = symbolImport;
+                InstanceName = symbolImport.instanceName;
             }
         }
         public Screen(V2DContent v2dContent)
@@ -74,10 +76,20 @@ namespace DDW.Display
         {
             moveList = new MoveList(new Move[]
             {
-                new Move("Up",  Direction.Up),
-                new Move("Down", Direction.Down),
-                new Move("Left", Direction.Left),
-                new Move("Right", Direction.Right),
+                Move.Up,
+                Move.Down,
+                Move.Left,
+                Move.Right,
+                Move.Start,
+                Move.Back,
+                Move.ButtonA,
+                Move.ButtonB,
+                Move.ButtonX,
+                Move.ButtonY,
+                Move.LeftShoulder,
+                Move.RightShoulder,
+                Move.LeftTrigger,
+                Move.RightTrigger,
             });
             // Create an InputManager for each player with a sufficiently large buffer.
             inputManagers = new InputManager[1];
@@ -90,9 +102,10 @@ namespace DDW.Display
             playerMoves = new Move[inputManagers.Length];
             playerMoveTimes = new TimeSpan[inputManagers.Length];
         }
+
         protected void ManageInput(GameTime gameTime)
         {
-            if (inputManagers != null)
+            if (inputManagers != null && isActive)
             {
                 for (int i = 0; i < inputManagers.Length; ++i)
                 {
@@ -124,13 +137,13 @@ namespace DDW.Display
                 }
             }
         }
-        public virtual void OnPlayerInput(int playerIndex, Move move, TimeSpan time)
-        {
-        }
         public override void Update(GameTime gameTime)
         {
-            ManageInput(gameTime);
-            base.Update(gameTime);
+            if (isActive)
+            {
+                ManageInput(gameTime);
+                base.Update(gameTime);
+            }
         }
         public override void Draw(SpriteBatch batch)
         {

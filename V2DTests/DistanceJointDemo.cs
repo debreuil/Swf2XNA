@@ -10,6 +10,7 @@ using DDW.Input;
 using VexRuntime.Components;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using V2DTests;
 
 namespace V2DTest
 {
@@ -19,9 +20,9 @@ namespace V2DTest
         public List<V2DSprite> hex;
         public V2DSprite star;
         public V2DSprite star2;
-        public V2DSprite car;
+        public V2DSprite testCar;
+        public MainMenuPanel mainMenuPanel;
         //public List<Button> menuItem;
-        public ButtonTabGroup mainMenu;
         
         public DistanceJointDemo()
         {
@@ -30,21 +31,14 @@ namespace V2DTest
         public DistanceJointDemo(V2DContent v2dContent)  : base(v2dContent)
         {     
         }
+        public DistanceJointDemo(SymbolImport si)  : base(si)
+        {
+            this.SymbolImport = si;
+        }
 
         public override void SetValidInput()
         {
             base.SetValidInput();
-        }
-        public override void OnPlayerInput(int playerIndex, Move move, TimeSpan time)
-        {
-            if (move.Name == "Up")
-            {
-                mainMenu.PreviousFocus();
-            }
-            else if(move.Name == "Down")
-            {
-                mainMenu.NextFocus();
-            }
         }
         public override void Update(GameTime gameTime)
         {
@@ -57,17 +51,7 @@ namespace V2DTest
         public override void Initialize()
         {
             base.Initialize();
-            //bkg.Visible = false;
-            bkg.Play();
-            //star2.Play();
-            //star.Play();
-            //car.GotoAndStop(4);
-            //star2.Alpha = .5f;
-            //hex[0].Alpha = .5f;
-            //hex[1].Alpha = .5f;
-            //btPlay.Select();
-            //menuItem[1].Visible = false;
-            mainMenu.SetFocus(1);
+            this.Play();
         }
     }
 }

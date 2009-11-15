@@ -33,7 +33,7 @@ namespace DDW.Vex
 		public Timeline(uint id)
 		{
 			this.id = id;
-			this.name = "mc" + id.ToString();
+			this.name = "$mc" + id.ToString();
 		}
 
 		//public IDefinition LookupSymbol(float t, uint depth)

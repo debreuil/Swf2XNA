@@ -31,6 +31,10 @@ namespace DDW.Display
             screens.Remove(scr);
         }
 
+		public Screen GetCurrentScreen()
+		{
+			return curScreen;
+		}
         public void SetScreen(Screen scr)
         {
             if (scr != null)

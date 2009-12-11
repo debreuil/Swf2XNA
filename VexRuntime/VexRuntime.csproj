@@ -24,13 +24,16 @@
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Box2DX, Version=2.0.1.23798, Culture=neutral, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+    </Reference>
     <Reference Include="Microsoft.Xna.Framework, Version=3.1.0.0, Culture=neutral, PublicKeyToken=6d5c3888ef60e27d, processorArchitecture=x86" />
     <Reference Include="Microsoft.Xna.Framework.Content.Pipeline, Version=3.1.0.0, Culture=neutral, PublicKeyToken=6d5c3888ef60e27d, processorArchitecture=x86" />
     <Reference Include="Microsoft.Xna.Framework.Game, Version=3.1.0.0, Culture=neutral, PublicKeyToken=6d5c3888ef60e27d, processorArchitecture=x86" />
@@ -59,11 +62,13 @@
     <Compile Include="Display\Stage.cs" />
     <Compile Include="Enums\EdgeName.cs" />
     <Compile Include="Enums\TransitionKind.cs" />
+    <Compile Include="Game\Player.cs" />
     <Compile Include="Input\Cursor.cs" />
     <Compile Include="Input\Direction.cs" />
     <Compile Include="Input\InputManager.cs" />
     <Compile Include="Input\Move.cs" />
     <Compile Include="Input\MoveList.cs" />
+    <Compile Include="Network\NetworkManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="State\StateManager.cs" />
     <Compile Include="V2D\Serialization\V2DJointKind.cs" />
@@ -85,10 +90,9 @@
     <Compile Include="V2D\V2DStage.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Box2D\src\Box2DX.csproj">
-      <Project>{C157BCA5-BAC7-455F-A7DE-59D506D46ECF}</Project>
-      <Name>Box2DX</Name>
-    </ProjectReference>
+    <Content Include="Libraries\debug\Box2DX.dll" />
+    <Content Include="Libraries\debug\Box2DX.pdb" />
+    <Content Include="Libraries\release\Box2DX.dll" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

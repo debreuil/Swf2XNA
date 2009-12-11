@@ -159,6 +159,28 @@ namespace DDW.V2D
             //}
         }
 
+		public V2DInstance GetInstanceDefinition(string definitionName, float x, float y, float rot)
+        {
+			V2DInstance result = null;
+
+            V2DDefinition def = v2dWorld.GetDefinitionByName(definitionName);
+            if (def != null)
+            {
+				result = new V2DInstance();
+				result.Definition = def;
+				result.DefinitionName = def.Name;
+				result.InstanceName = instanceName;
+				result.X = x; // body
+				result.Y = y;
+				result.Rotation = rot;
+				result.Matrix = V2DMatrix.Identity;
+				result.Transforms = new V2DTransform[1];
+				result.Transforms[0] = new V2DTransform(0, 0, 1, 1, 0, x, y, 1); // image
+				result.Visible = true;
+            }
+
+            return result;
+        }
         public DisplayObject CreateInstance(string definitionName, string instanceName, float x, float y, float rot)
         {
             DisplayObject result = null;
@@ -200,7 +222,6 @@ namespace DDW.V2D
                 {
                     Texture2D texture = this.GetTexture(def.LinkageName);
                     inst.Definition = def;
-
 
                     if (inst.InstanceName == V2DGame.currentRootName)
                     {
@@ -493,8 +514,19 @@ namespace DDW.V2D
                         // add element
                         ConstructorInfo elementCtor = gt.GetConstructor(new Type[] { typeof(Texture2D), typeof(V2DInstance) });
                         result = (DisplayObject)elementCtor.Invoke(new object[] { texture, inst });
-                        MethodInfo mi = collection.GetType().GetMethod("Add");
-                        mi.Invoke(collection, new object[] { result });
+
+                        PropertyInfo cm = collection.GetType().GetProperty("Count");
+                        int cnt = (int)cm.GetValue(collection, new object[] {});
+						if (index >= cnt)
+						{
+							MethodInfo mi = collection.GetType().GetMethod("Add");
+							mi.Invoke(collection, new object[] { result });
+						}
+						else
+						{
+							MethodInfo mi = collection.GetType().GetMethod("Insert");
+							mi.Invoke(collection, new object[] { index, result });
+						}
                     }
                 }
                 else if (ft.Equals(typeof(DisplayObject)) || ft.IsSubclassOf(typeof(DisplayObject)))

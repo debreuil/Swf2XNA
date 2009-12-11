@@ -12,6 +12,8 @@ using DDW.Display;
 using Microsoft.Xna.Framework.Input;
 using DDW.Input;
 using Microsoft.Xna.Framework.Content;
+using Microsoft.Xna.Framework.Net;
+using VexRuntime.Network;
 
 namespace DDW.V2D
 {
@@ -28,6 +30,8 @@ namespace DDW.V2D
         protected bool keyDown = false;
         protected bool isFullScreen = false;
         Microsoft.Xna.Framework.Graphics.Color bkgColor = new Microsoft.Xna.Framework.Graphics.Color(60, 60, 80);
+
+		public List<NetworkGamer> gamers = new List<NetworkGamer>();
 
         protected V2DGame()
         {
@@ -90,12 +94,32 @@ namespace DDW.V2D
         {
         }
 
+		public virtual void ExitToMainMenu()
+        {
+			NetworkManager.Instance.LeaveSession();
+        }
+        public virtual void ExitGame()
+        {
+			this.Exit();
+        }
+
+		public virtual void AddGamer(NetworkGamer gamer, int gamerIndex)
+		{
+			if (!gamers.Contains(gamer))
+			{
+				gamers.Add(gamer);
+			}
+		}
+		public virtual void RemoveGamer(NetworkGamer gamer)
+		{
+			if (gamers.Contains(gamer))
+			{
+				gamers.Remove(gamer);
+			}
+		}
+
         protected override void Update(GameTime gameTime)
         {
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
-            {
-                this.Exit();
-            }
             KeyboardState ks = Keyboard.GetState();
             if (!keyDown && ks.IsKeyDown(Keys.Left))
             {
@@ -116,6 +140,14 @@ namespace DDW.V2D
 
             base.Update(gameTime);
 
+			if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
+			{
+				ExitGame();
+			}
+			else if (GamePad.GetState(PlayerIndex.One).Buttons.Start == ButtonState.Pressed)
+			{
+				ExitToMainMenu();
+			}
         }
         protected override void Draw(GameTime gameTime)
         {

@@ -8,6 +8,10 @@ using DDW.V2D;
 using DDW.V2D.Serialization;
 using DDW.Input;
 using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Net;
+using VexRuntime.Network;
+using VexRuntime.Game;
+using Microsoft.Xna.Framework.Content;
 
 namespace DDW.Display
 {
@@ -23,7 +27,14 @@ namespace DDW.Display
         InputManager[] inputManagers;
         Move[] playerMoves;
         TimeSpan[] playerMoveTimes;
-        readonly TimeSpan MoveTimeOut = TimeSpan.FromSeconds(1.0);
+		readonly TimeSpan MoveTimeOut = TimeSpan.FromSeconds(1.0);
+
+		protected PacketWriter packetWriter = new PacketWriter();
+		protected PacketReader packetReader = new PacketReader();
+		protected int framesBetweenPackets = 4;
+		protected int framesSinceLastSend;
+		protected bool enablePrediction = true;
+		protected bool enableSmoothing = true;
         
         public Screen()
         {
@@ -66,11 +77,17 @@ namespace DDW.Display
                 {
                     result = V2DGame.contentManager.Load<Texture2D>(linkageName);
                 }
-                catch (Exception) { }
+				catch (ContentLoadException e) 
+				{
+				}
+                catch (Exception) 
+				{
+				}
             }
 
             return result;
         }
+
 
         public virtual void SetValidInput()
         {
@@ -133,15 +150,117 @@ namespace DDW.Display
                         playerMoves[i] = newMove;
                         playerMoveTimes[i] = gameTime.TotalRealTime;
                         OnPlayerInput(i, playerMoves[i], playerMoveTimes[i]);
+						BroadcastMove(i, playerMoves[i], playerMoveTimes[i]);
                     }
                 }
             }
-        }
+		}
+
+#region network
+		public virtual void BroadcastMove(int playerIndex, Move move, TimeSpan time)
+        {
+		}
+		public virtual void WriteNetworkPacket(PacketWriter packetWriter, GameTime gameTime)
+		{
+		}
+		public virtual void ReadNetworkPacket(PacketReader packetReader,GameTime gameTime, TimeSpan latency)
+		{
+		}
+		void UpdateNetworkSession(GameTime gameTime)
+		{
+			bool sendPacketThisFrame = false;
+			framesSinceLastSend++;
+			if (framesSinceLastSend >= framesBetweenPackets)
+			{
+				sendPacketThisFrame = true;
+				framesSinceLastSend = 0;
+			}
+
+			if (NetworkManager.Session.SessionState == NetworkSessionState.Playing)
+			{
+				foreach (LocalNetworkGamer gamer in NetworkManager.Session.LocalGamers)
+				{
+					UpdateLocalGamer(gamer, gameTime, sendPacketThisFrame);
+				}
+			}
+
+			try
+			{
+				NetworkManager.Session.Update();
+			}
+			catch (Exception e)
+			{
+				Console.WriteLine(e.Message);
+				NetworkManager.Instance.LeaveSession();
+			}
+
+			// Make sure the session has not ended.
+			if (NetworkManager.Session != null && NetworkManager.Session.SessionState == NetworkSessionState.Playing)
+			{
+				// Read any packets telling us the state of remotely controlled tanks.
+				foreach (LocalNetworkGamer gamer in NetworkManager.Session.LocalGamers)
+				{
+					ReadIncomingPackets(gamer, gameTime);
+				}
+
+				// Apply prediction and smoothing to the remotely controlled tanks.
+				foreach (NetworkGamer gamer in NetworkManager.Session.RemoteGamers)
+				{
+					Player p = gamer.Tag as Player;
+					if (p != null)
+					{
+						p.UpdateRemotePlayer(framesBetweenPackets, enablePrediction);
+					}
+				}
+
+				// Update the latency and packet loss simulation options.
+				//UpdateOptions();
+			}
+		}
+		protected virtual void ReadIncomingPackets(LocalNetworkGamer gamer, GameTime gameTime)
+		{
+			while (gamer.IsDataAvailable)
+			{
+				NetworkGamer sender;
+				gamer.ReceiveData(packetReader, out sender);
+				if (!sender.IsLocal && sender.Tag != null)
+				{
+					Player p = sender.Tag as Player;
+					TimeSpan latency = NetworkManager.Session.SimulatedLatency +
+									   TimeSpan.FromTicks(sender.RoundtripTime.Ticks / 2);
+
+					// Read the state of this tank from the network packet.
+					p.ReadNetworkPacket(packetReader, gameTime, latency);
+				}
+			}
+		}
+		protected virtual void UpdateLocalGamer(LocalNetworkGamer gamer, GameTime gameTime, bool sendPacketThisFrame)
+		{
+			Player p = gamer.Tag as Player;
+			if (p != null)
+			{
+				p.UpdateLocalPlayer(gameTime);
+
+				// Periodically send our state to everyone in the session.
+				if (sendPacketThisFrame)
+				{
+					p.WriteNetworkPacket(packetWriter, gameTime);
+					gamer.SendData(packetWriter, SendDataOptions.InOrder);
+				}
+			}
+		}
+
+#endregion
+
         public override void Update(GameTime gameTime)
         {
             if (isActive)
             {
-                ManageInput(gameTime);
+				ManageInput(gameTime);
+				if (NetworkManager.Session != null)
+				{
+					UpdateNetworkSession(gameTime);
+				}
                 base.Update(gameTime);
             }
         }

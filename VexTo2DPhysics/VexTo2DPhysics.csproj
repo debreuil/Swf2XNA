@@ -3,7 +3,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.21022</ProductVersion>
+    <ProductVersion>9.0.30729</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{7DAF775B-4772-473F-81D6-608B4DE681F2}</ProjectGuid>
     <OutputType>Exe</OutputType>
@@ -58,6 +58,7 @@
     <Compile Include="Placeholder\PolygonShape2D.cs" />
     <Compile Include="Placeholder\Shape2D.cs" />
     <Compile Include="Placeholder\Joint2D.cs" />
+    <Compile Include="Placeholder\Text2D.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Placeholder\Symbol2D.cs" />
     <Compile Include="V2D.cs" />

@@ -77,9 +77,6 @@ namespace DDW.Display
                 {
                     result = V2DGame.contentManager.Load<Texture2D>(linkageName);
                 }
-				catch (ContentLoadException e) 
-				{
-				}
                 catch (Exception) 
 				{
 				}

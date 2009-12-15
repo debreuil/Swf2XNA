@@ -147,7 +147,7 @@ namespace DDW.Gdi
 
                     string name = s + "#" + tx.Id;
                     genImages.Add(name, bmpFrames);
-                }
+                } 
             }
         }
 
@@ -313,6 +313,7 @@ namespace DDW.Gdi
                 {
                     style |= FontStyle.Italic;
                 }
+				style = FontStyle.Bold;// temp
                 Font font = new Font(tr.FontName, tr.FontSize, style, GraphicsUnit.Pixel);
 
                 System.Drawing.Color col = System.Drawing.Color.FromArgb(tr.Color.A, tr.Color.R, tr.Color.G, tr.Color.B);

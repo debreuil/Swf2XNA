@@ -97,7 +97,6 @@ namespace DDW.Placeholder
             }             
         }
 
-
         //public void DumpInstance(StringWriter sw, Dictionary<string, string> dict)
         //{
         //    MatrixComponents mc = this.Transforms[0].Matrix.GetMatrixComponents();

@@ -15,6 +15,7 @@ using Box2DX.Dynamics;
 using DDW.Display;
 using DDW.V2D.Serialization;
 using DDW.Input;
+using VexRuntime.Components;
 
 namespace DDW.V2D
 {
@@ -529,6 +530,12 @@ namespace DDW.V2D
 						}
                     }
                 }
+				//else if (ft.Equals(typeof(TextBox)) || ft.IsSubclassOf(typeof(TextBox)))
+				//{
+				//    ConstructorInfo ci = ft.GetConstructor(new Type[] { });
+				//    result = (DisplayObject)ci.Invoke(new object[] { });
+				//    fi.SetValue(parent, result);
+				//}
                 else if (ft.Equals(typeof(DisplayObject)) || ft.IsSubclassOf(typeof(DisplayObject)))
                 {
                     ConstructorInfo ci = ft.GetConstructor(new Type[] { typeof(Texture2D), typeof(V2DInstance) });

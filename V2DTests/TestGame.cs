@@ -5,12 +5,13 @@ using System.Text;
 using DDW.V2D;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
+using DDW.Display;
 
 namespace V2DTest
 {
     public class TestGame : V2DGame
     {
-        public bool show3D = true; 
+		public bool show3D = true;
 
         public override bool HasCursor { get { return true; } } 
 
@@ -64,8 +65,11 @@ namespace V2DTest
         }
         protected override void LoadContent()
         {
-            base.LoadContent();
-            players = new Model[MAX_PLAYERS];
+			base.LoadContent();
+			
+			FontManager.Instance.AddFont("Flareserif821 Lt BT", V2DGame.contentManager.Load<SpriteFont>(@"Flareserif821 Lt BT"));
+
+			players = new Model[MAX_PLAYERS];
             players[0] = contentManager.Load<Model>(@"ss0");
             players[1] = contentManager.Load<Model>(@"ss1");
             players[2] = contentManager.Load<Model>(@"ss2");

@@ -59,6 +59,7 @@ namespace DDW.VexTo2DPhysics
         public Instance2D rootInstance;
         private Dictionary<string, IDefinition> usedImages = new Dictionary<string, IDefinition>();
         private GenV2DWorld genV2d;
+		private List<string> fontNames = new List<string>();
 
         public VexTree()
         {
@@ -206,7 +207,7 @@ namespace DDW.VexTo2DPhysics
                     {
                         def.Name = "$tx_" + def.Id;
                     }
-                    Definition2D d2d = GetDefinition2D(m, def, false);
+					Definition2D d2d = GetTextDefinition(m, txt);
                     AddSymbolImage(def);
 
                     if (addInst)
@@ -345,6 +346,38 @@ namespace DDW.VexTo2DPhysics
 
             return result;
         }
+
+		private Definition2D GetTextDefinition(Matrix m, Text def)
+		{
+			Definition2D result = definitions.Find(d => d.DefinitionName == def.Name);
+			if (result == null)
+			{
+				result = CreateTextDefinition(def);
+				definitions.Add(result);
+			}
+			return result;
+		}
+		private Text2D CreateTextDefinition(Text def)
+		{
+			Text2D result = new Text2D(def.TextRuns);
+
+			result.Id = def.Id;
+			result.DefinitionName = def.Name;
+			result.LinkageName = def.Name;
+			result.Bounds = def.StrokeBounds;
+			AddFonts(def.TextRuns);
+			return result;
+		}
+		private void AddFonts(List<TextRun> runs)
+		{
+			for (int i = 0; i < runs.Count; i++)
+			{
+				if (!fontNames.Contains(runs[i].FontName))
+				{
+					fontNames.Add(runs[i].FontName);
+				}
+			}
+		}
         private void ParseJoint(V2DJointKind jointKind, Instance inst)
         {
             Dictionary<string, Joint2D> joints = parentStack.Peek().Definition.Joints;

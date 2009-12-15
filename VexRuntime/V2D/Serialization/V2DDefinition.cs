@@ -6,6 +6,7 @@ using System.Xml.Serialization;
 
 namespace DDW.V2D
 {
+	[XmlInclude(typeof(V2DText))]
     public class V2DDefinition
     {
         [XmlAttribute]

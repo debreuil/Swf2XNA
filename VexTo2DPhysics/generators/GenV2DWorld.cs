@@ -64,34 +64,45 @@ namespace DDW.VexTo2DPhysics
         {
             foreach (Definition2D def in v2d.definitions)
             {
-                V2DDefinition d = new V2DDefinition();
-                v2dWorld.definitions.Add(d);
-                d.Name = def.DefinitionName;
-                d.Id = def.Id;
-                d.LinkageName = def.LinkageName;// paths.ContainsKey(def.Id) ? paths[def.Id] : "";
-                d.FrameCount = def.FrameCount;
-                d.OffsetX = def.Bounds.Point.X;
-                d.OffsetY = def.Bounds.Point.Y;
-                d.V2DShapes.Clear();
-                for (int i = 0; i < def.Shapes.Count; i++)
-                {
-                    d.V2DShapes.Add(def.Shapes[i].GetV2DShape());
-                }
+				V2DDefinition d;
+				if (def is Text2D)
+				{
+					V2DText v2t = new V2DText();
+					d = v2t;
+					v2t.TextRuns = ((Text2D)def).TextRuns;
+				}
+				else
+				{
+					d = new V2DDefinition();
+					d.V2DShapes.Clear();
+					for (int i = 0; i < def.Shapes.Count; i++)
+					{
+						d.V2DShapes.Add(def.Shapes[i].GetV2DShape());
+					}
 
-                d.Instances.Clear();
-                if (def.Children.Count > 0)
-                {
-                    for (int i = 0; i < def.Children.Count; i++)
-                    {
-                        d.Instances.Add(GetV2DInstance(def.Children[i]));
-                    }
-                }
+					d.Instances.Clear();
+					if (def.Children.Count > 0)
+					{
+						for (int i = 0; i < def.Children.Count; i++)
+						{
+							d.Instances.Add(GetV2DInstance(def.Children[i]));
+						}
+					}
+				}
 
-                d.Joints.Clear();
-                if (def.Joints.Count > 0)
-                {
-                    WriteJointData(d.Joints, def);
-                }
+				v2dWorld.definitions.Add(d);
+				d.Name = def.DefinitionName;
+				d.Id = def.Id;
+				d.LinkageName = def.LinkageName;// paths.ContainsKey(def.Id) ? paths[def.Id] : "";
+				d.FrameCount = def.FrameCount;
+				d.OffsetX = def.Bounds.Point.X;
+				d.OffsetY = def.Bounds.Point.Y;
+
+				d.Joints.Clear();
+				if (def.Joints.Count > 0)
+				{
+					WriteJointData(d.Joints, def);
+				}
             }
         }
         private void WriteJointData(List<V2DJoint> defJoints, Definition2D def)

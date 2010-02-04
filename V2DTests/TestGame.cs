@@ -13,9 +13,9 @@ namespace V2DTest
     {
 		public bool show3D = true;
 
-        public override bool HasCursor { get { return true; } } 
+        public override bool HasCursor { get { return true; } }
 
-        protected override void InitializeScreens()
+		protected override void CreateScreens()
         {
             //screens.Add(new V2DScreen(contentManager.Load<V2DContent>("germs"))); 
             //screens.Add(new DistanceJointDemo(contentManager.Load<V2DContent>("DistanceJoint")));

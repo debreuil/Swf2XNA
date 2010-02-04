@@ -638,7 +638,7 @@ namespace Box2DX.Dynamics
 		/// <returns>The number of shapes found</returns>
 		public int Raycast(Segment segment, Shape[] shapes, int maxCount, bool solidShapes, object userData)
 		{
-#warning "PTR"
+//#warning "PTR"
 			_raycastSegment = segment;
 			_raycastUserData = userData;
 			_raycastSolidShape = solidShapes;
@@ -1466,5 +1466,27 @@ namespace Box2DX.Dynamics
 		{
 			return _broadPhase.InRange(aabb);
 		}
+
+		public bool Contains(Body b)
+		{
+			bool result = false;
+			if (b != null)
+			{
+				Body wb = GetBodyList();
+				while (wb != null)
+				{
+					if (b.Equals(wb))
+					{
+						result = true;
+						break;
+					}
+					wb = wb.GetNext();
+				}
+			}
+			return result;
+		}
 	}
 }
+
+
+

@@ -12,11 +12,12 @@ using System.IO;
 namespace DDW.VexPipeline
 {
     [ContentProcessor]
-    public class SwfProcessor : ContentProcessor<string, V2DContent>
+	public class SwfProcessor : ContentProcessor<string, V2DContentHolder>
     {
-        public override V2DContent Process(string fileName, ContentProcessorContext context)
-        { 
-            V2DContent result = null;
+		public override V2DContentHolder Process(string fileName, ContentProcessorContext context)
+        {
+			V2DContent result = null;
+			V2DContentHolder vch = null;
             //System.Diagnostics.Debugger.Launch();
 
             if (File.Exists(fileName))
@@ -31,15 +32,16 @@ namespace DDW.VexPipeline
                 SwfCompilationUnit scu = new SwfCompilationUnit(r, name);
                 if (scu.IsValid)
                 {
-                    result = DDW.VexTo2DPhysics.V2D.SwfToV2DContent(scu, context);
+                    vch = DDW.VexTo2DPhysics.V2D.SwfToV2DContent(scu, context);
                 }
             }
 
-            if (result == null)
+            if (vch == null)
             {
                 throw new InvalidContentException("invalid swf content");
             }
-            return result;
+			result = new V2DContent();
+            return vch;
         }
     }
 

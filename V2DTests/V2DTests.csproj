@@ -56,10 +56,6 @@
     <XnaCompressContent>true</XnaCompressContent>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Box2DX, Version=2.0.1.23798, Culture=neutral, processorArchitecture=x86">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\VexRuntime\Libraries\debug\Box2DX.dll</HintPath>
-    </Reference>
     <Reference Include="Microsoft.Xna.Framework, Version=3.1.0.0, Culture=neutral, PublicKeyToken=6d5c3888ef60e27d, processorArchitecture=x86">
       <Private>False</Private>
       <SpecificVersion>True</SpecificVersion>
@@ -135,13 +131,13 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\VexPipelineReader\VexPipelineReader.csproj">
-      <Project>{5A3DFD5E-6972-4252-B800-C884FCCB3C33}</Project>
-      <Name>VexPipelineReader</Name>
+    <ProjectReference Include="..\Box2D\src\Box2DX.csproj">
+      <Project>{C157BCA5-BAC7-455F-A7DE-59D506D46ECF}</Project>
+      <Name>Box2DX</Name>
     </ProjectReference>
-    <ProjectReference Include="..\VexRuntime\VexRuntime.csproj">
-      <Project>{75D33295-0B9A-4E03-83C3-2CC798741627}</Project>
-      <Name>VexRuntime</Name>
+    <ProjectReference Include="..\V2DRuntime\V2DRuntime.csproj">
+      <Project>{269A1048-DA2C-475A-9C10-564A7D8A071D}</Project>
+      <Name>V2DRuntime</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

@@ -97,6 +97,8 @@ namespace DDW.VexTo2DPhysics
 				d.FrameCount = def.FrameCount;
 				d.OffsetX = def.Bounds.Point.X;
 				d.OffsetY = def.Bounds.Point.Y;
+				d.Width = def.Bounds.Size.Width;
+				d.Height = def.Bounds.Size.Height;
 
 				d.Joints.Clear();
 				if (def.Joints.Count > 0)

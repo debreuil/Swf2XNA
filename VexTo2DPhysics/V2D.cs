@@ -72,9 +72,9 @@ namespace DDW.VexTo2DPhysics
             return result;
         }
 
-        public static V2DContent SwfToV2DContent(SwfCompilationUnit scu, ContentProcessorContext context)
+		public static V2DContentHolder SwfToV2DContent(SwfCompilationUnit scu, ContentProcessorContext context)
         {
-            V2DContent result = null;
+			V2DContentHolder result = null;
             if (scu.IsValid)
             {
                 SwfToVex s2v = new SwfToVex();

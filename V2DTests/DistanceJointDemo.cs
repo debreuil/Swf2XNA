@@ -7,7 +7,7 @@ using DDW.V2D.Serialization;
 using Box2DX.Dynamics;
 using DDW.Display;
 using DDW.Input;
-using VexRuntime.Components;
+using V2DRuntime.Components;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using V2DTests;

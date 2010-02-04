@@ -100,9 +100,9 @@ namespace DDW.VexTo2DPhysics
                 sw.Close();  
             }
         }
-        public V2DContent GetV2DContent(ContentProcessorContext context)
+		public V2DContentHolder GetV2DContent(ContentProcessorContext context)
         {
-            V2DContent result = new V2DContent();
+			V2DContentHolder result = new V2DContentHolder();
             result.v2dWorld = genV2d.v2dWorld;// V2DWorld.CreateFromXml(genV2d.path);
 
             //XmlSerializer xs = new XmlSerializer(typeof(V2DWorld));
@@ -198,6 +198,10 @@ namespace DDW.VexTo2DPhysics
                 {
                     V2DJointKind jointKind = jointKindMap[jointKinds.IndexOf(def.Name)];
                     ParseJoint(jointKind, inst);
+                }
+				else if( ((dk & DefinitionKind.ShapeMarker) != 0) && (inst != null))
+                {
+					parentStack.Peek().Definition.AddShapes(curVo, def, m);
                 }
 
                 if ((dk & DefinitionKind.TextField) != 0)

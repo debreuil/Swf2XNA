@@ -17,6 +17,7 @@ namespace DDW.V2D
 {
     public class V2DStage : Stage
     {
+		//todo: World needs to be per Screen
         private World world;
         public V2DWorld v2dWorld;
         public int Iterations = 10;
@@ -185,41 +186,44 @@ namespace DDW.V2D
 
         public override void Update(GameTime gameTime)
         {
-            float timeStep = hz > 0.0f ? 1.0f / hz : 0.0f;
-            if (pause)
-            {
-                if (singleStep)
-                {
-                    singleStep = false;
-                }
-                else
-                {
-                    timeStep = 0.0f;
-                }
-            }
+			if (V2DGame.instance.IsActive && curScreen.isActive)
+			{
+				float timeStep = hz > 0.0f ? 1.0f / hz : 0.0f;
 
-            world.SetWarmStarting(enableWarmStarting > 0);
-            world.SetContinuousPhysics(enableTOI > 0);
+				if (pause)
+				{
+					if (singleStep)
+					{
+						singleStep = false;
+					}
+					else
+					{
+						timeStep = 0.0f;
+					}
+				}
 
-            world.Step(timeStep, velocityIterations, positionIterations);
+				world.SetWarmStarting(enableWarmStarting > 0);
+				world.SetContinuousPhysics(enableTOI > 0);
 
-            world.Validate();
+				world.Step(timeStep, velocityIterations, positionIterations);
 
-            Body b = world.GetBodyList();
-            while (b != null)
-            {
-                if(b.GetUserData() is V2DSprite)
-                {
-                    V2DSprite s = (V2DSprite)b.GetUserData();
-                    Vector2 offset = s.Parent.GetGlobalOffset(Vector2.Zero); //Vector2.Zero;// 
-                    s.X = (int)(b.GetPosition().X * WorldScale - offset.X);
-                    s.Y = (int)(b.GetPosition().Y * WorldScale - offset.Y);
-                    s.Rotation = b.GetAngle();
-                }
-                b = b.GetNext();
-            }
+				world.Validate();
 
-            base.Update(gameTime);
+				Body b = world.GetBodyList();
+				while (b != null)
+				{
+					if (b.GetUserData() is V2DSprite)
+					{
+						V2DSprite s = (V2DSprite)b.GetUserData();
+						Vector2 offset = s.Parent.GetGlobalOffset(Vector2.Zero); //Vector2.Zero;// 
+						s.X = (int)(b.GetPosition().X * WorldScale - offset.X);
+						s.Y = (int)(b.GetPosition().Y * WorldScale - offset.Y);
+						s.Rotation = b.GetAngle();
+					}
+					b = b.GetNext();
+				}
+			}
+			base.Update(gameTime);
         }
 
 		public override void AddChild(DisplayObject o)

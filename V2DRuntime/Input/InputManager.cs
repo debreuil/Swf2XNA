@@ -21,12 +21,16 @@ namespace DDW.Input // these are ms supplied classes (and they are obtuse), name
 {
     public class InputManager
 	{
-		public PlayerIndex PlayerIndex { get; private set; }
-		public NetworkGamer NetworkGamer { get; set; }
-		public Player Player { get; set; }
+		public PlayerIndex PlayerIndex;
+		public NetworkGamer NetworkGamer;
+		public Player Player;
 
-        public GamePadState GamePadState { get; private set; }
-        public KeyboardState KeyboardState { get; private set; }
+		public GamePadState GamePadState;
+		public KeyboardState currentKeyboardState;
+		public bool IsActiveController = false;
+		public static KeyboardState EmptyKeyboardState = new KeyboardState();
+
+		public Buttons Releases;
 
         /// <summary>
         /// The last "real time" that new input was received. Slightly late button
@@ -94,13 +98,20 @@ namespace DDW.Input // these are ms supplied classes (and they are obtuse), name
         {
             // Get latest input state.
             GamePadState lastGamePadState = GamePadState;
-            KeyboardState lastKeyboardState = KeyboardState;
             GamePadState = GamePad.GetState(PlayerIndex);
 #if DEBUG
-			//if (PlayerIndex == PlayerIndex.One)
-			//{
-                KeyboardState = Keyboard.GetState(PlayerIndex);
-            //}
+			// keyboard only happens from one player	
+			KeyboardState lastKeyboardState;		
+			if (this.IsActiveController)//PlayerIndex == PlayerIndex.One)
+			{
+				lastKeyboardState = currentKeyboardState;
+				currentKeyboardState = Keyboard.GetState(PlayerIndex);
+			}
+			else
+			{
+				lastKeyboardState = EmptyKeyboardState;
+				currentKeyboardState = EmptyKeyboardState;
+			}
 #endif            
 
             // Expire old input.
@@ -111,20 +122,32 @@ namespace DDW.Input // these are ms supplied classes (and they are obtuse), name
                 Buffer.Clear();
             }
 
-            // Get all of the non-direction buttons pressed.
-            Buttons buttons = 0;
+			// Get all of the non-direction buttons pressed.
+			Buttons buttons = 0;
+			Releases = 0;
             foreach (var buttonAndKey in NonDirectionButtons)
             {
                 Buttons button = buttonAndKey.Key;
                 Keys key = buttonAndKey.Value;
 
                 // Check the game pad and keyboard for presses.
-                if ((lastGamePadState.IsButtonUp(button) &&  GamePadState.IsButtonDown(button)) ||
-                    (lastKeyboardState.IsKeyUp(key) && KeyboardState.IsKeyDown(key)) )
-                {
-                    // Use a bitwise-or to accumulate button presses.
-                    buttons |= button;
-                }
+				if ( lastGamePadState.IsButtonUp(button) && GamePadState.IsButtonDown(button) )
+				{
+					buttons |= button;
+				}
+				else if( IsActiveController && (lastKeyboardState.IsKeyUp(key) && currentKeyboardState.IsKeyDown(key)) )
+				{
+					buttons |= button;
+				}
+
+				if ( lastGamePadState.IsButtonDown(button) && GamePadState.IsButtonUp(button) )
+				{
+					Releases |= button;
+				}
+				else if( IsActiveController && (lastKeyboardState.IsKeyDown(key) && currentKeyboardState.IsKeyUp(key)) )
+				{
+					Releases |= button;
+				}
             }
 
             // It is very hard to press two buttons on exactly the same frame.
@@ -132,7 +155,7 @@ namespace DDW.Input // these are ms supplied classes (and they are obtuse), name
             bool mergeInput = (Buffer.Count > 0 && timeSinceLast < MergeInputTime);
 
             // If there is a new direction,
-            var direction = Direction.FromInput(GamePadState, KeyboardState);
+            var direction = Direction.FromInput(GamePadState, currentKeyboardState);
             if (Direction.FromInput(lastGamePadState, lastKeyboardState) != direction)
             {
                 // combine the direction with the buttons.

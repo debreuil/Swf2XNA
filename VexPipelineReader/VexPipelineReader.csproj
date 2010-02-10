@@ -1,23 +1,21 @@
 ﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
   <PropertyGroup>
-    <ProjectGuid>{DC6234AB-6264-45C0-82F5-4FCD9D14AA3D}</ProjectGuid>
+    <ProjectGuid>{D5D6310E-2D9D-4931-8D3B-4574F6625C6A}</ProjectGuid>
     <ProjectTypeGuids>{6D335F3A-9D43-41b4-9D22-F6F17C4BE596};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
-    <OutputType>WinExe</OutputType>
+    <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>V2DTests</RootNamespace>
-    <AssemblyName>V2DTests</AssemblyName>
+    <RootNamespace>VexPipelineReader</RootNamespace>
+    <AssemblyName>VexPipelineReader</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <XnaFrameworkVersion>v3.1</XnaFrameworkVersion>
     <XnaPlatform>Windows</XnaPlatform>
-    <XnaCrossPlatformGroupID>b14afafa-f2a3-4a58-861d-41813a937690</XnaCrossPlatformGroupID>
-    <ApplicationIcon>Game.ico</ApplicationIcon>
-    <Thumbnail>GameThumbnail.png</Thumbnail>
-    <PublishUrl>http://localhost/V2DTests/</PublishUrl>
+    <XnaCrossPlatformGroupID>7481f1fe-9150-4bc1-b930-8eaf21671058</XnaCrossPlatformGroupID>
+    <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
-    <InstallFrom>Web</InstallFrom>
-    <UpdateEnabled>true</UpdateEnabled>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
     <UpdateMode>Foreground</UpdateMode>
     <UpdateInterval>7</UpdateInterval>
     <UpdateIntervalUnits>Days</UpdateIntervalUnits>
@@ -26,7 +24,7 @@
     <MapFileExtensions>true</MapFileExtensions>
     <ApplicationRevision>0</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
-    <IsWebBootstrapper>true</IsWebBootstrapper>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
@@ -70,8 +68,6 @@
     <Reference Include="System">
       <Private>False</Private>
     </Reference>
-    <Reference Include="System.Data" />
-    <Reference Include="System.Drawing" />
     <Reference Include="System.Xml">
       <Private>False</Private>
     </Reference>
@@ -85,25 +81,36 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DistanceJointDemo.cs" />
-    <Compile Include="MainMenuPanel.cs" />
-    <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TestGame.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="cursor.png" />
-    <Content Include="Game.ico" />
-    <Content Include="GameThumbnail.png" />
-    <Content Include="Tests\cursor.png" />
+    <Compile Include="Serialization\SymbolImport.cs" />
+    <Compile Include="Serialization\V2DContent.cs" />
+    <Compile Include="Serialization\V2DDefinition.cs" />
+    <Compile Include="Serialization\V2DInstance.cs" />
+    <Compile Include="Serialization\V2DJoint.cs" />
+    <Compile Include="Serialization\V2DJointKind.cs" />
+    <Compile Include="Serialization\V2DMatrix.cs" />
+    <Compile Include="Serialization\V2DRectangle.cs" />
+    <Compile Include="Serialization\V2DShape.cs" />
+    <Compile Include="Serialization\V2DShapeKind.cs" />
+    <Compile Include="Serialization\V2DText.cs" />
+    <Compile Include="Serialization\V2DTextRun.cs" />
+    <Compile Include="Serialization\V2DTexture.cs" />
+    <Compile Include="Serialization\V2DTransform.cs" />
+    <Compile Include="Serialization\V2DWorld.cs" />
+    <Compile Include="V2DReader.cs" />
   </ItemGroup>
   <ItemGroup>
     <NestedContentProject Include="Content\Content.contentproj">
-      <Project>819f02bd-960e-4362-9add-e70c039aade5</Project>
+      <Project>1712bc5b-4ef2-4539-81f4-0a3493fc053a</Project>
       <Visible>False</Visible>
     </NestedContentProject>
   </ItemGroup>
   <ItemGroup>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
     <BootstrapperPackage Include="Microsoft.Net.Framework.2.0">
       <Visible>False</Visible>
       <ProductName>.NET Framework 2.0 %28x86%29</ProductName>
@@ -117,6 +124,11 @@
     <BootstrapperPackage Include="Microsoft.Net.Framework.3.5">
       <Visible>False</Visible>
       <ProductName>.NET Framework 3.5</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
       <Install>true</Install>
     </BootstrapperPackage>
     <BootstrapperPackage Include="Microsoft.Windows.Installer.3.1">
@@ -129,34 +141,6 @@
       <ProductName>Microsoft XNA Framework Redistributable 3.1</ProductName>
       <Install>true</Install>
     </BootstrapperPackage>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Box2D\src\Box2DX.csproj">
-      <Project>{C157BCA5-BAC7-455F-A7DE-59D506D46ECF}</Project>
-      <Name>Box2DX</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\V2DRuntime\V2DRuntime.csproj">
-      <Project>{269A1048-DA2C-475A-9C10-564A7D8A071D}</Project>
-      <Name>V2DRuntime</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\VexPipelineReader\VexPipelineReader.csproj">
-      <Project>{D5D6310E-2D9D-4931-8D3B-4574F6625C6A}</Project>
-      <Name>VexPipelineReader</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Tests\Demo.fla" />
-    <None Include="Tests\DistanceJoint.fla" />
-    <None Include="Tests\GearJoint.fla" />
-    <None Include="Tests\Movieclip1.fla" />
-    <None Include="Tests\PrismaticJoint.fla" />
-    <None Include="Tests\PullyJoint.fla" />
-    <None Include="Tests\RevoluteJoint.fla" />
-    <None Include="Tests\Scene1Data.fla" />
-    <None Include="Tests\Scene2Data.fla" />
-    <None Include="Tests\Scene3Data.fla" />
-    <None Include="Tests\Scene4Data.fla" />
-    <None Include="Tests\SmuckLib.fla" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\Microsoft.Xna.GameStudio.targets" />

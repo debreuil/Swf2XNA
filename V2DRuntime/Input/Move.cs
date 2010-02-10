@@ -26,7 +26,9 @@ namespace DDW.Input // these are ms supplied classes, namespace changed to fit
         // Set this to true if the input used to activate this move may
         // be reused as a component of longer moves.
         public bool IsSubMove;
+        public Buttons Releases;
         
+        public static Move Empty = new Move("");
         public static Move Up = new Move("Up",  Direction.Up);
         public static Move Down = new Move("Down", Direction.Down);
         public static Move Left = new Move("Left", Direction.Left);

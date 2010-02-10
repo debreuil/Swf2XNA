@@ -13,7 +13,8 @@ namespace V2DRuntime.Components
     public class ButtonTabGroup : Group<Button>
     {
         private int focusIndex = -1;
-        public bool wrapAround = false;
+		public bool wrapAround = false;
+		private bool selectionDown = false;
 
         public ButtonTabGroup(Texture2D texture, V2DInstance inst) : base(texture, inst)
         {
@@ -66,11 +67,11 @@ namespace V2DRuntime.Components
         {
             SetFocus(focusIndex - 1);
         }
-        public override void OnPlayerInput(int playerIndex, DDW.Input.Move move, TimeSpan time)
+        public override bool OnPlayerInput(int playerIndex, DDW.Input.Move move, TimeSpan time)
         {
-            base.OnPlayerInput(playerIndex, move, time);
+            bool result = base.OnPlayerInput(playerIndex, move, time);
 
-			if (!Guide.IsVisible)
+			if (result && !Guide.IsVisible)
 			{
 				if (move == Move.Up)
 				{
@@ -82,15 +83,27 @@ namespace V2DRuntime.Components
 				}
 				else if (focusIndex > -1 && move == Move.ButtonA)
 				{
-					if (OnClick != null)
+					selectionDown = true;
+					element[focusIndex].Press();
+				}
+				else if (move == Move.Empty)
+				{
+					element[focusIndex].Release();
+					if (selectionDown && OnClick != null)
 					{
 						OnClick(element[focusIndex], playerIndex, time);
 					}
+					selectionDown = false;
 				}
 			}
+			return result;
         }
         public delegate void ButtonEventHandler(Button sender, int playerIndex, TimeSpan time);
         public event ButtonEventHandler OnClick;
 
+		public override void Draw(SpriteBatch batch)
+		{
+			base.Draw(batch);
+		}
     }
 }

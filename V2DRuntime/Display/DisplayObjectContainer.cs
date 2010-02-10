@@ -57,12 +57,15 @@ namespace DDW.Display
 	    }
 		private void EnsureInstancesCreated()
 		{
-			V2DDefinition def = screen.v2dWorld.GetDefinitionByName(definitionName);
-			if (def != null)
+			if (!isInitialized)
 			{
-				for (int i = 0; i < def.Instances.Count; i++)
+				V2DDefinition def = screen.v2dWorld.GetDefinitionByName(definitionName);
+				if (def != null)
 				{
-					AddInstance(def.Instances[i], this);
+					for (int i = 0; i < def.Instances.Count; i++)
+					{
+						AddInstance(def.Instances[i], this);
+					}
 				}
 			}
 		}
@@ -104,14 +107,14 @@ namespace DDW.Display
         }
         public virtual void RemoveChild(DisplayObject o)
         {
-			if (o is DisplayObjectContainer)
-			{
-				DisplayObjectContainer doc = (DisplayObjectContainer)o;
-				for (int i = 0; i < doc.children.Count; i++)
-				{
-					doc.RemoveChild(doc.children[i]);
-				}
-			}
+			//if (o is DisplayObjectContainer)
+			//{
+			//    DisplayObjectContainer doc = (DisplayObjectContainer)o;
+			//    for (int i = 0; i < doc.children.Count; i++)
+			//    {
+			//        doc.RemoveChild(doc.children[i]);
+			//    }
+			//}
 
             if (o.EndFrame >= LastChildFrame)
             {
@@ -120,6 +123,7 @@ namespace DDW.Display
 		    children.Remove(o);
 
             o.Removed(EventArgs.Empty);
+			o.Parent = null;
         }
         public virtual void RemoveChildAt(int index)
         {
@@ -192,6 +196,21 @@ namespace DDW.Display
         public uint CurChildFrame;
         public uint LastChildFrame;
 
+		protected override void OnInitializeComplete()
+		{
+			base.OnInitializeComplete();
+			foreach (DisplayObject d in children)
+			{
+				if (d is DisplayObjectContainer)
+				{
+					((DisplayObjectContainer)d).OnInitializeComplete();
+				}
+				else
+				{
+					d.Initialize();
+				}
+			}
+		}
 		//public override void Initialize()
 		//{
 		//    base.Initialize();
@@ -210,12 +229,12 @@ namespace DDW.Display
         }
         public override void Removed(EventArgs e)
         {
+            base.Removed(e);
             foreach (DisplayObject d in children)
             {
                 d.Removed(e);
             }
-            base.Removed(e);
-            children.Clear();
+            //children.Clear();
         }
 
 		#region Instance Management
@@ -415,16 +434,27 @@ namespace DDW.Display
 
 						PropertyInfo cm = collection.GetType().GetProperty("Count");
 						int cnt = (int)cm.GetValue(collection, new object[] { });
-						if (index >= cnt)
+
+						if (t.Name.Contains("ButtonTabGroup") && index == 2)
 						{
-							MethodInfo mi = collection.GetType().GetMethod("Add");
-							mi.Invoke(collection, new object[] { result });
+							int x = 5;
 						}
-						else
+						// pad with nulls if needs to skip indexes (order is based on flash depth, not index)
+						while (index > cnt)
 						{
-							MethodInfo mi = collection.GetType().GetMethod("Insert");
-							mi.Invoke(collection, new object[] { index, result });
+							MethodInfo mia = collection.GetType().GetMethod("Add");
+							mia.Invoke(collection, new object[] { null }); 
+							cnt = (int)cm.GetValue(collection, new object[] { });
 						}
+
+						if (index < cnt)
+						{
+							MethodInfo mia = collection.GetType().GetMethod("RemoveAt");
+							mia.Invoke(collection, new object[] { index }); 
+						}
+
+						MethodInfo mi = collection.GetType().GetMethod("Insert");
+						mi.Invoke(collection, new object[] { index, result });
 					}
 				}
 				//else if (ft.Equals(typeof(TextBox)) || ft.IsSubclassOf(typeof(TextBox)))
@@ -523,13 +553,21 @@ namespace DDW.Display
 			return result;
 		}
 
-        public override void OnPlayerInput(int playerIndex, Move move, TimeSpan time)
+        public override bool OnPlayerInput(int playerIndex, Move move, TimeSpan time)
         {
-            base.OnPlayerInput(playerIndex, move, time);
-            foreach (DisplayObject d in children)
-            {
-                d.OnPlayerInput(playerIndex, move, time);
-            }
+            bool result = base.OnPlayerInput(playerIndex, move, time);
+			if (result)
+			{
+				foreach (DisplayObject d in children)
+				{
+					result = d.OnPlayerInput(playerIndex, move, time);
+					if (!result)
+					{
+						break;
+					}
+				}
+			}
+			return result;
         }
         public override void Update(GameTime gameTime)
         {

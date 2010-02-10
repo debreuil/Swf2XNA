@@ -34,6 +34,7 @@ namespace V2DRuntime.Components
 					textAtoms.Add(ta);
 					sb.Append(ta.Text);
 				}
+				RecreateTextRuns();
 			}
 		}
 
@@ -97,10 +98,21 @@ namespace V2DRuntime.Components
 				ta.FontName = FontManager.Instance.defaultFontName;
 				ta.Font = FontManager.Instance.GetFont(ta.FontName);
 				//ta.Origin = new Microsoft.Xna.Framework.Vector2(X + ta.Left, Y + ta.Top);
-				ta.Origin = new Microsoft.Xna.Framework.Vector2(ta.Left, ta.Top);
+				ta.Origin = ta.TopLeft;
 				ta.Color = color;
 			}
 			ta.Text = sb.ToString();
+
+			if (ta.Align == TextAlign.Center)
+			{
+				Vector2 tw = ta.Font.MeasureString(ta.Text);
+				ta.TopLeft.X = (this.Width - ta.Font.MeasureString(ta.Text).X) / 2;
+			}
+			else if (ta.Align == TextAlign.Right)
+			{
+				ta.TopLeft.X = (this.Width - ta.Font.MeasureString(ta.Text).X);
+			}
+
 			textAtoms.Add(ta);
 		}
 		public override void Update(Microsoft.Xna.Framework.GameTime gameTime)
@@ -117,7 +129,7 @@ namespace V2DRuntime.Components
 
 			for (int i = 0; i < textAtoms.Count; i++)
 			{
-				batch.DrawString(textAtoms[i].Font, textAtoms[i].Text, textAtoms[i].Origin + gOffset, textAtoms[i].Color,
+				batch.DrawString(textAtoms[i].Font, textAtoms[i].Text, textAtoms[i].Origin + textAtoms[i].TopLeft + gOffset, textAtoms[i].Color,
 					gRotation, gOrigin, gScale, SpriteEffects.None, 1f / DepthCounter++);
 			}
 		}

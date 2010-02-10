@@ -15,7 +15,7 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Net;
 using V2DRuntime.Network;
 
-namespace DDW.V2D
+namespace DDW.V2D 
 {
     public abstract class V2DGame : Microsoft.Xna.Framework.Game
     {
@@ -120,39 +120,8 @@ namespace DDW.V2D
 
         protected override void Update(GameTime gameTime)
         {
-			//KeyboardState ks = Keyboard.GetState();
-			//if (!keyDown && ks.IsKeyDown(Keys.Left))
-			//{
-			//    keyDown = true;
-			//    stage.PreviousScreen();
-			//}
-			//else if (!keyDown && ks.IsKeyDown(Keys.Right))
-			//{
-			//    keyDown = true;
-			//    stage.NextScreen();
-			//}
-			//else if (keyDown && (ks.IsKeyUp(Keys.Left) && ks.IsKeyUp(Keys.Right)))
-			//{
-			//    keyDown = false;
-			//}
-
-            stage.Update(gameTime);
-
-            base.Update(gameTime);
-
-			for (PlayerIndex pi = PlayerIndex.One; pi < PlayerIndex.Four; pi++)
-			{
-				if (GamePad.GetState(pi).Buttons.Back == ButtonState.Pressed)
-				{
-					ExitGame();
-					break;
-				}
-				else if (GamePad.GetState(pi).Buttons.Start == ButtonState.Pressed)
-				{
-					ExitToMainMenu();
-					break;
-				}
-			}
+			stage.Update(gameTime);
+			base.Update(gameTime);
         }
         protected override void Draw(GameTime gameTime)
         {

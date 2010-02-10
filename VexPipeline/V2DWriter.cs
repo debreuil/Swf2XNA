@@ -9,9 +9,9 @@ using Microsoft.Xna.Framework.Content.Pipeline.Serialization.Compiler;
 using Microsoft.Xna.Framework;
 using DDW.V2D;
 using Microsoft.Xna.Framework.Content.Pipeline.Graphics;
-using DDW.V2D.Serialization;
 using System.Xml.Serialization;
 using System.IO;
+using DDW.V2D.Serialization;
 
 namespace DDW.VexPipeline
 {

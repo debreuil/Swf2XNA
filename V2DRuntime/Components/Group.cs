@@ -21,7 +21,7 @@ namespace V2DRuntime.Components
 		public override void Removed(EventArgs e)
 		{
 			base.Removed(e);
-			this.ClearChildren();
+			//this.ClearChildren();
 		}
     }
 }

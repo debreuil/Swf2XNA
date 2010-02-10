@@ -6,6 +6,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using DDW.V2D;
 using System.Text.RegularExpressions;
+using System.Globalization;
 
 namespace DDW.Display
 {
@@ -14,10 +15,12 @@ namespace DDW.Display
 		private string text;
 		public string FontName;
 		public SpriteFont Font;
-		public float Top;
-		public float Left;
+		public Vector2 TopLeft;
 		public Color Color;
 		public Vector2 Origin;
+		public float Kerning;
+		public float LetterSpacing;
+		public TextAlign Align;
 
 		public TextAtom()
 		{
@@ -35,6 +38,10 @@ namespace DDW.Display
 			byte g = (byte)(c >> 8);
 			byte b = (byte)(c >> 0);
 			this.Color = new Color(r, g, b, a);
+
+			this.LetterSpacing = GetAttributeValue(tr.Text, "letterSpacing");
+			this.Kerning = GetAttributeValue(tr.Text, "kerning");
+			this.Align = GetAlign(tr.Text);
 		}
 		public string Text
 		{
@@ -47,6 +54,82 @@ namespace DDW.Display
 		private string StripHtml(string text)
 		{
 			string result = Regex.Replace(text, @"<(.|\n)*?>", string.Empty);
+			if (result.Contains('&'))
+			{
+				result = Regex.Replace(result, @"&apos;", "'");
+				result = Regex.Replace(result, @"&nbsp;", @"");
+				result = Regex.Replace(result, @"&gt;", @"");
+				result = Regex.Replace(result, @"&lt;", @"");
+				result = Regex.Replace(result, @"&amp;", @"");
+
+				//result = Regex.Replace(text, @"&cent;", @"¢");
+				//result = Regex.Replace(text, @"&pound;", @"£");
+				//result = Regex.Replace(text, @"&yen;", @"¥");
+				//result = Regex.Replace(text, @"&euro;", @"€");
+				//result = Regex.Replace(text, @"&sect;", @"§");
+				//result = Regex.Replace(text, @"&copy;", @"©");
+				//result = Regex.Replace(text, @"&reg;", @"®");
+			}
+			return result;
+		}
+		private string GetAttributeValueString(string s, string attributeName)
+		{
+			string result = "";
+			int ix = s.IndexOf(attributeName + "=\"");
+			if (ix > -1)
+			{
+				try
+				{
+					int st = ix + attributeName.Length + 2;
+					result = s.Substring(st, s.IndexOf('\"', st) - st);
+				}
+				catch (Exception) { }
+			}
+
+			return result;
+		}
+		private float GetAttributeValue(string s, string attributeName)
+		{
+			float result = 0;
+			string val;
+			try
+			{
+				val = GetAttributeValueString(s, attributeName);
+				result = float.Parse(val, NumberStyles.Any);
+			}
+			catch (Exception)
+			{
+			}
+
+			return result;
+		}
+		private TextAlign GetAlign(string s)
+		{
+			TextAlign result = TextAlign.Left;
+			string val;
+			try
+			{
+				val = GetAttributeValueString(s, "align");
+				switch (val.ToLowerInvariant())
+				{
+					case "left":
+						result = TextAlign.Left;
+						break;
+					case "right":
+						result = TextAlign.Right;
+						break;
+					case "center":
+						result = TextAlign.Center;
+						break;
+					default :
+						result = TextAlign.Left;
+						break;
+				}
+			}
+			catch (Exception)
+			{
+			}
+
 			return result;
 		}
 
@@ -55,4 +138,6 @@ namespace DDW.Display
 			batch.DrawString(Font, Text, Origin, Color);
 		}
 	}
+
+	public enum TextAlign { Left, Center, Right }
 }

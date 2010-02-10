@@ -4,15 +4,17 @@ using System.Linq;
 using System.Text;
 using System.Xml.Serialization;
 using System.IO;
-using Box2DX.Dynamics;
+//using Box2DX.Dynamics;
 using Microsoft.Xna.Framework;
-using Box2DX.Collision;
-using Box2DX.Common;
+//using Box2DX.Collision;
+//using Box2DX.Common;
 
 namespace DDW.V2D.Serialization
 {
     public class V2DWorld
-    {
+	{
+		public const string ROOT_NAME = "_root";
+
         [XmlAttribute]
         public int Width = 800;
         [XmlAttribute]
@@ -46,8 +48,8 @@ namespace DDW.V2D.Serialization
                 if (rootInstance == null)
                 {
                     rootInstance = new V2DInstance();
-                    rootInstance.DefinitionName = V2DGame.ROOT_NAME;
-                    rootInstance.InstanceName = V2DGame.ROOT_NAME;
+                    rootInstance.DefinitionName = ROOT_NAME;
+                    rootInstance.InstanceName = ROOT_NAME;
                 }
                 return rootInstance;
             }

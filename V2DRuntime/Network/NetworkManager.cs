@@ -41,11 +41,6 @@ namespace V2DRuntime.Network
 					instance = new NetworkManager();
 				}
 
-				if (Gamer.SignedInGamers.Count == 0 && !Guide.IsVisible)
-				{
-					Guide.ShowSignIn(maxLocalGamers, false);
-				}
-
 				return instance;
 			}
 		}

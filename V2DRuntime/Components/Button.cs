@@ -13,7 +13,7 @@ namespace V2DRuntime.Components
     /// </summary>
     public class Button : Sprite
     {
-        //public Sprite bkg;
+        // todo: move the event managment into button
 
         private bool isOver;
         private bool isDown;
@@ -68,7 +68,7 @@ namespace V2DRuntime.Components
             isOver = false;
             ResetViewState();
         }
-        public void Click()
+        public void Press()
         {
             isDown = true;
             ResetViewState();
@@ -99,12 +99,16 @@ namespace V2DRuntime.Components
             }
             else if (isSelected && this.FrameCount >= 3)  // use down if no select
             {
-                this.GotoAndStop(2);
+                this.GotoAndStop(1);
             }
             else
             {
                 this.GotoAndStop(0);
             }
-        }
+		}
+		protected override void DrawChild(DisplayObject d, SpriteBatch batch)
+		{
+			base.DrawChild(d, batch);
+		}
     }
 }

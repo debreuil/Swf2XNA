@@ -4,8 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Xml.Serialization;
 
-using Box2DX.Dynamics;
-using DDW.Display;
+//using Box2DX.Dynamics;
+//using DDW.Display;
 using Microsoft.Xna.Framework.Content;
 
 namespace DDW.V2D

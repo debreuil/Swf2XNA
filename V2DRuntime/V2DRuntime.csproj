@@ -79,6 +79,10 @@
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
       <Private>False</Private>
     </Reference>
+    <Reference Include="VexPipelineReader, Version=1.0.0.0, Culture=neutral, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\VexPipelineReader\bin\x86\Debug\VexPipelineReader.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Components\Button.cs" />
@@ -116,24 +120,8 @@
     <Compile Include="Shaders\V2DShader.cs" />
     <Compile Include="Shaders\V2DShaderAttribute.cs" />
     <Compile Include="State\StateManager.cs" />
-    <Compile Include="V2D\Serialization\SymbolImport.cs" />
-    <Compile Include="V2D\Serialization\V2DContent.cs" />
-    <Compile Include="V2D\Serialization\V2DDefinition.cs" />
-    <Compile Include="V2D\Serialization\V2DInstance.cs" />
-    <Compile Include="V2D\Serialization\V2DJoint.cs" />
-    <Compile Include="V2D\Serialization\V2DJointKind.cs" />
-    <Compile Include="V2D\Serialization\V2DMatrix.cs" />
-    <Compile Include="V2D\Serialization\V2DRectangle.cs" />
-    <Compile Include="V2D\Serialization\V2DShape.cs" />
-    <Compile Include="V2D\Serialization\V2DShapeKind.cs" />
-    <Compile Include="V2D\Serialization\V2DText.cs" />
-    <Compile Include="V2D\Serialization\V2DTextRun.cs" />
-    <Compile Include="V2D\Serialization\V2DTexture.cs" />
-    <Compile Include="V2D\Serialization\V2DTransform.cs" />
-    <Compile Include="V2D\Serialization\V2DWorld.cs" />
     <Compile Include="V2D\V2DAttribute.cs" />
     <Compile Include="V2D\V2DGame.cs" />
-    <Compile Include="V2D\V2DReader.cs" />
     <Compile Include="V2D\V2DScreen.cs" />
     <Compile Include="V2D\V2DSprite.cs" />
     <Compile Include="V2D\V2DStage.cs" />

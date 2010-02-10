@@ -45,8 +45,8 @@ namespace DDW.V2D
         {
 			base.Activate();
 
-            bodyMap.Clear();
-            bodyMap.Add(V2DGame.currentRootName, world.GetGroundBody());
+			//bodyMap.Clear();
+			//bodyMap.Add(V2DGame.currentRootName, world.GetGroundBody());
         }
  
 		protected override void RemoveInstanceByName(string name)
@@ -105,16 +105,6 @@ namespace DDW.V2D
 				DestroyBody(b);
 				b = b.GetNext();
 			}
-			//for (int i = 0; i < bodies.Count; i++)
-			//{
-			//    world.DestroyBody(bodies[i]);
-			//}
-
-			//for (int i = 0; i < joints.Count; i++)
-			//{
-			//    world.DestroyJoint(joints[i]);
-			//}
-
 			joints.Clear();
 			bodyMap.Clear();
         }

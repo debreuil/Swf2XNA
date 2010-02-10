@@ -31,7 +31,7 @@ namespace DDW.Display
         public bool isActive = false;
 
         protected MoveList moveList;
-        protected InputManager[] inputManagers;
+        public InputManager[] inputManagers;
         protected Move[] playerMoves;
         protected TimeSpan[] playerMoveTimes;
 		readonly TimeSpan MoveTimeOut = TimeSpan.FromSeconds(1.0);
@@ -113,7 +113,6 @@ namespace DDW.Display
 								new float[]{sa.param0, sa.param1, sa.param2, sa.param3, sa.param4} 
 							});
 			}
-
             SetValidInput();
         }
 
@@ -250,11 +249,24 @@ namespace DDW.Display
             // Give each player a location to store their most recent move.
             playerMoves = new Move[inputManagers.Length];
             playerMoveTimes = new TimeSpan[inputManagers.Length];
+			SetKeyboardController();
         }
+		protected void SetKeyboardController()
+		{
+			bool hasController = false;
+			for (int i = 0; i < inputManagers.Length; i++)
+			{
+				if (inputManagers[i] != null)
+				{
+					inputManagers[i].IsActiveController = !hasController;
+					hasController = true;
+				}
+			}
+		}
 
         protected void ManageInput(GameTime gameTime)
         {
-            if (inputManagers != null && isActive)
+            if (inputManagers != null)
 			{
 				for (int i = 0; i < inputManagers.Length; ++i)
                 {
@@ -273,6 +285,12 @@ namespace DDW.Display
 
 						// Detection and record the current player's most recent move.
 						Move newMove = moveList.DetectMove(inputManager);
+						if (inputManager.Releases != 0)
+						{
+							newMove = new Move("");
+							newMove.Releases = inputManager.Releases;
+						}
+
 						if (newMove != null)
 						{
 							playerMoves[i] = newMove;
@@ -368,7 +386,7 @@ namespace DDW.Display
 			Player p = gamer.Tag as Player;
 			if (p != null)
 			{
-				p.UpdateLocalPlayer(gameTime);
+				//p.UpdateLocalPlayer(gameTime);
 
 				// Periodically send our state to everyone in the session.
 				if (sendPacketThisFrame)
@@ -383,9 +401,10 @@ namespace DDW.Display
 
 		public override void Update(GameTime gameTime)
         {
+			ManageInput(gameTime);
+
             if (isActive)
             {
-				ManageInput(gameTime);
 				if (NetworkManager.Session != null)
 				{
 					UpdateNetworkSession(gameTime);
@@ -400,7 +419,7 @@ namespace DDW.Display
 					DestroyElement(ds);
 				}
 				destructionList.Clear();
-			}
+			}			
 		}
 
 		//Stack<V2DShader> shaderStack = new Stack<V2DShader>();

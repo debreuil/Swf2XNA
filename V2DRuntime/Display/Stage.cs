@@ -88,11 +88,13 @@ namespace DDW.Display
         public override void Update(GameTime gameTime)
         {
             //base.Update(gameTime); // dont update stage itself as it is fixed pos
-			
-            foreach (DisplayObject d in children)
-            {
-                d.Update(gameTime);
-            }
+			if (V2DGame.instance.IsActive)
+			{
+				foreach (DisplayObject d in children)
+				{
+					d.Update(gameTime);
+				}
+			}
 
             if (prevScreen != null && children.Contains(prevScreen) && !prevScreen.isActive)
             {

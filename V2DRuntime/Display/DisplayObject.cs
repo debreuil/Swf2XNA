@@ -28,6 +28,7 @@ namespace DDW.Display
         private int id;
         private static int idCounter = 0;//int.MinValue;
 		private bool isOnStage = false;
+		protected bool isInitialized = false;
 
 		public DisplayObject()
 		{
@@ -81,8 +82,8 @@ namespace DDW.Display
                 texture = value;
                 if (texture != null)
                 {
-                    sourceRectangle = new Rectangle(0, 0, texture.Width, texture.Height);
-                    destinationRectangle = new V2DRectangle(0, 0, texture.Width, texture.Height);
+                    sourceRectangle = new Rectangle(0, 0, texture.Width, texture.Height + 1);
+                    destinationRectangle = new V2DRectangle(0, 0, texture.Width, texture.Height + 1);
                 }
                     
             }
@@ -309,10 +310,15 @@ namespace DDW.Display
             }
 		}
         #endregion
-
 		public virtual void Initialize()
         {
+			isInitialized = true;
         }
+		protected virtual void OnInitializeComplete()
+		{
+			this.Initialize();
+			isInitialized = true;
+		}
         public virtual DisplayObject Clone()
         {
             DisplayObject result = new DisplayObject();
@@ -407,7 +413,7 @@ namespace DDW.Display
             {
                 this.RemovedFromStage(e);
             }
-            this.parent = null;
+            //this.parent = null;
         }
 		/// <summary>
 		/// When this object, or a parent object is added to stage.
@@ -416,7 +422,10 @@ namespace DDW.Display
 		{
 			mspf = (screen == null) ? stage.MillisecondsPerFrame : screen.MillisecondsPerFrame;
 			isOnStage = true;
-			Initialize();
+			if (parent.isInitialized)
+			{
+				OnInitializeComplete();
+			}
         }
 		/// <summary>
 		/// When this object, or a parent object is removed from stage.
@@ -426,9 +435,9 @@ namespace DDW.Display
             if (stage != null)
             {
 				stage.ObjectRemovedFromStage(this);
-				isOnStage = false;
-				stage = null;
             }
+			isOnStage = false;
+			stage = null;
         }
 
         public void LocalToGlobal(ref float x, ref float y)
@@ -515,17 +524,15 @@ namespace DDW.Display
 				screen.DestructionList.Add(this);
 			}
 		}
-        public virtual void OnPlayerInput(int playerIndex, Move move, TimeSpan time)
-        {
+        public virtual bool OnPlayerInput(int playerIndex, Move move, TimeSpan time)
+		{
+			return true;
         }
         public virtual void Update(GameTime gameTime)
         {
         }
         public virtual void Draw(SpriteBatch batch)
 		{
-			//batch.End();
-			//batch.Begin(SpriteBlendMode.AlphaBlend, SpriteSortMode.Immediate, SaveStateMode.None);
-
             if (texture != null)
             {
                 Vector2 gOffset = GetGlobalOffset(Vector2.Zero);
@@ -551,10 +558,12 @@ namespace DDW.Display
                     ydif = Height - (Height - origin.Y) * 2;
                     gOrigin.Y -= ydif;
                     gRotation /= 2f;
-                }
-
-				batch.Draw(texture, gOffset, sourceRectangle, color,
-					gRotation, gOrigin, gScale, se, 1f / DepthCounter++);
+				}
+				Rectangle destRect = new Rectangle((int)gOffset.X, (int)gOffset.Y, (int)Math.Floor(gScale.X * Width + .99999), (int)Math.Floor(gScale.X * Height + .99999));
+				batch.Draw(texture, destRect, sourceRectangle, color,
+					gRotation, gOrigin, se, 1f / DepthCounter++);
+				//batch.Draw(texture, gOffset, sourceRectangle, color,
+				//    gRotation, gOrigin, gScale, se, 1f / DepthCounter++);
             }
 
 

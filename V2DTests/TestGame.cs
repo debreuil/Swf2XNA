@@ -6,23 +6,35 @@ using DDW.V2D;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
 using DDW.Display;
+using Microsoft.Xna.Framework.Input;
 
 namespace V2DTest
 {
     public class TestGame : V2DGame
     {
-		public bool show3D = true;
+		public bool show3D = false;
 
         public override bool HasCursor { get { return true; } }
 
 		protected override void CreateScreens()
         {
-            //screens.Add(new V2DScreen(contentManager.Load<V2DContent>("germs"))); 
-            //screens.Add(new DistanceJointDemo(contentManager.Load<V2DContent>("DistanceJoint")));
-            SymbolImport si = new SymbolImport("DistanceJoint", "djBkg");
-            stage.AddScreen(new DistanceJointDemo(si));
-            si = new SymbolImport("DistanceJoint", "scr2");
-            stage.AddScreen(new DistanceJointDemo(si));
+			stage.AddScreen(new V2DScreen(new SymbolImport("Demo")));
+			stage.AddScreen(new V2DScreen(new SymbolImport("GearJoint")));
+			stage.AddScreen(new V2DScreen(new SymbolImport("SmuckLib")));
+			stage.AddScreen(new V2DScreen(new SymbolImport("Movieclip1")));
+			stage.AddScreen(new V2DScreen(new SymbolImport("PrismaticJoint")));
+			stage.AddScreen(new V2DScreen(new SymbolImport("RevoluteJoint")));
+			stage.AddScreen(new V2DScreen(new SymbolImport("PullyJoint")));
+			stage.AddScreen(new V2DScreen(new SymbolImport("Scene1Data")));
+			stage.AddScreen(new V2DScreen(new SymbolImport("Scene2Data")));
+			stage.AddScreen(new V2DScreen(new SymbolImport("Scene3Data")));
+			stage.AddScreen(new V2DScreen(new SymbolImport("Scene4Data")));
+
+            //si = new SymbolImport("DistanceJoint", "djBkg");
+            //stage.AddScreen(new DistanceJointDemo(si));
+
+			//si = new SymbolImport("DistanceJoint", "scr2");
+			//stage.AddScreen(new DistanceJointDemo(si));
 
             //screens.Add(new V2DScreen(contentManager.Load<V2DContent>("Demo")));
             //screens.Add(new V2DScreen(contentManager.Load<V2DContent>("GearJoint")));
@@ -66,8 +78,8 @@ namespace V2DTest
         protected override void LoadContent()
         {
 			base.LoadContent();
-			
-			FontManager.Instance.AddFont("Flareserif821 Lt BT", V2DGame.contentManager.Load<SpriteFont>(@"Flareserif821 Lt BT"));
+
+			FontManager.Instance.AddFont("Arial", V2DGame.contentManager.Load<SpriteFont>(@"Arial"));
 
 			players = new Model[MAX_PLAYERS];
             players[0] = contentManager.Load<Model>(@"ss0");
@@ -79,6 +91,23 @@ namespace V2DTest
         protected override void Update(Microsoft.Xna.Framework.GameTime gameTime)
         {
             base.Update(gameTime);
+			
+			KeyboardState ks = Keyboard.GetState();
+			if (!keyDown && ks.IsKeyDown(Keys.Left))
+			{
+				keyDown = true;
+				stage.PreviousScreen();
+			}
+			else if (!keyDown && ks.IsKeyDown(Keys.Right))
+			{
+				keyDown = true;
+				stage.NextScreen();
+			}
+			else if (keyDown && (ks.IsKeyUp(Keys.Left) && ks.IsKeyUp(Keys.Right)))
+			{
+				keyDown = false;
+			}
+
             if (show3D)
             {
                 UpdateShips(gameTime);

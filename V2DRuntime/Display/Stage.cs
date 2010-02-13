@@ -13,7 +13,8 @@ namespace DDW.Display
         protected List<Screen> screens = new List<Screen>();
         protected int curScreenIndex = 0;
         protected Screen curScreen;
-        protected Screen prevScreen;
+		protected Screen prevScreen;
+		public bool pause = false;
 
         public float MillisecondsPerFrame = 1000f / 12f;
 
@@ -85,6 +86,10 @@ namespace DDW.Display
         internal virtual void ObjectRemovedFromStage(DisplayObject o)
         {
         }
+
+		public virtual void SetBounds(float x, float y, float w, float h)
+		{
+		}
         public override void Update(GameTime gameTime)
         {
             //base.Update(gameTime); // dont update stage itself as it is fixed pos
@@ -105,10 +110,6 @@ namespace DDW.Display
             if (!children.Contains(curScreen))
             {
                 this.AddChild(curScreen);
-                if (curScreen is V2DScreen)
-                {
-                    V2DGame.instance.SetSize(((V2DScreen)curScreen).v2dWorld.Width, ((V2DScreen)curScreen).v2dWorld.Height);
-                }
             }
 		}
         public override void Draw(SpriteBatch batch)

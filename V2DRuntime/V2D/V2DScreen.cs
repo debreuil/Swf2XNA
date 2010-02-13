@@ -17,6 +17,8 @@ using DDW.V2D.Serialization;
 using DDW.Input;
 using V2DRuntime.Components;
 using V2DRuntime.V2D;
+using Box2DX.Collision;
+using V2DRuntime.Enums;
 
 namespace DDW.V2D
 {
@@ -30,23 +32,31 @@ namespace DDW.V2D
         public List<Body> bodies = new List<Body>();
         public List<Joint> joints = new List<Joint>();
 		//private V2DInstance rootInstance;
+
+		Cursor cursor;
+		internal MouseJoint _mouseJoint;
+		public float hz = 60.0f;
+		public bool singleStep = false;
+		public int velocityIterations = 10;
+		public int positionIterations = 8;
+		public int enableWarmStarting = 1;
+		public int enableTOI = 1;
+		public int Iterations = 10;
+		public float TimeStep = 1 / 30;
+		public float WorldScale = 15;
+		public Vec2 Gravity = new Vec2(0.0f, 10.0f); 
         
         public V2DScreen()
         {
+			CreateWorld();
         }
         public V2DScreen(SymbolImport symbolImport) : base(symbolImport)
         {
+			CreateWorld();
         }
         public V2DScreen(V2DContent v2dContent) : base(v2dContent)
         {
-        }
-
-        public void Activate(World world)
-        {
-			base.Activate();
-
-			//bodyMap.Clear();
-			//bodyMap.Add(V2DGame.currentRootName, world.GetGroundBody());
+			CreateWorld();
         }
  
 		protected override void RemoveInstanceByName(string name)
@@ -85,6 +95,7 @@ namespace DDW.V2D
 		public override void Initialize()
 		{
 			base.Initialize();
+
 			V2DDefinition def = v2dWorld.GetDefinitionByName(this.definitionName);
 			if (def != null)
 			{
@@ -94,10 +105,24 @@ namespace DDW.V2D
 				}
 			}
 		}
-        public override void Removed(EventArgs e)
-        {
-            base.Removed(e);
+		private void CreateWorld()
+		{
+			if (world == null)
+			{
+				bool doSleep = true;
+				ClientSize = new Vector2(v2dWorld.Width, v2dWorld.Height);
+				float w = ClientSize.X / WorldScale;
+				float h = ClientSize.Y / WorldScale;
+				AABB worldAABB = new AABB();
+				worldAABB.LowerBound.Set(0 - 500, (-h / 2) - 500);
+				worldAABB.UpperBound.Set((w / 2) + 500, (h / 2) + 500);
 
+				world = new World(worldAABB, Gravity, doSleep);
+				bodyMap.Add(this.instanceName, world.GetGroundBody());
+			}
+		}
+		private void DestroyWorld()
+		{
 			// clear box2d
 			Body b = world.GetBodyList();
 			while (b != null)
@@ -107,6 +132,29 @@ namespace DDW.V2D
 			}
 			joints.Clear();
 			bodyMap.Clear();
+			world = null;
+		}
+		public override void Added(EventArgs e)
+		{
+			base.Added(e);
+			if (V2DGame.instance.HasCursor)
+			{
+				cursor = V2DGame.instance.GetCursor();
+				cursor.MouseDown += MouseDown;
+				cursor.MouseMove += MouseMove;
+				cursor.MouseUp += MouseUp;
+			}
+		}
+        public override void Removed(EventArgs e)
+        {
+            base.Removed(e);
+			if (V2DGame.instance.HasCursor)
+			{
+				cursor = V2DGame.instance.GetCursor();
+				cursor.MouseDown -= MouseDown;
+				cursor.MouseMove -= MouseMove;
+				cursor.MouseUp -= MouseUp;
+			}
         }
 
         protected Joint AddJoint(V2DJoint joint, float offsetX, float offsetY)
@@ -117,7 +165,7 @@ namespace DDW.V2D
             Vector2 pt0 = new Vector2(joint.X + offsetX, joint.Y + offsetY);
 
             string name = joint.Name;
-            float scale = V2DStage.GetInstance().WorldScale;
+            float scale = WorldScale;
 
             Vec2 anchor0 = new Vec2();
             anchor0.Set(pt0.X / scale, pt0.Y / scale);
@@ -297,6 +345,164 @@ namespace DDW.V2D
 		public void SetContactListener(ContactListener contactListener)
 		{
 			world.SetContactListener(contactListener);
+		}
+
+		public void MouseDown(Vector2 position)
+		{
+			if (_mouseJoint != null)
+			{
+				return;
+			}
+
+			Vec2 p = new Vec2(position.X / WorldScale, position.Y / WorldScale);
+			// Make a small box.
+			AABB aabb = new AABB();
+			Vec2 d = new Vec2();
+			d.Set(0.001f, 0.001f);
+			aabb.LowerBound = p - d;
+			aabb.UpperBound = p + d;
+
+			// Query the world for overlapping shapes.
+			int k_maxCount = 10;
+			Shape[] shapes = new Shape[k_maxCount];
+			int count = world.Query(aabb, shapes, k_maxCount);
+			Body bd = null;
+			for (int i = 0; i < count; ++i)
+			{
+				Body shapeBody = shapes[i].GetBody();
+				if (shapeBody.IsStatic() == false && shapeBody.GetMass() > 0.0f)
+				{
+					bool inside = shapes[i].TestPoint(shapeBody.GetXForm(), p);
+					if (inside)
+					{
+						bd = shapes[i].GetBody();
+						break;
+					}
+				}
+			}
+
+			if (bd != null)
+			{
+				MouseJointDef md = new MouseJointDef();
+				md.Body1 = world.GetGroundBody();
+				md.Body2 = bd;
+				md.Target = p;
+				md.MaxForce = 1000.0f * bd.GetMass();
+				_mouseJoint = (MouseJoint)world.CreateJoint(md);
+				bd.WakeUp();
+			}
+		}
+		public void MouseUp(Vector2 position)
+		{
+			if (_mouseJoint != null)
+			{
+				world.DestroyJoint(_mouseJoint);
+				_mouseJoint = null;
+			}
+		}
+		public void MouseMove(Vector2 position)
+		{
+			if (_mouseJoint != null)
+			{
+				Vec2 p = new Vec2(position.X / WorldScale, position.Y / WorldScale);
+				_mouseJoint.SetTarget(p);
+			}
+		}
+
+		Body[] boundsBodies = new Body[4];
+
+		public override void SetBounds(float x, float y, float w, float h)
+		{
+			foreach (Body b in boundsBodies)
+			{
+				if (b != null && world.Contains(b))
+				{
+					world.DestroyBody(b);
+				}
+			}
+
+			float overlap = 10;
+			float thickness = 100;
+
+			boundsBodies[0] = CreateBox(-overlap, -thickness, w + overlap * 2, thickness);
+			boundsBodies[1] = CreateBox(-overlap, h, w + overlap * 2, thickness);
+			boundsBodies[2] = CreateBox(-thickness, -overlap, thickness, h + overlap * 2);
+			boundsBodies[3] = CreateBox(w, -overlap, thickness, h + overlap * 2);
+
+			boundsBodies[0].SetUserData(EdgeName.Top);
+			boundsBodies[1].SetUserData(EdgeName.Bottom);
+			boundsBodies[2].SetUserData(EdgeName.Left);
+			boundsBodies[3].SetUserData(EdgeName.Right);
+
+		}
+		protected Body CreateBox(float x, float y, float w, float h)
+		{
+			x /= WorldScale;
+			y /= WorldScale;
+			w /= WorldScale;
+			h /= WorldScale;
+
+			BodyDef bodyDef = new BodyDef();
+			bodyDef.Position.Set(x, y);
+
+			PolygonDef polyDef = new PolygonDef();
+			polyDef.VertexCount = 4;
+			polyDef.Vertices[0].Set(0, 0);
+			polyDef.Vertices[1].Set(w, 0);
+			polyDef.Vertices[2].Set(w, h);
+			polyDef.Vertices[3].Set(0, h);
+
+			Body body = world.CreateBody(bodyDef);
+			body.CreateShape(polyDef);
+			body.SetMassFromShapes();
+
+			return body;
+		}
+
+
+
+
+
+		public override void Update(GameTime gameTime)
+		{
+			base.Update(gameTime);
+			if (V2DGame.instance.IsActive && isActive)
+			{
+				float timeStep = hz > 0.0f ? 1.0f / hz : 0.0f;
+
+				if (stage.pause)
+				{
+					if (singleStep)
+					{
+						singleStep = false;
+					}
+					else
+					{
+						timeStep = 0.0f;
+					}
+				}
+
+				world.SetWarmStarting(enableWarmStarting > 0);
+				world.SetContinuousPhysics(enableTOI > 0);
+
+				world.Step(timeStep, velocityIterations, positionIterations);
+
+				world.Validate();
+
+				Body b = world.GetBodyList();
+				while (b != null)
+				{
+					if (b.GetUserData() is V2DSprite)
+					{
+						V2DSprite s = (V2DSprite)b.GetUserData();
+						Vector2 offset = s.Parent.GetGlobalOffset(Vector2.Zero); //Vector2.Zero;// 
+						s.X = (int)(b.GetPosition().X * WorldScale - offset.X);
+						s.Y = (int)(b.GetPosition().Y * WorldScale - offset.Y);
+						s.Rotation = b.GetAngle();
+					}
+					b = b.GetNext();
+				}
+			}
 		}
     }
 }

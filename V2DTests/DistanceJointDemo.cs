@@ -44,7 +44,7 @@ namespace V2DTest
 		public override void Initialize()
 		{
 			base.Initialize();
-			spriteFont1 = V2DGame.contentManager.Load<SpriteFont>(@"FlareSerif821 Lt BT");
+			spriteFont1 = V2DGame.contentManager.Load<SpriteFont>(@"Arial");
 			TextBox tb = new TextBox(null);
 			tb.StartFrame = 0;
 			tb.EndFrame = 9;
@@ -63,7 +63,7 @@ namespace V2DTest
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
-			txTitle.Text = "changed changed changed changed changed \n changed changed changed ";
+			//txTitle.Text = "changed changed changed changed changed \n changed changed changed ";
         }
         public override void Draw(SpriteBatch batch)
         {

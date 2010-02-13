@@ -30,6 +30,8 @@ namespace DDW.Display
         private SymbolImport symbolImport;
         public bool isActive = false;
 
+		public Vector2 ClientSize = new Vector2(400, 300);
+
         protected MoveList moveList;
         public InputManager[] inputManagers;
         protected Move[] playerMoves;
@@ -63,6 +65,7 @@ namespace DDW.Display
 				instanceDefinition = FindRootInstance(v2dWorld.RootInstance, SymbolImport.instanceName);
 				instanceName = symbolImport.instanceName;
 			}
+
 			if (instanceDefinition != null)
 			{
 				definitionName = instanceDefinition.DefinitionName;
@@ -76,7 +79,7 @@ namespace DDW.Display
 
 		public List<DisplayObject> DestructionList { get { return destructionList; } }
 
-		public void Activate()
+		public virtual void Activate()
 		{
 			V2DGame.currentRootName = instanceDefinition.InstanceName == null ? V2DGame.ROOT_NAME : instanceDefinition.InstanceName;
 
@@ -91,7 +94,7 @@ namespace DDW.Display
 			Visible = true;
 		}
 
-		public void Deactivate()
+		public virtual void Deactivate()
 		{
 			isActive = false;
 			Visible = false;
@@ -115,6 +118,22 @@ namespace DDW.Display
 			}
             SetValidInput();
         }
+
+		public override void Added(EventArgs e)
+		{
+			base.Added(e);
+			V2DGame.instance.SetSize(v2dWorld.Width, v2dWorld.Height);
+			Activate();
+		}
+		public override void Removed(EventArgs e)
+		{
+			base.Added(e);
+			Deactivate();
+		}
+		protected override void OnInitializeComplete()
+		{
+			base.OnInitializeComplete();
+		}
 
         public SymbolImport SymbolImport
         {
@@ -399,6 +418,9 @@ namespace DDW.Display
 
 #endregion
 
+		public virtual void SetBounds(float x, float y, float w, float h)
+		{
+		}
 		public override void Update(GameTime gameTime)
         {
 			ManageInput(gameTime);

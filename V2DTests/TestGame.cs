@@ -19,9 +19,9 @@ namespace V2DTest
 
 		protected override void CreateScreens()
         {
-            stage.AddScreen(new DistanceJointDemo(new SymbolImport("DistanceJoint", "djBkg")));
 
-			stage.AddScreen(new Demo(new SymbolImport("Demo")));
+			stage.AddScreen(new Demo(new SymbolImport("Demo", "demoScreen")));
+            stage.AddScreen(new DistanceJointDemo(new SymbolImport("DistanceJoint", "djBkg")));
 			stage.AddScreen(new V2DScreen(new SymbolImport("GearJoint")));
 			stage.AddScreen(new V2DScreen(new SymbolImport("SmuckLib")));
 			stage.AddScreen(new V2DScreen(new SymbolImport("Movieclip1")));

@@ -106,6 +106,21 @@ namespace DDW.V2D
 					AddJoint(def.Joints[i], this.X, this.Y);
 				}
 			}
+			
+			System.Reflection.MemberInfo inf = this.GetType();			
+			System.Attribute[] attrs = System.Attribute.GetCustomAttributes(inf);  // reflection
+			foreach (System.Attribute attr in attrs)
+			{
+				if (attr is V2DScreenAttribute)
+				{
+					V2DScreenAttribute a = (V2DScreenAttribute)attr;
+					if (a.gravityX != 0 | a.gravityY != 10)
+					{
+						Gravity = new Vec2(a.gravityX, a.gravityY);
+						world.Gravity = Gravity;
+					}
+				}
+			}
 		}
 		private void CreateWorld()
 		{
@@ -120,7 +135,11 @@ namespace DDW.V2D
 				worldAABB.UpperBound.Set((w / 2) + 500, (h / 2) + 500);
 
 				world = new World(worldAABB, Gravity, doSleep);
-				bodyMap.Add(this.instanceName, world.GetGroundBody());
+				bodyMap.Add(V2DGame.ROOT_NAME, world.GetGroundBody());
+				if (instanceName != V2DGame.ROOT_NAME)
+				{
+					bodyMap.Add(this.instanceName, world.GetGroundBody());
+				}
 			}
 		}
 		private void DestroyWorld()

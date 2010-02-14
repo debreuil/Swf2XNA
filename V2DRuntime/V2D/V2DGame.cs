@@ -29,7 +29,6 @@ namespace DDW.V2D
         protected SpriteBatch spriteBatch;
         protected bool keyDown = false;
         protected bool isFullScreen = false;
-        Microsoft.Xna.Framework.Graphics.Color bkgColor = new Microsoft.Xna.Framework.Graphics.Color(60, 60, 80);
 
 		public List<NetworkGamer> gamers = new List<NetworkGamer>();
 
@@ -40,11 +39,10 @@ namespace DDW.V2D
                 throw new Exception("There can be only one game class.");
             }
             instance = this;
-
             graphics = new GraphicsDeviceManager(this);
             contentManager = Content;
             Content.RootDirectory = "Content";
-            stage = V2DStage.GetInstance();
+			stage = new V2DStage();
             GetCursor();
         }
 
@@ -125,8 +123,6 @@ namespace DDW.V2D
         }
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(bkgColor);
-
             stage.Draw(spriteBatch);
 
             base.Draw(gameTime);

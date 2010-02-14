@@ -17,6 +17,7 @@ using Microsoft.Xna.Framework.Storage;
 using System.IO;
 using V2DRuntime.Shaders;
 using System.Reflection;
+using V2DRuntime.V2D;
 
 namespace DDW.Display
 {
@@ -104,17 +105,33 @@ namespace DDW.Display
         {
 			base.Initialize(); 
 			
-			System.Reflection.MemberInfo inf = this.GetType();
-			V2DShaderAttribute[] sas = (V2DShaderAttribute[])inf.GetCustomAttributes(typeof(V2DShaderAttribute), false);
-			foreach (V2DShaderAttribute sa in sas)
+			System.Reflection.MemberInfo inf = this.GetType();			
+			System.Attribute[] attrs = System.Attribute.GetCustomAttributes(inf);  // reflection
+			foreach (System.Attribute attr in attrs)
 			{
-				float[] parameters = new float[] { };
-				ConstructorInfo ci = sa.shaderType.GetConstructor(new Type[] { parameters.GetType() });
-				this.defaultShader = (V2DShader)ci.Invoke(
-					new object[] 
+				if (attr is ScreenAttribute)
+				{
+					ScreenAttribute sa = (ScreenAttribute)attr;
+					if (sa.backgroundColor != 0x000000)
+					{
+						this.color = new Color(
+							((sa.backgroundColor & 0xFF0000) >> 16) / 255f, 
+							((sa.backgroundColor & 0x00FF00) >> 8)  / 255f, 
+							((sa.backgroundColor & 0x0000FF) >> 0)  / 255f);
+					}
+				}
+				if (attr is V2DShaderAttribute)
+				{
+					V2DShaderAttribute sa = (V2DShaderAttribute)attr;
+
+					float[] parameters = new float[] { };
+					ConstructorInfo ci = sa.shaderType.GetConstructor(new Type[] { parameters.GetType() });
+					this.defaultShader = (V2DShader)ci.Invoke(
+						new object[] 
 							{ 
 								new float[]{sa.param0, sa.param1, sa.param2, sa.param3, sa.param4} 
 							});
+				}
 			}
             SetValidInput();
         }

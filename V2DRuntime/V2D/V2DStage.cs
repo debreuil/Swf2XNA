@@ -18,23 +18,13 @@ namespace DDW.V2D
     public class V2DStage : Stage
     {
 		//todo: World needs to be per Screen
-        private World world;
         public V2DWorld v2dWorld;
     
 
-        protected V2DStage()
+        public V2DStage()
         {
         }
 
-        private static V2DStage stageInstance;
-        public static V2DStage GetInstance()
-        {
-            if (stageInstance == null)
-            {
-                stageInstance = new V2DStage();
-            }
-            return stageInstance;
-        }
 
 		public override void AddChild(DisplayObject o)
 		{

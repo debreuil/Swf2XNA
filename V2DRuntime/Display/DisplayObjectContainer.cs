@@ -482,9 +482,9 @@ namespace DDW.Display
 
 				foreach (System.Attribute attr in attrs)
 				{
-					if (attr is V2DAttribute)
+					if (attr is SpriteAttribute)
 					{
-						V2DAttribute a = (V2DAttribute)attr;
+						SpriteAttribute a = (SpriteAttribute)attr;
 						result.DepthGroup = a.depthGroup;
 
 						if (result is V2DSprite)

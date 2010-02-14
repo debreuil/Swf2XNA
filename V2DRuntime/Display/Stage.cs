@@ -17,7 +17,7 @@ namespace DDW.Display
 		public bool pause = false;
 
         public float MillisecondsPerFrame = 1000f / 12f;
-
+		
         protected Stage()
         {
             stage = this;
@@ -115,6 +115,7 @@ namespace DDW.Display
         public override void Draw(SpriteBatch batch)
         {
             DepthCounter = 1;
+			batch.GraphicsDevice.Clear(curScreen.Color);
 
             batch.Begin(SpriteBlendMode.AlphaBlend, SpriteSortMode.Immediate, SaveStateMode.None);
             base.Draw(batch);

@@ -7,6 +7,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
 using DDW.Display;
 using Microsoft.Xna.Framework.Input;
+using V2DTests;
 
 namespace V2DTest
 {
@@ -18,7 +19,9 @@ namespace V2DTest
 
 		protected override void CreateScreens()
         {
-			stage.AddScreen(new V2DScreen(new SymbolImport("Demo")));
+            stage.AddScreen(new DistanceJointDemo(new SymbolImport("DistanceJoint", "djBkg")));
+
+			stage.AddScreen(new Demo(new SymbolImport("Demo")));
 			stage.AddScreen(new V2DScreen(new SymbolImport("GearJoint")));
 			stage.AddScreen(new V2DScreen(new SymbolImport("SmuckLib")));
 			stage.AddScreen(new V2DScreen(new SymbolImport("Movieclip1")));
@@ -30,26 +33,9 @@ namespace V2DTest
 			stage.AddScreen(new V2DScreen(new SymbolImport("Scene3Data")));
 			stage.AddScreen(new V2DScreen(new SymbolImport("Scene4Data")));
 
-            //si = new SymbolImport("DistanceJoint", "djBkg");
-            //stage.AddScreen(new DistanceJointDemo(si));
 
 			//si = new SymbolImport("DistanceJoint", "scr2");
 			//stage.AddScreen(new DistanceJointDemo(si));
-
-            //screens.Add(new V2DScreen(contentManager.Load<V2DContent>("Demo")));
-            //screens.Add(new V2DScreen(contentManager.Load<V2DContent>("GearJoint")));
-            //screens.Add(new V2DScreen(contentManager.Load<V2DContent>("SmuckLib")));
-            //screens.Add(new V2DScreen(contentManager.Load<V2DContent>("Movieclip1")));
-            //screens.Add(new V2DScreen(contentManager.Load<V2DContent>("PrismaticJoint")));
-            //screens.Add(new V2DScreen(contentManager.Load<V2DContent>("RevoluteJoint")));
-            //screens.Add(new V2DScreen(contentManager.Load<V2DContent>("PullyJoint")));
-            //screens.Add(new V2DScreen(contentManager.Load<V2DContent>("Scene1Data")));
-            //screens.Add(new V2DScreen(contentManager.Load<V2DContent>("Scene2Data")));
-            //screens.Add(new V2DScreen(contentManager.Load<V2DContent>("Scene3Data")));
-            //screens.Add(new V2DScreen(contentManager.Load<V2DContent>("Scene4Data")));
-
-            //screens.Add(new V2DScreen(new SymbolImport(@"Tests/Movieclip1.xml", "nest1Inst")));
-            //screens.Add(new V2DScreen(new SymbolImport(@"Tests/Movieclip1.xml", "nest2Inst")));
         }
         protected override void Initialize()
         {

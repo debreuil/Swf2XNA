@@ -371,6 +371,7 @@ namespace DDW.Display
 		public virtual DisplayObject SetFieldWithReflection(V2DInstance inst, Texture2D texture)
 		{
 			DisplayObject result = null;
+
 			Type t = this.GetType();
 			string instName = inst.InstanceName;
 			int index = -1;
@@ -379,7 +380,7 @@ namespace DDW.Display
 			if (m.Groups.Count > 2 && t.GetField(instName) == null)
 			{
 				instName = m.Groups[1].Value;
-				index = int.Parse(m.Groups[2].Value);
+				index = int.Parse(m.Groups[2].Value, System.Globalization.NumberStyles.None);
 			}
 
 			FieldInfo fi = t.GetField(instName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
@@ -389,7 +390,8 @@ namespace DDW.Display
 
 				if (ft.BaseType.Name == typeof(V2DRuntime.Components.Group<>).Name && // IsSubclassOf etc doesn't work on generics?
 					 ft.BaseType.Namespace == typeof(V2DRuntime.Components.Group<>).Namespace)
-				{
+				{ 
+					// eg ButtonTabGroup
 					if (fi.GetValue(this) == null)
 					{
 						ConstructorInfo ci = ft.GetConstructor(new Type[] { typeof(Texture2D), typeof(V2DInstance) });
@@ -435,10 +437,6 @@ namespace DDW.Display
 						PropertyInfo cm = collection.GetType().GetProperty("Count");
 						int cnt = (int)cm.GetValue(collection, new object[] { });
 
-						if (t.Name.Contains("ButtonTabGroup") && index == 2)
-						{
-							int x = 5;
-						}
 						// pad with nulls if needs to skip indexes (order is based on flash depth, not index)
 						while (index > cnt)
 						{

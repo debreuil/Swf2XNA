@@ -312,5 +312,11 @@ namespace Box2DX.Dynamics
 			xf.R.Set(angle);
 			xf.Position = center - Box2DX.Common.Math.Mul(xf.R, localCenter);
 		}
+
+
+		public void SetCollideConnected(bool value)
+		{
+			this._collideConnected = value;
+		}
 	}
 }

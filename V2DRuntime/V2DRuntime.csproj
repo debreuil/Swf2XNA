@@ -68,6 +68,7 @@
     <Reference Include="System">
       <Private>False</Private>
     </Reference>
+    <Reference Include="System.Data" />
     <Reference Include="System.Xml">
       <Private>False</Private>
     </Reference>
@@ -85,6 +86,13 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Attributes\DistanceJointAttribute.cs" />
+    <Compile Include="Attributes\GearJointAttribute.cs" />
+    <Compile Include="Attributes\JointAttribute.cs" />
+    <Compile Include="Attributes\LineJointAttribute.cs" />
+    <Compile Include="Attributes\PrismaticJointAttribute.cs" />
+    <Compile Include="Attributes\PulleyJointAttribute.cs" />
+    <Compile Include="Attributes\RevoluteJointAttribute.cs" />
     <Compile Include="Components\Button.cs" />
     <Compile Include="Components\ButtonTabGroup.cs" />
     <Compile Include="Components\Group.cs" />
@@ -120,7 +128,7 @@
     <Compile Include="Shaders\V2DShader.cs" />
     <Compile Include="Shaders\V2DShaderAttribute.cs" />
     <Compile Include="State\StateManager.cs" />
-    <Compile Include="V2D\V2DAttribute.cs" />
+    <Compile Include="Attributes\V2DAttribute.cs" />
     <Compile Include="V2D\V2DGame.cs" />
     <Compile Include="V2D\V2DScreen.cs" />
     <Compile Include="V2D\V2DSprite.cs" />

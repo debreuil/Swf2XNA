@@ -19,6 +19,7 @@ using V2DRuntime.Components;
 using V2DRuntime.V2D;
 using Box2DX.Collision;
 using V2DRuntime.Enums;
+using V2DRuntime.Attributes;
 
 namespace DDW.V2D
 {
@@ -52,6 +53,7 @@ namespace DDW.V2D
         }
         public V2DScreen(SymbolImport symbolImport) : base(symbolImport)
         {
+			this.SymbolImport = symbolImport;
 			CreateWorld();
         }
         public V2DScreen(V2DContent v2dContent) : base(v2dContent)
@@ -270,7 +272,10 @@ namespace DDW.V2D
                 dict["name"] = name;
                 jnt.UserData = dict;
                 this.joints.Add(jnt);
+
+				SetJointWithReflection(name, jnt);
             }
+
 
             return jnt;
         }
@@ -459,7 +464,146 @@ namespace DDW.V2D
 			return body;
 		}
 
+		protected Regex lastDigits = new Regex(@"^([a-zA-Z$_]*)([0-9]+)$", RegexOptions.Compiled);
+		public virtual void SetJointWithReflection(string instName, Joint jnt)
+		{
+			Type t = this.GetType();
 
+			int index = -1;
+			FieldInfo fi = t.GetField(instName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
+
+			if (fi == null)
+			{
+				Match m = lastDigits.Match(instName);
+				if (m.Groups.Count > 2 && t.GetField(instName) == null)
+				{
+					instName = m.Groups[1].Value;
+					index = int.Parse(m.Groups[2].Value, System.Globalization.NumberStyles.None);
+					fi = t.GetField(instName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
+				}
+			}
+
+			if (fi != null)
+			{
+				Type ft = fi.FieldType;
+				
+				if (ft.IsArray)
+				{
+					object array = fi.GetValue(this);
+					Type elementType = ft.GetElementType();
+					if (array == null)
+					{
+						int arrayLength = GetJointArrayLength(instName);
+						array = Array.CreateInstance(elementType, arrayLength);
+						fi.SetValue(this, array);
+					}
+
+					MethodInfo mi = array.GetType().GetMethod("SetValue", new Type[] { elementType, index.GetType() });
+					mi.Invoke(array, new object[] { jnt, index });
+				}
+				else if (typeof(System.Collections.ICollection).IsAssignableFrom(ft))
+				{
+					Type[] genTypes = ft.GetGenericArguments();
+					if (genTypes.Length == 1) // only support single type generics (eg List<>) for now
+					{
+						Type gt = genTypes[0];
+						object collection = fi.GetValue(this);
+						if (collection == null) // ensure list created
+						{
+							ConstructorInfo ci = ft.GetConstructor(new Type[] { });
+							collection = ci.Invoke(new object[] { });
+							fi.SetValue(this, collection);
+						}
+
+						PropertyInfo cm = collection.GetType().GetProperty("Count");
+						int cnt = (int)cm.GetValue(collection, new object[] { });
+
+						// pad with nulls if needs to skip indexes (order is based on flash depth, not index)
+						while (index > cnt)
+						{
+							MethodInfo mia = collection.GetType().GetMethod("Add");
+							mia.Invoke(collection, new object[] { null });
+							cnt = (int)cm.GetValue(collection, new object[] { });
+						}
+
+						if (index < cnt)
+						{
+							MethodInfo mia = collection.GetType().GetMethod("RemoveAt");
+							mia.Invoke(collection, new object[] { index });
+						}
+
+						MethodInfo mi = collection.GetType().GetMethod("Insert");
+						mi.Invoke(collection, new object[] { index, jnt });
+					}
+				}
+				else if (ft.Equals(typeof(Joint)) || ft.IsSubclassOf(typeof(Joint)))
+				{
+					fi.SetValue(this, jnt);
+				}
+				else
+				{
+					throw new ArgumentException("Not supported field type. " + ft.ToString() + " " + instName);
+				}
+
+
+				// apply attributes
+				System.Attribute[] attrs = System.Attribute.GetCustomAttributes(fi);  // reflection
+
+				foreach (System.Attribute attr in attrs)
+				{
+					if (jnt is DistanceJoint && attr is DistanceJointAttribute)
+					{
+						((DistanceJointAttribute)attr).ApplyAttribtues((DistanceJoint)jnt);
+					}
+					else if (jnt is GearJoint && attr is GearJointAttribute)
+					{
+						((GearJointAttribute)attr).ApplyAttribtues((GearJoint)jnt);
+					}
+					else if (jnt is LineJoint && attr is LineJointAttribute)
+					{
+						((LineJointAttribute)attr).ApplyAttribtues((LineJoint)jnt);
+					}
+					else if (jnt is PrismaticJoint && attr is PrismaticJointAttribute)
+					{
+						((PrismaticJointAttribute)attr).ApplyAttribtues((PrismaticJoint)jnt);
+					}
+					else if (jnt is PulleyJoint && attr is PulleyJointAttribute)
+					{
+						((PulleyJointAttribute)attr).ApplyAttribtues((PulleyJoint)jnt);
+					}
+					else if (jnt is RevoluteJoint && attr is RevoluteJointAttribute)
+					{
+						((RevoluteJointAttribute)attr).ApplyAttribtues((RevoluteJoint)jnt);
+					}
+				}
+			}
+		}
+
+		private int GetJointArrayLength(string instName)
+		{
+			int result = 1; // will always be at least one, allows dopping index in def for single arrays
+			V2DDefinition def = screen.v2dWorld.GetDefinitionByName(definitionName);
+			if (def != null)
+			{
+				foreach (V2DJoint vi in def.Joints)
+				{
+					if (vi.Name.StartsWith(instName))
+					{
+						string s = vi.Name.Substring(instName.Length);
+						int val = 0;
+						try
+						{
+							val = int.Parse(s, System.Globalization.NumberStyles.None);
+						}
+						catch (Exception)
+						{
+						}
+						result = System.Math.Max(val + 1, result);
+					}
+				}
+			}
+			return result;
+		}
 
 
 

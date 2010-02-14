@@ -38,7 +38,6 @@ namespace V2DTest
         }
         public DistanceJointDemo(SymbolImport si)  : base(si)
         {
-            this.SymbolImport = si;
         }
 
 		public override void Initialize()

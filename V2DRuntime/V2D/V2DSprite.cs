@@ -9,6 +9,7 @@ using Box2DX.Dynamics;
 using Box2DX.Collision;
 using Box2DX.Common;
 using V2DRuntime.V2D;
+using V2DRuntime.Attributes;
 
 namespace DDW.V2D
 {
@@ -28,6 +29,7 @@ namespace DDW.V2D
         protected List<V2DShape> polygons = new List<V2DShape>();
 
         protected static short groupIndexCounter = 1;
+		public V2DSpriteAttribute attributeProperties;
 
 
         public V2DSprite(Texture2D texture, V2DInstance instance) : base(texture)
@@ -177,8 +179,7 @@ namespace DDW.V2D
 
 				if (body != null && vscreen.bodyMap.ContainsKey(this.instanceName))
                 {
-					vscreen.DestroyBody(body);
-					vscreen.bodyMap.Remove(this.instanceName);
+					vscreen.DestroyBody(body, this.instanceName);
                 }
 
                 body = null;
@@ -216,6 +217,11 @@ namespace DDW.V2D
                             this.transforms[0].Rotation -= rotation;
                         }
                     }
+
+					if (attributeProperties != null)
+					{
+						attributeProperties.ApplyAttribtues(bodyDef);
+					}
 
 					body = vscreen.CreateBody(bodyDef);
 					vscreen.bodies.Add(body);
@@ -314,7 +320,13 @@ namespace DDW.V2D
                 fd.MaskBits = sd.Filter.MaskBits;
                 fd.CategoryBits = sd.Filter.CategoryBits;
                 sd.Filter = fd;
-            }
+			}
+
+			if (attributeProperties != null)
+			{
+				attributeProperties.ApplyAttribtues(sd);
+			}
+
             body.CreateShape(sd);
         }
         protected void ResetInstanceProperties()

@@ -66,6 +66,7 @@
     <Compile Include="Attributes\ScreenAttribute.cs" />
     <Compile Include="Attributes\SpriteAttribute.cs" />
     <Compile Include="Attributes\V2DScreenAttribute.cs" />
+    <Compile Include="Attributes\V2DSpriteAttribute.cs" />
     <Compile Include="Components\Button.cs" />
     <Compile Include="Components\ButtonTabGroup.cs" />
     <Compile Include="Components\Group.cs" />
@@ -180,10 +181,16 @@
     </Reference>
     <Reference Include="XBox_Box2DX, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Box2D\XBox_Box2DX\bin\Xbox 360\Debug\XBox_Box2DX.dll</HintPath>
+      <HintPath>..\Box2D\Output\XBox_Box2DX.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\VexPipelineReader\Xbox 360 Copy of VexPipelineReader.csproj">
+      <Project>{602A9B7F-A669-4025-ABD8-2BC4248FC7B1}</Project>
+      <Name>Xbox 360 Copy of VexPipelineReader</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\Microsoft.Xna.GameStudio.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

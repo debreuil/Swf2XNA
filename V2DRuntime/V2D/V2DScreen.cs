@@ -69,24 +69,7 @@ namespace DDW.V2D
 			{
 				if (bodyMap.ContainsKey(name))
 				{
-					bodyMap.Remove(name);
-
-					List<Joint> relatedJoints = new List<Joint>();
-					for (int j = joints.Count - 1; j >= 0; j--)
-					{
-						if (joints[j].GetBody1() == bd || joints[j].GetBody2() == bd)
-						{
-							joints.RemoveAt(j);
-							relatedJoints.Add(joints[j]);
-						}
-					}
-
-					for (int j = relatedJoints.Count - 1; j >= 0; j--)
-					{
-						world.DestroyJoint(relatedJoints[j]);
-					}
-
-					DestroyBody(bd);
+					DestroyBody(bd, name);
 				}
 				bd.SetUserData(null);
 
@@ -148,7 +131,7 @@ namespace DDW.V2D
 			Body b = world.GetBodyList();
 			while (b != null)
 			{
-				DestroyBody(b);
+				DestroyBody(b, "");
 				b = b.GetNext();
 			}
 			joints.Clear();
@@ -347,19 +330,44 @@ namespace DDW.V2D
 		    }
             return result;
         }
+		public override void DestroyElement(DisplayObject obj)
+		{
+			base.DestroyElement(obj);
+			if (obj is V2DSprite)
+			{
+				DestroyBody(((V2DSprite)obj).body, obj.InstanceName);
+			}
+		}
 		public Body CreateBody(BodyDef bodyDef)
 		{
 			return world.CreateBody(bodyDef);
 		}
-		public void DestroyBody(Body b)
+		public void DestroyBody(Body b, string name)
 		{
 			if (world.Contains(b))
 			{
+				List<Joint> relatedJoints = new List<Joint>();
+				for (int j = joints.Count - 1; j >= 0; j--)
+				{
+					if (joints[j].GetBody1() == b || joints[j].GetBody2() == b)
+					{
+						joints.RemoveAt(j);
+						relatedJoints.Add(joints[j]);
+					}
+				}
+
+				for (int j = relatedJoints.Count - 1; j >= 0; j--)
+				{
+					world.DestroyJoint(relatedJoints[j]);
+				}
+
 				world.DestroyBody(b);
 				this.bodies.Remove(b);
-			}
-			else
-			{
+
+				if (bodyMap.ContainsKey(name))
+				{
+					bodyMap.Remove(name);
+				}
 			}
 		}
 		public void SetGravity(Vec2 v2)
@@ -435,7 +443,7 @@ namespace DDW.V2D
 
 		Body[] boundsBodies = new Body[4];
 
-		public override void SetBounds(float x, float y, float w, float h)
+		protected void ClearBoundsBodies()
 		{
 			foreach (Body b in boundsBodies)
 			{
@@ -444,7 +452,10 @@ namespace DDW.V2D
 					world.DestroyBody(b);
 				}
 			}
-
+		}
+		public override void SetBounds(float x, float y, float w, float h)
+		{
+			ClearBoundsBodies();
 			float overlap = 10;
 			float thickness = 100;
 

@@ -95,6 +95,7 @@
     <Compile Include="Attributes\RevoluteJointAttribute.cs" />
     <Compile Include="Attributes\ScreenAttribute.cs" />
     <Compile Include="Attributes\V2DScreenAttribute.cs" />
+    <Compile Include="Attributes\V2DSpriteAttribute.cs" />
     <Compile Include="Components\Button.cs" />
     <Compile Include="Components\ButtonTabGroup.cs" />
     <Compile Include="Components\Group.cs" />

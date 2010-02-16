@@ -110,7 +110,7 @@ namespace DDW.Display
 			try
 			{
 				val = GetAttributeValueString(s, "align");
-				switch (val.ToLowerInvariant())
+				switch (val.ToLower(CultureInfo.InvariantCulture))
 				{
 					case "left":
 						result = TextAlign.Left;

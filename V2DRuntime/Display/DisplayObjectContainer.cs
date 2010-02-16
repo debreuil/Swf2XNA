@@ -7,9 +7,9 @@ using Microsoft.Xna.Framework;
 using DDW.Input;
 using System.Text.RegularExpressions;
 using System.Reflection;
-using V2DRuntime.V2D;
 using DDW.V2D;
 using V2DRuntime.Shaders;
+using V2DRuntime.Attributes;
 
 namespace DDW.Display
 {
@@ -486,10 +486,15 @@ namespace DDW.Display
 					{
 						SpriteAttribute a = (SpriteAttribute)attr;
 						result.DepthGroup = a.depthGroup;
+					}
 
+					if (attr is V2DSpriteAttribute)
+					{
 						if (result is V2DSprite)
 						{
+							V2DSpriteAttribute a = (V2DSpriteAttribute)attr;
 							V2DSprite sp = (V2DSprite)result;
+							sp.attributeProperties = a;
 							sp.SetGroupIndex(a.groupIndex);
 							sp.IsStatic = a.isStatic;
 						}

@@ -386,7 +386,7 @@ namespace DDW.Display
 		//    return result;
 		//}
 
-		public void SetStageAndScreen()
+		public virtual void SetStageAndScreen()
 		{
 			if (!isOnStage)
 			{

@@ -321,21 +321,21 @@ namespace DDW.Display
 					}
 					else
 					{
-						result = parent.SetFieldWithReflection(inst, texture);
+						result = parent.SetFieldWithReflection(texture, inst);
 
 						if (result == null)
 						{
-							result = new V2DSprite(texture, inst);
+							result = screen.CreateDefaultObject(texture, inst);
 						}
 						parent.AddChild(result);
 					}
 				}
 				else
 				{
-					result = parent.SetFieldWithReflection(inst, texture);
+					result = parent.SetFieldWithReflection(texture, inst);
 					if (result == null)
 					{
-						result = new V2DSprite(texture, inst);
+						result = screen.CreateDefaultObject(texture, inst);
 					}
 					parent.AddChild(result);
 				}
@@ -368,7 +368,7 @@ namespace DDW.Display
 		#endregion
 
 		protected Regex lastDigits = new Regex(@"^([a-zA-Z$_]*)([0-9]+)$", RegexOptions.Compiled);
-		public virtual DisplayObject SetFieldWithReflection(V2DInstance inst, Texture2D texture)
+		public virtual DisplayObject SetFieldWithReflection( Texture2D texture, V2DInstance inst)
 		{
 			DisplayObject result = null;
 

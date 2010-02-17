@@ -163,6 +163,10 @@ namespace DDW.Display
                 symbolImport = value;
             }
         }
+		public virtual Sprite CreateDefaultObject(Texture2D texture, V2DInstance inst)
+		{
+			return new Sprite(texture, inst);
+		}
         public Texture2D GetTexture(string linkageName)
         {
             Texture2D result = null;
@@ -450,7 +454,11 @@ namespace DDW.Display
 				}
                 base.Update(gameTime);
 			}
+			OnUpdateComplete(gameTime);		
+		}
 
+		public virtual void OnUpdateComplete(GameTime gameTime)
+		{
 			if (destructionList.Count > 0)
 			{
 				foreach (DisplayObject ds in destructionList)
@@ -458,9 +466,8 @@ namespace DDW.Display
 					DestroyElement(ds);
 				}
 				destructionList.Clear();
-			}			
+			}	
 		}
-
 		//Stack<V2DShader> shaderStack = new Stack<V2DShader>();
 		public V2DShader lastShader;
 		public V2DShader defaultShader;

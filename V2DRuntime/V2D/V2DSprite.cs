@@ -13,11 +13,12 @@ using V2DRuntime.Attributes;
 
 namespace DDW.V2D
 {
-    public class V2DSprite : Sprite
-    {
+    public class V2DSprite : Sprite, IJointable
+	{
+		V2DScreen v2dScreen;
+
 		public Body body;
         protected List<Joint> jointRefs = new List<Joint>();
-        protected float worldScale;
         protected float density;
         protected float friction;
         protected float restitution;
@@ -46,6 +47,24 @@ namespace DDW.V2D
             ResetInstanceProperties();
         }
 
+		private float worldScale = 15;
+		public float WorldScale { get { return worldScale; } set { worldScale = value; } }
+		public V2DScreen VScreen { get { return v2dScreen; } set { v2dScreen = value; } }
+
+		public override void Initialize()
+		{
+			base.Initialize();
+			this.AddJoints();
+		}
+		public override void SetStageAndScreen()
+		{
+			base.SetStageAndScreen();
+			if (screen == null || !(screen is V2DScreen))
+			{
+				throw new Exception("V2D can only be added to V2DScreens");
+			}
+			v2dScreen = (V2DScreen)screen;
+		}
         public bool IsStatic
         {
             get
@@ -188,67 +207,63 @@ namespace DDW.V2D
         }
         public virtual Body AddBodyInstanceToRuntime()
         {
-			if(screen is V2DScreen)
-			{
-				V2DScreen vscreen = (V2DScreen)screen;
-				this.worldScale = vscreen.worldScale;
+			this.worldScale = v2dScreen.WorldScale;
 
-                // box2D body
-                if (this.polygons.Count > 0)
+            // box2D body
+            if (this.polygons.Count > 0)
+            {
+                BodyDef bodyDef = new BodyDef();
+				float localX = 0;
+				float localY = 0;
+				LocalToGlobal(ref localX, ref localY);
+				bodyDef.Position.Set(localX / worldScale, localY / worldScale);
+				bodyDef.Angle = this.rotation;
+				bodyDef.FixedRotation = this.fixedRotation;
+				bodyDef.AngularDamping = this.angularDamping;
+                bodyDef.LinearDamping = this.linearDamping;
+
+                if (!fixedRotation &&
+                    rotation != 0 && 
+                    this.transforms != null && 
+                    this.transforms.Length > 0 && 
+                    this.transforms[0].Rotation == this.rotation)
                 {
-                    BodyDef bodyDef = new BodyDef();
-					float localX = 0;
-					float localY = 0;
-					LocalToGlobal(ref localX, ref localY);
-					bodyDef.Position.Set(localX / worldScale, localY / worldScale);
-					bodyDef.Angle = this.rotation;
-					bodyDef.FixedRotation = this.fixedRotation;
-					bodyDef.AngularDamping = this.angularDamping;
-                    bodyDef.LinearDamping = this.linearDamping;
-
-                    if (!fixedRotation &&
-                        rotation != 0 && 
-                        this.transforms != null && 
-                        this.transforms.Length > 0 && 
-                        this.transforms[0].Rotation == this.rotation)
+                    for (int i = 0; i < transforms.Length; i++)
                     {
-                        for (int i = 0; i < transforms.Length; i++)
-                        {
-                            this.transforms[0].Rotation -= rotation;
-                        }
+                        this.transforms[0].Rotation -= rotation;
                     }
-
-					if (attributeProperties != null)
-					{
-						attributeProperties.ApplyAttribtues(bodyDef);
-					}
-
-					body = vscreen.CreateBody(bodyDef);
-					vscreen.bodies.Add(body);
-                    
-                    for (int i = 0; i < this.polygons.Count; i++)
-                    {
-                        AddPoly(body, this.polygons[i]);
-                    }
-
-                    if (groupIndex != 0)
-                    {
-                        SetGroupIndex(groupIndex);
-                    }
-
-					if(isStatic != false)
-					{
-						IsStatic = isStatic;
-					}
-
-                    body.SetMassFromShapes();
-                    body.SetUserData(this);
                 }
 
-                if (body != null)
+				if (attributeProperties != null)
+				{
+					attributeProperties.ApplyAttribtues(bodyDef);
+				}
+
+				body = v2dScreen.CreateBody(bodyDef);
+				v2dScreen.bodies.Add(body);
+                
+                for (int i = 0; i < this.polygons.Count; i++)
                 {
-					vscreen.bodyMap.Add(this.instanceName, body);
+                    AddPoly(body, this.polygons[i]);
                 }
+
+                if (groupIndex != 0)
+                {
+                    SetGroupIndex(groupIndex);
+                }
+
+				if(isStatic != false)
+				{
+					IsStatic = isStatic;
+				}
+
+                body.SetMassFromShapes();
+                body.SetUserData(this);
+            }
+
+            if (body != null)
+            {
+				v2dScreen.bodyMap.Add(this.instanceName, body);
             }
             return body;
         }

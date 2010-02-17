@@ -132,6 +132,8 @@
     <Compile Include="Shaders\V2DShaderAttribute.cs" />
     <Compile Include="State\StateManager.cs" />
     <Compile Include="Attributes\SpriteAttribute.cs" />
+    <Compile Include="V2D\IJointable.cs" />
+    <Compile Include="V2D\V2DExtensions.cs" />
     <Compile Include="V2D\V2DGame.cs" />
     <Compile Include="V2D\V2DScreen.cs" />
     <Compile Include="V2D\V2DSprite.cs" />

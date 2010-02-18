@@ -83,15 +83,6 @@ namespace V2DRuntime.Attributes
 		}
 		public void ApplyAttribtues(BodyDef def)
 		{
-			centerOfMassX = 0;
-			centerOfMassY = 0;
-			mass = 0.0f;
-			linearDamping = 0.0f;
-			angularDamping = 0.0f;
-			allowSleep = true;
-			fixedRotation = false;
-			isBullet = false;
-
 			if (centerOfMassX != 0 || centerOfMassY != 0)
 			{
 				def.MassData.Center = new Vec2(centerOfMassX, centerOfMassY);

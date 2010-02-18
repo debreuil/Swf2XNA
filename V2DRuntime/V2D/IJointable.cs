@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using DDW.V2D;
+using DDW.Display;
 
 namespace V2DRuntime.V2D
 {
@@ -13,5 +14,6 @@ namespace V2DRuntime.V2D
 		V2DScreen VScreen { get; }
 		float WorldScale { get; }
 		string DefinitionName { get; }
+		DisplayObject GetChildByName(string name);
 	}
 }

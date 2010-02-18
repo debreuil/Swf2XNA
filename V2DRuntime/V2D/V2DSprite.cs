@@ -238,7 +238,6 @@ namespace DDW.V2D
 				{
 					attributeProperties.ApplyAttribtues(bodyDef);
 				}
-
 				body = v2dScreen.CreateBody(bodyDef);
 				v2dScreen.bodies.Add(body);
                 
@@ -263,7 +262,7 @@ namespace DDW.V2D
 
             if (body != null)
             {
-				v2dScreen.bodyMap.Add(this.instanceName, body);
+				//v2dScreen.bodyMap.Add(this.instanceName, body);
             }
             return body;
         }

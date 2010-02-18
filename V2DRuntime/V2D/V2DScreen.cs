@@ -28,6 +28,7 @@ namespace DDW.V2D
     {
         public World world;
 		protected V2DScreen v2dScreen;
+		public Body groundBody;
 
         public Dictionary<string, Body> bodyMap = new Dictionary<string, Body>();
         public List<Body> bodies = new List<Body>();
@@ -135,10 +136,11 @@ namespace DDW.V2D
 				worldAABB.UpperBound.Set((w / 2) + 500, (h / 2) + 500);
 
 				world = new World(worldAABB, Gravity, doSleep);
-				bodyMap.Add(V2DGame.ROOT_NAME, world.GetGroundBody());
+				groundBody = world.GetGroundBody();
+				bodyMap.Add(V2DGame.ROOT_NAME, groundBody);
 				if (instanceName != V2DGame.ROOT_NAME)
 				{
-					bodyMap.Add(this.instanceName, world.GetGroundBody());
+					bodyMap.Add(this.instanceName, groundBody);
 				}
 			}
 		}

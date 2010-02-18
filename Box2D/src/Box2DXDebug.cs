@@ -31,6 +31,7 @@ namespace Box2DX
 		[Conditional("DEBUG")]
 		public static void Assert(bool condition)
 		{
+			if(!condition)Debugger.Break();
 			Debug.Assert(condition);
 		}
 

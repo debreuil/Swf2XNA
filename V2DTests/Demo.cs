@@ -15,6 +15,8 @@ namespace V2DTests
     public class Demo : V2DScreen
 	{
 		private Sprite bkg;
+
+		[V2DSpriteAttribute(isBullet=true)]
 		private V2DSprite hex;
 		private List<V2DSprite> flo;
 
@@ -30,7 +32,7 @@ namespace V2DTests
 		public override void Initialize()
 		{
 			base.Initialize();
-			bkg.Visible = false;
+			//bkg.Visible = false;
 		}
 	}
 }

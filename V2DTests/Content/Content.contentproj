@@ -94,68 +94,6 @@
       <Importer>SwfImporter</Importer>
       <Processor>SwfProcessor</Processor>
     </Compile>
-    <Compile Include="DistanceJoint.swf">
-      <Name>DistanceJoint</Name>
-      <Importer>SwfImporter</Importer>
-      <Processor>SwfProcessor</Processor>
-    </Compile>
-    <Compile Include="GearJoint.swf">
-      <Name>GearJoint</Name>
-      <Importer>SwfImporter</Importer>
-      <Processor>SwfProcessor</Processor>
-    </Compile>
-    <Compile Include="germs.swf">
-      <Name>germs</Name>
-      <Importer>SwfImporter</Importer>
-      <Processor>SwfProcessor</Processor>
-    </Compile>
-    <Compile Include="SmuckLib.swf">
-      <Name>SmuckLib</Name>
-      <Importer>SwfImporter</Importer>
-      <Processor>SwfProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Movieclip1.swf">
-      <Name>Movieclip1</Name>
-      <Importer>SwfImporter</Importer>
-      <Processor>SwfProcessor</Processor>
-    </Compile>
-    <Compile Include="PrismaticJoint.swf">
-      <Name>PrismaticJoint</Name>
-      <Importer>SwfImporter</Importer>
-      <Processor>SwfProcessor</Processor>
-    </Compile>
-    <Compile Include="PullyJoint.swf">
-      <Name>PullyJoint</Name>
-      <Importer>SwfImporter</Importer>
-      <Processor>SwfProcessor</Processor>
-    </Compile>
-    <Compile Include="RevoluteJoint.swf">
-      <Name>RevoluteJoint</Name>
-      <Importer>SwfImporter</Importer>
-      <Processor>SwfProcessor</Processor>
-    </Compile>
-    <Compile Include="Scene1Data.swf">
-      <Name>Scene1Data</Name>
-      <Importer>SwfImporter</Importer>
-      <Processor>SwfProcessor</Processor>
-    </Compile>
-    <Compile Include="Scene2Data.swf">
-      <Name>Scene2Data</Name>
-      <Importer>SwfImporter</Importer>
-      <Processor>SwfProcessor</Processor>
-    </Compile>
-    <Compile Include="Scene3Data.swf">
-      <Name>Scene3Data</Name>
-      <Importer>SwfImporter</Importer>
-      <Processor>SwfProcessor</Processor>
-    </Compile>
-    <Compile Include="Scene4Data.swf">
-      <Name>Scene4Data</Name>
-      <Importer>SwfImporter</Importer>
-      <Processor>SwfProcessor</Processor>
-    </Compile>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\$(XnaFrameworkVersion)\Microsoft.Xna.GameStudio.ContentPipeline.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -9,6 +9,8 @@ using Microsoft.Xna.Framework;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using V2DRuntime.Attributes;
+using DDW.Display;
+using DDW.V2D.Serialization;
 
 namespace V2DRuntime.V2D
 {
@@ -26,11 +28,27 @@ namespace V2DRuntime.V2D
 			}
 		}
 
+		public static Body GetBody(this IJointable ithis, string name)
+		{
+			Body result = (name == V2DWorld.ROOT_NAME) ? ithis.VScreen.groundBody : null;
+			if (result == null)
+			{
+				DisplayObject obj = ithis.GetChildByName(name);
+				if(obj != null && obj is V2DSprite)
+				{
+					result = ((V2DSprite)obj).body;
+				}
+			}
+			return result;
+		}
+
 		public static Joint AddJoint(this IJointable ithis, V2DJoint joint, float offsetX, float offsetY)
 		{
 			Joint jnt = null;
-			Body targ0 = ithis.VScreen.bodyMap[joint.Body1];
-			Body targ1 = ithis.VScreen.bodyMap[joint.Body2];
+			//Body targ0 = ithis.VScreen.bodyMap[joint.Body1];
+			//Body targ1 = ithis.VScreen.bodyMap[joint.Body2];
+			Body targ0 = GetBody(ithis, joint.Body1);
+			Body targ1 = GetBody(ithis, joint.Body2);
 			Vector2 pt0 = new Vector2(joint.X + offsetX, joint.Y + offsetY);
 
 			string name = joint.Name;

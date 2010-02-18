@@ -21,17 +21,17 @@ namespace V2DTest
         {
 
 			stage.AddScreen(new Demo(new SymbolImport("Demo", "demoScreen")));
-            stage.AddScreen(new DistanceJointDemo(new SymbolImport("DistanceJoint", "djBkg")));
-			stage.AddScreen(new V2DScreen(new SymbolImport("GearJoint")));
-			stage.AddScreen(new V2DScreen(new SymbolImport("SmuckLib")));
-			stage.AddScreen(new V2DScreen(new SymbolImport("Movieclip1")));
-			stage.AddScreen(new V2DScreen(new SymbolImport("PrismaticJoint")));
-			stage.AddScreen(new V2DScreen(new SymbolImport("RevoluteJoint")));
-			stage.AddScreen(new V2DScreen(new SymbolImport("PullyJoint")));
-			stage.AddScreen(new V2DScreen(new SymbolImport("Scene1Data")));
-			stage.AddScreen(new V2DScreen(new SymbolImport("Scene2Data")));
-			stage.AddScreen(new V2DScreen(new SymbolImport("Scene3Data")));
-			stage.AddScreen(new V2DScreen(new SymbolImport("Scene4Data")));
+			//stage.AddScreen(new DistanceJointDemo(new SymbolImport("DistanceJoint", "djBkg")));
+			//stage.AddScreen(new V2DScreen(new SymbolImport("GearJoint")));
+			//stage.AddScreen(new V2DScreen(new SymbolImport("SmuckLib")));
+			//stage.AddScreen(new V2DScreen(new SymbolImport("Movieclip1")));
+			//stage.AddScreen(new V2DScreen(new SymbolImport("PrismaticJoint")));
+			//stage.AddScreen(new V2DScreen(new SymbolImport("RevoluteJoint")));
+			//stage.AddScreen(new V2DScreen(new SymbolImport("PullyJoint")));
+			//stage.AddScreen(new V2DScreen(new SymbolImport("Scene1Data")));
+			//stage.AddScreen(new V2DScreen(new SymbolImport("Scene2Data")));
+			//stage.AddScreen(new V2DScreen(new SymbolImport("Scene3Data")));
+			//stage.AddScreen(new V2DScreen(new SymbolImport("Scene4Data")));
 
 
 			//si = new SymbolImport("DistanceJoint", "scr2");

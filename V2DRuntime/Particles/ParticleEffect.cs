@@ -81,7 +81,7 @@ namespace V2DRuntime.Particles
 		public virtual void End()
 		{
 			isActive = false;
-			this.MarkForDestruction();
+			this.DestroyAfterUpdate();
 		}
 		public override void AddedToStage(EventArgs e)
 		{

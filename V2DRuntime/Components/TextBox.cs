@@ -14,10 +14,10 @@ namespace V2DRuntime.Components
 		private StringBuilder sb;
 		private List<TextAtom> textAtoms = new List<TextAtom>();
 
-		public TextBox() : base(null)
+		public TextBox() : base(null, null)
 		{
 		}
-		public TextBox(string text) : base(null)
+		public TextBox(string text) : base(null, null)
 		{
 			this.Text = text;
 		}

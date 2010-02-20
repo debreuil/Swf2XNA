@@ -33,18 +33,8 @@ namespace DDW.V2D
 		public V2DSpriteAttribute attributeProperties;
 
 
-        public V2DSprite(Texture2D texture, V2DInstance instance) : base(texture)
+        public V2DSprite(Texture2D texture, V2DInstance instance) : base(texture, instance)
         {
-            this.texture = texture;
-            this.instanceDefinition = instance;
-            //this.groupIndex = groupIndexCounter++;
-
-            if (texture != null)
-            {
-                this.sourceRectangle = new Rectangle(0, 0, texture.Width, texture.Height);
-            }
-
-            ResetInstanceProperties();
         }
 
 		private float worldScale = 15;
@@ -230,7 +220,7 @@ namespace DDW.V2D
                 {
                     for (int i = 0; i < transforms.Length; i++)
                     {
-                        this.transforms[0].Rotation -= rotation;
+                        this.transforms[0].Rotation -= rotation; // todo: fix and verify this error
                     }
                 }
 
@@ -343,45 +333,15 @@ namespace DDW.V2D
 
             body.CreateShape(sd);
         }
-        protected void ResetInstanceProperties()
+        protected override void ResetInstanceProperties()
         {
+			base.ResetInstanceProperties();
             if (instanceDefinition != null)
             {
-                if (texture != null)
-                {
-                    //this.destinationRectangle = new V2DRectangle(0, 0, texture.Width, texture.Height);
-                    this.destinationRectangle = new V2DRectangle((int)instanceDefinition.X, (int)instanceDefinition.Y, texture.Width, texture.Height);
-                }
-                else
-                {
-                    //this.destinationRectangle = new V2DRectangle(0, 0, 0, 0);
-                    this.destinationRectangle = new V2DRectangle((int)instanceDefinition.X, (int)instanceDefinition.Y, 0, 0);
-                }
-                this.origin = new Vector2(-instanceDefinition.Definition.OffsetX, -instanceDefinition.Definition.OffsetY);
-				this.InstanceName = instanceDefinition.InstanceName;
-                this.DefinitionName = instanceDefinition.DefinitionName;
-                this.rotation = instanceDefinition.Rotation;
-                this.scale = new Vector2(instanceDefinition.ScaleX, instanceDefinition.ScaleY);
-                this.alpha = instanceDefinition.Alpha;
-                this.visible = instanceDefinition.Visible;
-                this.Depth = instanceDefinition.Depth;
-
-                // normalize all transforms to base position
-                this.transforms = new V2DTransform[instanceDefinition.Transforms.Length];
-                float ox = instanceDefinition.X;
-                float oy = instanceDefinition.Y;
-                for (int i = 0; i < instanceDefinition.Transforms.Length; i++)
-                {
-                    this.transforms[i] = instanceDefinition.Transforms[i].Clone();
-                    this.transforms[i].TranslationX -= ox;
-                    this.transforms[i].TranslationY -= oy;
-                }
                 this.polygons = instanceDefinition.Definition.V2DShapes;
                 this.density = instanceDefinition.Density;
                 this.friction = instanceDefinition.Friction;
                 this.restitution = instanceDefinition.Restitution;
-                this.StartFrame = instanceDefinition.StartFrame;
-                this.EndFrame = instanceDefinition.EndFrame;
             }
         }
 

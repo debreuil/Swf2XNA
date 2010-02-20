@@ -38,19 +38,14 @@ namespace DDW.Display
 		public DisplayObject(Texture2D texture, V2DInstance inst)
 		{
 			id = idCounter++;
+
 			Texture = texture;
-			this.instanceDefinition = inst;
-			this.instanceName = inst.InstanceName;
-			this.definitionName = inst.DefinitionName;
-			this.Depth = inst.Depth;
+			instanceDefinition = inst;
+
 			this.X = (int)inst.X;
 			this.Y = (int)inst.Y;
-			this.Rotation = inst.Rotation;
-			this.Alpha = inst.Alpha;
-			this.Scale = new Vector2(inst.ScaleX, inst.ScaleY);
-			this.Visible = inst.Visible;
-			this.StartFrame = inst.StartFrame;
-			this.EndFrame = inst.EndFrame;
+
+			ResetInstanceProperties();
 		}
 
         #region Properties
@@ -517,11 +512,51 @@ namespace DDW.Display
             return sc;
         }
 
-		public virtual void MarkForDestruction()
+		public virtual void DestroyAfterUpdate()
 		{
 			if (screen != null)
 			{
-				screen.DestructionList.Add(this);
+				screen.DestroyAfterUpdate(this);
+			}
+		}
+
+
+		protected virtual void ResetInstanceProperties()
+		{
+			if (instanceDefinition != null)
+			{
+				if (texture != null)
+				{
+					//this.destinationRectangle = new V2DRectangle(0, 0, texture.Width, texture.Height);
+					this.destinationRectangle = new V2DRectangle((int)instanceDefinition.X, (int)instanceDefinition.Y, texture.Width, texture.Height);
+				}
+				else
+				{
+					//this.destinationRectangle = new V2DRectangle(0, 0, 0, 0);
+					this.destinationRectangle = new V2DRectangle((int)instanceDefinition.X, (int)instanceDefinition.Y, 0, 0);
+				}
+				this.origin = new Vector2(-instanceDefinition.Definition.OffsetX, -instanceDefinition.Definition.OffsetY);
+
+				this.InstanceName = instanceDefinition.InstanceName;
+				this.DefinitionName = instanceDefinition.DefinitionName;
+				this.Rotation = instanceDefinition.Rotation;
+				this.Scale = new Vector2(instanceDefinition.ScaleX, instanceDefinition.ScaleY);
+				this.Alpha = instanceDefinition.Alpha;
+				this.Visible = instanceDefinition.Visible;
+				this.Depth = instanceDefinition.Depth;
+
+				// normalize all transforms to base position
+				this.transforms = new V2DTransform[instanceDefinition.Transforms.Length];
+				float ox = instanceDefinition.X;
+				float oy = instanceDefinition.Y;
+				for (int i = 0; i < instanceDefinition.Transforms.Length; i++)
+				{
+					transforms[i] = instanceDefinition.Transforms[i].Clone();
+					transforms[i].TranslationX -= ox;
+					transforms[i].TranslationY -= oy;
+				}
+				this.StartFrame = instanceDefinition.StartFrame;
+				this.EndFrame = instanceDefinition.EndFrame;
 			}
 		}
         public virtual bool OnPlayerInput(int playerIndex, Move move, TimeSpan time)

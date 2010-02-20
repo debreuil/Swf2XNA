@@ -47,6 +47,10 @@ namespace DDW.Display
 		}
 		public SpriteFont GetFont(string name)
 		{
+			if (!fontList.ContainsKey(name))
+			{
+				throw new Exception("Font not found: " + name);
+			}
 			return fontList[name];
 		}
 	}

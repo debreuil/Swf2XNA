@@ -67,7 +67,16 @@ namespace DDW.V2D
 
 		public override Sprite CreateDefaultObject(Texture2D texture, V2DInstance inst)
 		{
-			return new V2DSprite(texture, inst);
+			Sprite result;
+			if (parent is V2DSprite || parent is V2DScreen)
+			{
+				result = new V2DSprite(texture, inst);
+			}
+			else
+			{
+				result = new Sprite(texture, inst);
+			}
+			return result;
 		}
 
 		public override void SetStageAndScreen()
@@ -264,6 +273,10 @@ namespace DDW.V2D
 		public void SetContactListener(ContactListener contactListener)
 		{
 			world.SetContactListener(contactListener);
+		}
+		public void ClearContactListener()
+		{
+			world.SetContactListener(null);
 		}
 
 		public void MouseDown(Vector2 position)

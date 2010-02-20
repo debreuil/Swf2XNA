@@ -20,9 +20,9 @@ namespace V2DRuntime.Components
         private bool isSelected;
         private bool isEnabled = true;
         
-        public Button(Texture2D texture) : base(texture)
-        {
-        }
+		//public Button(Texture2D texture) : base(texture)
+		//{
+		//}
         public Button(Texture2D texture, V2DInstance inst): base(texture, inst)
         {
         }

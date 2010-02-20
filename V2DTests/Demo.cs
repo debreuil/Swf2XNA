@@ -6,8 +6,9 @@ using DDW.V2D;
 using DDW.Display;
 using V2DRuntime.Attributes;
 using Box2DX.Dynamics;
-using V2DRuntime.V2D;
+using V2DRuntime.Components;
 using Microsoft.Xna.Framework;
+using V2DRuntime.V2D;
 
 namespace V2DTests
 {
@@ -19,6 +20,7 @@ namespace V2DTests
 		[V2DSpriteAttribute(isBullet=true)]
 		private V2DSprite hex;
 		private List<V2DSprite> flo;
+		private TextBox txTest;
 
 		[GearJointAttribute(ratio = 2)]
 		private GearJoint g1;

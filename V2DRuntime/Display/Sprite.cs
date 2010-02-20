@@ -12,12 +12,12 @@ namespace DDW.Display
 {
     public class Sprite : DisplayObjectContainer, IRenderable
     {
-        public Sprite(Texture2D texture)
-        {
-            Texture = texture;
-        }
+		//public Sprite(Texture2D texture)
+		//{
+		//    Texture = texture;
+		//}
         public Sprite(Texture2D texture, V2DInstance inst) : base(texture, inst)
-        {
+		{
         }
     }
 }

@@ -45,7 +45,7 @@ namespace DDW.Display
 		protected int framesSinceLastSend;
 		protected bool enablePrediction = true;
 		protected bool enableSmoothing = true;
-		protected List<DisplayObject> destructionList = new List<DisplayObject>();
+		private List<DisplayObject> destructionList = new List<DisplayObject>();
 		public Dictionary<int, V2DShader> shaderMap = new Dictionary<int, V2DShader>();
 
         public Screen()
@@ -78,7 +78,10 @@ namespace DDW.Display
             this.textures = v2dContent.textures;
         }
 
-		public List<DisplayObject> DestructionList { get { return destructionList; } }
+		public void DestroyAfterUpdate(DisplayObject obj)
+		{
+			destructionList.Add(obj);
+		}
 
 		public virtual void Activate()
 		{

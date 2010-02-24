@@ -159,16 +159,25 @@ namespace DDW.Input
             if (!isMouseDown && mouseState.LeftButton == ButtonState.Pressed)
             {
                 isMouseDown = true;
-                MouseDown.Invoke(position);
+				if (MouseDown != null)
+				{
+					MouseDown.Invoke(position);
+				}
             }
             else if (isMouseDown && mouseState.LeftButton == ButtonState.Released)
             {
                 isMouseDown = false;
-                MouseUp.Invoke(position);
+				if (MouseDown != null)
+				{
+					MouseUp.Invoke(position);
+				}
             }
             else if (isMouseDown && position != previousPosition)
             {
-                MouseMove.Invoke(position);
+				if (MouseMove != null)
+				{
+					MouseMove.Invoke(position);
+				}
                 previousPosition = position;
             }
 #endif

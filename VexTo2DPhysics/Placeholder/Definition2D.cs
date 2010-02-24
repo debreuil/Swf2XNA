@@ -17,7 +17,9 @@ namespace DDW.Placeholder
     /// Temporary holder for conversion to V2DDefinition
     /// </summary>
     public class Definition2D
-    {
+	{
+		public bool IsDefined = false;
+
         public uint Id;
         public string DefinitionName;
 		public string LinkageName;
@@ -62,30 +64,30 @@ namespace DDW.Placeholder
         }
         public void AddShapes(VexObject vo, IDefinition def, Matrix m)
         {
-            if (def.Name == "circleShape")
-            {
-                //Matrix m = orgInst.Transformations[0].Matrix;
-                Point c = new Point(m.TranslateX, m.TranslateY);
-                float r = m.ScaleX * 100 / 2;
-                Shapes.Add(new CircleShape2D(def.Name, c, r));
-            }
-            else if (def is Symbol)
-            {
-                //Matrix m = orgInst.Transformations[0].Matrix;
-                AddShape(def.Name, (Symbol)def, m);
-            }
-            else if (def is Timeline)
-            {
-                foreach (Instance inst in ((Timeline)def).Instances)
-                {
-                    IDefinition def2 = vo.Definitions[inst.DefinitionId];
-                    if (def2 is Symbol && def2.UserData == (int)DefinitionKind.OutlineStroke)
-                    {
-                        //Matrix m = inst.Transformations[0].Matrix;
-                        AddShape(def.Name, (Symbol)def2, inst.Transformations[0].Matrix);
-                    }
-                }
-            }
+			if (def.Name == "circleShape")
+			{
+				//Matrix m = orgInst.Transformations[0].Matrix;
+				Point c = new Point(m.TranslateX, m.TranslateY);
+				float r = m.ScaleX * 100 / 2;
+				Shapes.Add(new CircleShape2D(def.Name, c, r));
+			}
+			else if (def is Symbol)
+			{
+				//Matrix m = orgInst.Transformations[0].Matrix;
+				AddShape(def.Name, (Symbol)def, m);
+			}
+			else if (def is Timeline)
+			{
+				foreach (Instance inst in ((Timeline)def).Instances)
+				{
+					IDefinition def2 = vo.Definitions[inst.DefinitionId];
+					if (def2 is Symbol && def2.UserData == (int)DefinitionKind.OutlineStroke)
+					{
+						//Matrix m = inst.Transformations[0].Matrix;
+						AddShape(def.Name, (Symbol)def2, inst.Transformations[0].Matrix);
+					}
+				}
+			}
         }
         public void AddShape(string name, Symbol sy, Matrix m)
         {

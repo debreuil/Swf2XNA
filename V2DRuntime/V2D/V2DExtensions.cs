@@ -167,15 +167,27 @@ namespace V2DRuntime.V2D
 
 		private static Joint GetFirstGearableJoint(JointEdge je)
 		{
-			Joint result = je.Joint;
-			while (result != null && !(result is PrismaticJoint || result is RevoluteJoint))
+			while (je != null && !(je.Joint is PrismaticJoint || je.Joint is RevoluteJoint))
 			{
 				je = je.Next;
-				result = je.Joint;
-				break;
 			}
-			return result;
+			if (je == null)
+			{
+				throw (new Exception("missing gear joint target"));
+			}
+			return je.Joint;
 		}
+		//private static Joint GetFirstGearableJoint(JointEdge je)
+		//{
+		//    Joint result = je.Joint;
+		//    while (result != null && !(result is PrismaticJoint || result is RevoluteJoint))
+		//    {
+		//        je = je.Next;
+		//        result = je.Joint;
+		//        break;
+		//    }
+		//    return result;
+		//}
 
 		private static Regex lastDigits = new Regex(@"^([a-zA-Z$_]*)([0-9]+)$", RegexOptions.Compiled);
 		public static void SetJointWithReflection(this IJointable ithis, string instName, Joint jnt)

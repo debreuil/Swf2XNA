@@ -36,5 +36,9 @@ namespace V2DTests
 			base.Initialize();
 			//bkg.Visible = false;
 		}
+		public override void Update(GameTime gameTime)
+		{
+			base.Update(gameTime);
+		}
 	}
 }

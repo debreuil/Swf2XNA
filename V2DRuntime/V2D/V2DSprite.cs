@@ -118,7 +118,10 @@ namespace DDW.V2D
 
 		public void SetB2DPosition(float x, float y)
 		{
-			body.SetXForm(new Vec2(x / worldScale, y / worldScale), Rotation);
+			Vector2 go = parent.GetGlobalOffset(Vector2.Zero);
+			XForm xf = body.GetXForm();
+			body.SetXForm(new Vec2((x + go.X) / worldScale, (y + go.Y) / worldScale), xf.R.GetAngle());
+			//body.SetXForm(new Vec2(x / worldScale, y / worldScale), Rotation);
 		}
 
         public override void Play()

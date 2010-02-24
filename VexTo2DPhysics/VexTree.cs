@@ -188,102 +188,117 @@ namespace DDW.VexTo2DPhysics
 
         private void EnsureDefinition(Instance inst, IDefinition def)
         {
-            DefinitionKind dk = (DefinitionKind)def.UserData;
-            bool addInst = (inst != null);
-            Matrix m = (inst == null) ? Matrix.Identitiy : inst.Transformations[0].Matrix;
+			DefinitionKind dk = (DefinitionKind)def.UserData;
+			bool addInst = (inst != null);
+			Matrix m = (inst == null) ? Matrix.Identitiy : inst.Transformations[0].Matrix;
 
-            if ((dk & DefinitionKind.Ignore) == 0)
-            {
-                if ( ((dk & DefinitionKind.JointMarker) != 0) && (inst != null))
-                {
-                    V2DJointKind jointKind = jointKindMap[jointKinds.IndexOf(def.Name)];
-                    ParseJoint(jointKind, inst);
-                }
-				else if( ((dk & DefinitionKind.ShapeMarker) != 0) && (inst != null))
-                {
-					parentStack.Peek().Definition.AddShapes(curVo, def, m);
-                }
+			if ((dk & DefinitionKind.Ignore) == 0)
+			{
+				if (((dk & DefinitionKind.JointMarker) != 0) && (inst != null))
+				{
+					V2DJointKind jointKind = jointKindMap[jointKinds.IndexOf(def.Name)];
+					ParseJoint(jointKind, inst);
+				}
+				else if (((dk & DefinitionKind.ShapeMarker) != 0) && (inst != null))
+				{
+					if (!parentStack.Peek().Definition.IsDefined)
+					{
+						parentStack.Peek().Definition.AddShapes(curVo, def, m);
+					}
+				}
 
-                if ((dk & DefinitionKind.TextField) != 0)
-                {
-                    Text txt = (Text)def;
-                    if (def.Name == null)
-                    {
-                        def.Name = "$tx_" + def.Id;
-                    }
+				if ((dk & DefinitionKind.TextField) != 0)
+				{
+					Text txt = (Text)def;
+					if (def.Name == null)
+					{
+						def.Name = "$tx_" + def.Id;
+					}
 					Definition2D d2d = GetTextDefinition(m, txt);
-                    AddSymbolImage(def);
+					AddSymbolImage(def);
 
-                    if (addInst)
-                    {
-                        AddInstance(inst, def);
-                    }
-                }
+					if (addInst)
+					{
+						AddInstance(inst, def);
+					}
+				}
 
-                if ((dk & DefinitionKind.Timeline) != 0)
-                {
-                    Definition2D d2d = GetDefinition2D(m, def, false);
-        
-                    Instance2D i2d;
-                    if (addInst)
-                    {
-                        i2d = AddInstance(inst, def);
-                    }
-                    else
-                    {
-                        i2d = CreateInstance2D(def);
-                    }
-                    parentStack.Push(i2d);
-                    ParseTimeline((Timeline)def);
-                    parentStack.Pop();
-                }
+				if ((dk & DefinitionKind.Timeline) != 0)
+				{
+					Definition2D d2d = GetDefinition2D(m, def);
 
-                if ((dk & DefinitionKind.Symbol) != 0)
-                {
-                    // todo: this is just adding images
-                    //Body2D b2d = CreateBody2D(inst, def);
-                    if (def.Name == null)
-                    {
-                        def.Name = "$sym_" + def.Id;
-                    }
-                    Definition2D d2d = GetDefinition2D(m, def, false);
-                    AddSymbolImage(def);
+					Instance2D i2d;
+					if (addInst)
+					{
+						i2d = AddInstance(inst, def);
+					}
+					else
+					{
+						i2d = CreateInstance2D(def);
+					}
+					parentStack.Push(i2d);
+					ParseTimeline((Timeline)def);
+					i2d.Definition.IsDefined = true;
+					parentStack.Pop();
+				}
 
-                    if (addInst)
-                    {
-                        AddInstance(inst, def);
-                    }
-                }
+				if ((dk & DefinitionKind.Symbol) != 0)
+				{
+					// todo: this is just adding images
+					//Body2D b2d = CreateBody2D(inst, def);
+					if (def.Name == null)
+					{
+						def.Name = "$sym_" + def.Id;
+					}
+					Definition2D d2d = GetDefinition2D(m, def);
+					AddSymbolImage(def);
 
-                if ((dk & DefinitionKind.Vex2D) != 0)
-                {
-                    Definition2D d2d = GetDefinition2D(m, def, true);
+					if (addInst)
+					{
+						AddInstance(inst, def);
+					}
+				}
 
-                    Instance2D i2d;
-                    if (addInst)
-                    {
-                        i2d = AddInstance(inst, def);
-                    }
-                    else
-                    {
-                        i2d = CreateInstance2D(def);
-                    }
+				if ((dk & DefinitionKind.Vex2D) != 0)
+				{
+					Definition2D d2d = GetDefinition2D(m, def);
 
-                    parentStack.Push(i2d);
-                    ParseTimeline((Timeline)def);
-                    parentStack.Pop();
-                }
-            }
+					if (!parentStack.Peek().Definition.IsDefined)
+					{
+						d2d.AddShapes(curVo, def, m);
+						//parentStack.Peek().Definition.AddShapes(curVo, def, m);
+					}
 
+					Instance2D i2d;
+					if (addInst)
+					{
+						i2d = AddInstance(inst, def);
+					}
+					else
+					{
+						i2d = CreateInstance2D(def);
+					}
+
+					parentStack.Push(i2d);
+					ParseTimeline((Timeline)def);
+					i2d.Definition.IsDefined = true;
+					parentStack.Pop();
+				}
+			}
+
+			def.IsDefined = true;
         }
         private Instance2D AddInstance(Instance inst, IDefinition def)
         {
             Instance2D result = null;
-            if (inst != null)
-            {
-                result = CreateInstance2D(inst, def);
-                parentStack.Peek().Definition.Children.Add(result);
-            }
+			if (inst != null)
+			{
+				result = CreateInstance2D(inst, def);
+				if (!parentStack.Peek().Definition.IsDefined)
+				{
+					parentStack.Peek().Definition.Children.Add(result);
+				}
+			}
             return result;
         }
         private Instance2D CreateInstance2D(Instance inst, IDefinition def)
@@ -311,17 +326,13 @@ namespace DDW.VexTo2DPhysics
             result.TotalFrames = 0; 
             return result;
         }
-        private Definition2D GetDefinition2D(Matrix m, IDefinition def, bool addShapes)
+        private Definition2D GetDefinition2D(Matrix m, IDefinition def)
         {
             Definition2D result = definitions.Find(d => d.DefinitionName == def.Name);
             if (result == null)
             {
                 result = CreateDefinition2D(def);
                 definitions.Add(result);
-                if (addShapes)
-                {
-                    result.AddShapes(curVo, def, m);//inst.Transformations[0].Matrix);
-                }
             }
             return result;
         }

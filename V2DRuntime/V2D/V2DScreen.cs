@@ -88,22 +88,36 @@ namespace DDW.V2D
 			}
 			v2dScreen = (V2DScreen)screen;
 		}
-		protected override void RemoveInstanceByName(string name)
+		protected override DisplayObject RemoveInstance(DisplayObject obj)
 		{
-			Body bd = GetBodyByName(name);
-
-			if (bd != null)
+			DisplayObject d = base.RemoveInstance(obj);
+			if (d is V2DSprite)
 			{
-				if (bodyMap.ContainsKey(name))
+				V2DSprite sp = (V2DSprite)d;
+				if(sp.body != null)
 				{
-					DestroyBody(bd, name);
+					DestroyBody(sp.body, d.InstanceName);
+					sp.body.SetUserData(null);
 				}
-				bd.SetUserData(null);
-
 			}
-
-			base.RemoveInstanceByName(name);
+			return d;
 		}
+		//protected override void RemoveInstanceByName(string name)
+		//{
+		//    Body bd = GetBodyByName(name);
+
+		//    if (bd != null)
+		//    {
+		//        if (bodyMap.ContainsKey(name))
+		//        {
+		//            DestroyBody(bd, name);
+		//        }
+		//        bd.SetUserData(null);
+
+		//    }
+
+		//    base.RemoveInstanceByName(name);
+		//}
 		public override void Initialize()
 		{
 			base.Initialize();
@@ -243,18 +257,22 @@ namespace DDW.V2D
 			if (world.Contains(b))
 			{
 				List<Joint> relatedJoints = new List<Joint>();
-				for (int j = joints.Count - 1; j >= 0; j--)
+				for (int j = 0; j < joints.Count; j++)
 				{
 					if (joints[j].GetBody1() == b || joints[j].GetBody2() == b)
 					{
-						joints.RemoveAt(j);
+						//joints.RemoveAt(j);
 						relatedJoints.Add(joints[j]);
 					}
 				}
 
 				for (int j = relatedJoints.Count - 1; j >= 0; j--)
 				{
-					world.DestroyJoint(relatedJoints[j]);
+					if (joints.Contains(relatedJoints[j]))
+					{
+						world.DestroyJoint(relatedJoints[j]);
+						joints.Remove(relatedJoints[j]);
+					}
 				}
 
 				world.DestroyBody(b);

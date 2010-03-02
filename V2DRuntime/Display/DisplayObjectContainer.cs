@@ -343,27 +343,44 @@ namespace DDW.Display
 
 			return result;
 		}
-		protected virtual void RemoveInstance(V2DInstance instance)
+		protected virtual DisplayObject RemoveInstance(DisplayObject obj)
 		{
-			RemoveInstanceByName(instance.InstanceName);
-		}
-		protected virtual void RemoveInstanceByName(string name)
-		{
-			DisplayObject d = this.GetChildByName(name);
-			if (d != null && d.Parent != null)
+			DisplayObject d = this.children.Find(elem => obj.id == elem.id);
+			if (d != null)
 			{
-				d.Parent.RemoveChild(d);
+				this.RemoveChild(d);
 				d.Parent = null;
 			}
+			else 
+			{
+				for (int i = 0; i < children.Count; i++)
+				{
+					if (children[i] is DisplayObjectContainer)
+					{
+						DisplayObjectContainer doc = (DisplayObjectContainer)children[i];
+						d = doc.RemoveInstance(obj);
+						if (d != null)
+						{
+							break;
+						}
+					}
+				}
+			}
+
+			return d;
 		}
+		//protected virtual void RemoveInstanceByName(string name)
+		//{
+		//    DisplayObject d = this.GetChildByName(name);
+		//    if (d != null && d.Parent != null)
+		//    {
+		//        d.Parent.RemoveChild(d);
+		//        d.Parent = null;
+		//    }
+		//}
 		public virtual void DestroyElement(DisplayObject obj)
 		{
-			this.RemoveInstanceByName(obj.InstanceName);
-			if (obj.Parent != null)
-			{
-				obj.Parent.RemoveChild(obj);
-				obj.Parent = null;
-			}
+			this.RemoveInstance(obj);
 		}
 		#endregion
 

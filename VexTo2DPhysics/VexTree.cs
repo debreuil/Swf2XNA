@@ -263,7 +263,7 @@ namespace DDW.VexTo2DPhysics
 				{
 					Definition2D d2d = GetDefinition2D(m, def);
 
-					if (!parentStack.Peek().Definition.IsDefined)
+					if (!def.IsDefined)
 					{
 						d2d.AddShapes(curVo, def, m);
 						//parentStack.Peek().Definition.AddShapes(curVo, def, m);
@@ -581,133 +581,136 @@ namespace DDW.VexTo2DPhysics
         }
         private void GenerateJointData(Definition2D def)
         {
-            foreach (Joint2D j in def.Joints.Values)
-            {
-                string jName = j.Name;
-                EnsureBodyTags(j);
-                string b1Name = j.data["body1"];
-                string b2Name = j.data["body2"];
-                Instance2D b1Body = (b1Name == V2D.ROOT_NAME) ? rootInstance : parentStack.Peek().Definition.GetChildByName(b1Name);
-                Instance2D b2Body = (b2Name == V2D.ROOT_NAME) ? rootInstance : parentStack.Peek().Definition.GetChildByName(b2Name);
+			if (!def.IsDefined) // todo: really really need to do this isDefined crap right.
+			{
+				foreach (Joint2D j in def.Joints.Values)
+				{
+					string jName = j.Name;
+					EnsureBodyTags(j);
+					string b1Name = j.data["body1"];
+					string b2Name = j.data["body2"];
+					Instance2D b1Body = (b1Name == V2D.ROOT_NAME) ? rootInstance : parentStack.Peek().Definition.GetChildByName(b1Name);
+					Instance2D b2Body = (b2Name == V2D.ROOT_NAME) ? rootInstance : parentStack.Peek().Definition.GetChildByName(b2Name);
 
-                V2DJointKind jointKind = j.JointKind;
+					V2DJointKind jointKind = j.JointKind;
 
-                if (!j.data.ContainsKey("location"))
-                {
-                    if (V2D.OUTPUT_TYPE == OutputType.Swf)
-                    {
-                        j.data.Add("location", "#" + j.Locations[0].ToString());
-                    }
-                    else
-                    {
-                        j.data.Add("X", j.Locations[0].X.ToString());
-                        j.data.Add("Y", j.Locations[0].Y.ToString());
-                    }
-                }
-                if ((j.Locations.Count > 1) && (jointKind == V2DJointKind.Distance || jointKind == V2DJointKind.Pully))
-                {
-                    if (!j.data.ContainsKey("location2"))
-                    {
-                        if (V2D.OUTPUT_TYPE == OutputType.Swf)
-                        {
-                            j.data.Add("location2", "#" + j.Locations[1].ToString());
-                        }
-                        else
-                        {
-                            j.data.Add("X2", j.Locations[1].X.ToString());
-                            j.data.Add("Y2", j.Locations[1].Y.ToString());
-                        }
-                    }
-                    if (jointKind == V2DJointKind.Pully)
-                    {
-                        Point groundAnchor1;
-                        Point groundAnchor2;
-                        if (b1Body.Transforms.Count > 1)
-                        {
-                            groundAnchor1 = new Point(
-                                b1Body.Transforms[1].Matrix.TranslateX,
-                                b1Body.Transforms[1].Matrix.TranslateY);
-                            groundAnchor2 = new Point(
-                                b2Body.Transforms[1].Matrix.TranslateX,
-                                b2Body.Transforms[1].Matrix.TranslateY);
-                        }
-                        else
-                        {
-                            groundAnchor1 = j.Transforms[0];
-                            groundAnchor2 = j.Transforms[1];
-                        }
+					if (!j.data.ContainsKey("location"))
+					{
+						if (V2D.OUTPUT_TYPE == OutputType.Swf)
+						{
+							j.data.Add("location", "#" + j.Locations[0].ToString());
+						}
+						else
+						{
+							j.data.Add("X", j.Locations[0].X.ToString());
+							j.data.Add("Y", j.Locations[0].Y.ToString());
+						}
+					}
+					if ((j.Locations.Count > 1) && (jointKind == V2DJointKind.Distance || jointKind == V2DJointKind.Pully))
+					{
+						if (!j.data.ContainsKey("location2"))
+						{
+							if (V2D.OUTPUT_TYPE == OutputType.Swf)
+							{
+								j.data.Add("location2", "#" + j.Locations[1].ToString());
+							}
+							else
+							{
+								j.data.Add("X2", j.Locations[1].X.ToString());
+								j.data.Add("Y2", j.Locations[1].Y.ToString());
+							}
+						}
+						if (jointKind == V2DJointKind.Pully)
+						{
+							Point groundAnchor1;
+							Point groundAnchor2;
+							if (b1Body.Transforms.Count > 1)
+							{
+								groundAnchor1 = new Point(
+									b1Body.Transforms[1].Matrix.TranslateX,
+									b1Body.Transforms[1].Matrix.TranslateY);
+								groundAnchor2 = new Point(
+									b2Body.Transforms[1].Matrix.TranslateX,
+									b2Body.Transforms[1].Matrix.TranslateY);
+							}
+							else
+							{
+								groundAnchor1 = j.Transforms[0];
+								groundAnchor2 = j.Transforms[1];
+							}
 
-                        float d1x = groundAnchor1.X - j.Locations[0].X;// m1a.TranslateX;
-                        float d1y = groundAnchor1.Y - j.Locations[0].Y;//m1a.TranslateY;
-                        float d2x = groundAnchor2.X - j.Locations[1].X;//m2a.TranslateX;
-                        float d2y = groundAnchor2.Y - j.Locations[1].Y;//m2a.TranslateY;
-                        float maxLength1 = (float)Math.Sqrt(d1x * d1x + d1y * d1y);
-                        float maxLength2 = (float)Math.Sqrt(d2x * d2x + d2y * d2y);
-                        //j.data.Add("groundAnchor1", groundAnchor1.ToString());
-                        //j.data.Add("groundAnchor2", groundAnchor2.ToString());
-                        j.data.Add("groundAnchor1X", groundAnchor1.X.ToString());
-                        j.data.Add("groundAnchor1Y", groundAnchor1.Y.ToString());
-                        j.data.Add("groundAnchor2X", groundAnchor2.X.ToString());
-                        j.data.Add("groundAnchor2Y", groundAnchor2.Y.ToString());
-                        j.data.Add("maxLength1", maxLength1.ToString());
-                        j.data.Add("maxLength2", maxLength2.ToString());
-                    }
-                }
-                else if (b1Body.Transforms.Count > 1 || b2Body.Transforms.Count > 1)
-                {
-                    List<Transform> tr = (b1Body.Transforms.Count > 1) ? b1Body.Transforms : b2Body.Transforms;
-                    if (jointKind == V2DJointKind.Revolute)
-                    {
-                        float start = (float)(tr[0].Matrix.GetMatrixComponents().Rotation / 180 * Math.PI);
-                        float rmin = (float)(tr[1].Matrix.GetMatrixComponents().Rotation / 180 * Math.PI);
-                        float rmax = (float)(tr[2].Matrix.GetMatrixComponents().Rotation / 180 * Math.PI);
-                        rmin = rmin - start;
-                        rmax = rmax - start;
-                        if (rmin > 0)
-                        {
-                            rmin = (float)(Math.PI * -2 + rmin);
-                        }
-                        j.data.Add("min", rmin.ToString());
-                        j.data.Add("max", rmax.ToString());
+							float d1x = groundAnchor1.X - j.Locations[0].X;// m1a.TranslateX;
+							float d1y = groundAnchor1.Y - j.Locations[0].Y;//m1a.TranslateY;
+							float d2x = groundAnchor2.X - j.Locations[1].X;//m2a.TranslateX;
+							float d2y = groundAnchor2.Y - j.Locations[1].Y;//m2a.TranslateY;
+							float maxLength1 = (float)Math.Sqrt(d1x * d1x + d1y * d1y);
+							float maxLength2 = (float)Math.Sqrt(d2x * d2x + d2y * d2y);
+							//j.data.Add("groundAnchor1", groundAnchor1.ToString());
+							//j.data.Add("groundAnchor2", groundAnchor2.ToString());
+							j.data.Add("groundAnchor1X", groundAnchor1.X.ToString());
+							j.data.Add("groundAnchor1Y", groundAnchor1.Y.ToString());
+							j.data.Add("groundAnchor2X", groundAnchor2.X.ToString());
+							j.data.Add("groundAnchor2Y", groundAnchor2.Y.ToString());
+							j.data.Add("maxLength1", maxLength1.ToString());
+							j.data.Add("maxLength2", maxLength2.ToString());
+						}
+					}
+					else if (b1Body.Transforms.Count > 1 || b2Body.Transforms.Count > 1)
+					{
+						List<Transform> tr = (b1Body.Transforms.Count > 1) ? b1Body.Transforms : b2Body.Transforms;
+						if (jointKind == V2DJointKind.Revolute)
+						{
+							float start = (float)(tr[0].Matrix.GetMatrixComponents().Rotation / 180 * Math.PI);
+							float rmin = (float)(tr[1].Matrix.GetMatrixComponents().Rotation / 180 * Math.PI);
+							float rmax = (float)(tr[2].Matrix.GetMatrixComponents().Rotation / 180 * Math.PI);
+							rmin = rmin - start;
+							rmax = rmax - start;
+							if (rmin > 0)
+							{
+								rmin = (float)(Math.PI * -2 + rmin);
+							}
+							j.data.Add("min", rmin.ToString());
+							j.data.Add("max", rmax.ToString());
 
-                    }
-                    else if (jointKind == V2DJointKind.Prismatic)
-                    {
-                        Point a = new Point(
-                            tr[0].Matrix.TranslateX,
-                            tr[0].Matrix.TranslateY);
-                        Point p0 = new Point(
-                            tr[1].Matrix.TranslateX,
-                            tr[1].Matrix.TranslateY);
-                        Point p1 = new Point(
-                            tr[2].Matrix.TranslateX,
-                            tr[2].Matrix.TranslateY);
+						}
+						else if (jointKind == V2DJointKind.Prismatic)
+						{
+							Point a = new Point(
+								tr[0].Matrix.TranslateX,
+								tr[0].Matrix.TranslateY);
+							Point p0 = new Point(
+								tr[1].Matrix.TranslateX,
+								tr[1].Matrix.TranslateY);
+							Point p1 = new Point(
+								tr[2].Matrix.TranslateX,
+								tr[2].Matrix.TranslateY);
 
-                        double len = Math.Sqrt((p1.Y - p0.Y) * (p1.Y - p0.Y) + (p1.X - p0.X) * (p1.X - p0.X));
-                        double r = ((p0.Y - a.Y) * (p0.Y - p1.Y) - (p0.X - a.X) * (p0.X - p1.X)) / (len * len);
+							double len = Math.Sqrt((p1.Y - p0.Y) * (p1.Y - p0.Y) + (p1.X - p0.X) * (p1.X - p0.X));
+							double r = ((p0.Y - a.Y) * (p0.Y - p1.Y) - (p0.X - a.X) * (p0.X - p1.X)) / (len * len);
 
-                        float axisX = p1.X - p0.X;
-                        float axisY = p1.Y - p0.Y;
-                        float maxAxis = Math.Abs(axisX) > Math.Abs(axisY) ? axisX : axisY;
-                        axisX /= maxAxis;
-                        axisY /= maxAxis;
+							float axisX = p1.X - p0.X;
+							float axisY = p1.Y - p0.Y;
+							float maxAxis = Math.Abs(axisX) > Math.Abs(axisY) ? axisX : axisY;
+							axisX /= maxAxis;
+							axisY /= maxAxis;
 
-                        Point ap0 = new Point(p0.X - a.X, p0.Y - a.Y);
-                        Point ap1 = new Point(p1.X - a.X, p1.Y - a.Y);
-                        float min = (float)-(Math.Abs(r * len));
-                        float max = (float)((1 - Math.Abs(r)) * len);
-                        // Point ab = new Point(b.X - a.X, b.Y - a.Y);
+							Point ap0 = new Point(p0.X - a.X, p0.Y - a.Y);
+							Point ap1 = new Point(p1.X - a.X, p1.Y - a.Y);
+							float min = (float)-(Math.Abs(r * len));
+							float max = (float)((1 - Math.Abs(r)) * len);
+							// Point ab = new Point(b.X - a.X, b.Y - a.Y);
 
-                        // float r0 = (ap0.X * ab.X + ap0.Y * ab.Y) / (w * w); // dot product
-                        //float r1 = (ap1.X * ab.X + ap1.Y * ab.Y) / (w * w); // dot product
+							// float r0 = (ap0.X * ab.X + ap0.Y * ab.Y) / (w * w); // dot product
+							//float r1 = (ap1.X * ab.X + ap1.Y * ab.Y) / (w * w); // dot product
 
-                        j.data.Add("axisX", axisX.ToString());
-                        j.data.Add("axisY", axisY.ToString());
-                        j.data.Add("min", min.ToString());
-                        j.data.Add("max", max.ToString());
-                    }
-                }
-            }
+							j.data.Add("axisX", axisX.ToString());
+							j.data.Add("axisY", axisY.ToString());
+							j.data.Add("min", min.ToString());
+							j.data.Add("max", max.ToString());
+						}
+					}
+				}
+			}
         }
 
 

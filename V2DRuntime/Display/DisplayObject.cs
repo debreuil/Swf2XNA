@@ -25,7 +25,7 @@ namespace DDW.Display
 
         protected float mspf;
 
-        private int id;
+        public int id;
         private static int idCounter = 0;//int.MinValue;
 		private bool isOnStage = false;
 		protected bool isInitialized = false;

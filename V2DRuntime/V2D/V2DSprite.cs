@@ -179,25 +179,15 @@ namespace DDW.V2D
             return polygons.Count > 0 && LastChildFrame == 0 && children.Count == 1 && children[0] is DisplayObjectContainer;
         }
 
-        public void RemoveBodyInstanceFromRuntime()
-        {
-			if(screen is V2DScreen)
+		public override void DestroyElement(DisplayObject obj)
+		{
+			base.DestroyElement(obj);
+			if (obj is V2DSprite)
 			{
-				V2DScreen vscreen = (V2DScreen)screen;
-                for (int i = 0; i < jointRefs.Count; i++)
-                {
-					vscreen.RemoveJoint(jointRefs[i]);
-                }
+				v2dScreen.DestroyBody(((V2DSprite)obj).body, obj.InstanceName);
+			}
+		}
 
-				if (body != null && vscreen.bodyMap.ContainsKey(this.instanceName))
-                {
-					vscreen.DestroyBody(body, this.instanceName);
-                }
-
-                body = null;
-                jointRefs.Clear();
-            }
-        }
         public virtual Body AddBodyInstanceToRuntime()
         {
 			this.worldScale = v2dScreen.WorldScale;
@@ -351,7 +341,7 @@ namespace DDW.V2D
 		public override void RemoveChild(DisplayObject o)
 		{
 			base.RemoveChild(o);
-			RemoveBodyInstanceFromRuntime();
+			//RemoveBodyInstanceFromRuntime();
 		}
     }
 }

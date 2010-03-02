@@ -378,8 +378,20 @@ namespace DDW.Display
 		//        d.Parent = null;
 		//    }
 		//}
+
+		/// <summary>
+		/// Destroys element, any attached bodies, and children
+		/// </summary>
 		public virtual void DestroyElement(DisplayObject obj)
 		{
+			if (obj is DisplayObjectContainer)
+			{
+				DisplayObjectContainer doc = (DisplayObjectContainer)obj;
+				for (int i = 0; i < doc.children.Count; i++)
+				{
+					doc.DestroyElement(doc.children[i]);
+				}
+			}
 			this.RemoveInstance(obj);
 		}
 		#endregion

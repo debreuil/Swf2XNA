@@ -88,19 +88,18 @@ namespace DDW.V2D
 			}
 			v2dScreen = (V2DScreen)screen;
 		}
-		protected override DisplayObject RemoveInstance(DisplayObject obj)
+		public override void RemoveChild(DisplayObject obj)
 		{
-			DisplayObject d = base.RemoveInstance(obj);
-			if (d is V2DSprite)
+			base.RemoveChild(obj);
+			if (obj is V2DSprite)
 			{
-				V2DSprite sp = (V2DSprite)d;
+				V2DSprite sp = (V2DSprite)obj;
 				if(sp.body != null)
 				{
-					DestroyBody(sp.body, d.InstanceName);
+					DestroyBody(sp.body, obj.InstanceName);
 					sp.body.SetUserData(null);
 				}
 			}
-			return d;
 		}
 		//protected override void RemoveInstanceByName(string name)
 		//{

@@ -80,6 +80,7 @@
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
       <Private>False</Private>
     </Reference>
+    <Reference Include="VexPipelineReader, Version=1.0.0.0, Culture=neutral, processorArchitecture=x86" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Attributes\DistanceJointAttribute.cs" />
@@ -187,10 +188,6 @@
     <ProjectReference Include="..\Box2D\src\Box2DX.csproj">
       <Project>{C157BCA5-BAC7-455F-A7DE-59D506D46ECF}</Project>
       <Name>Box2DX</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\VexPipelineReader\VexPipelineReader.csproj">
-      <Project>{D5D6310E-2D9D-4931-8D3B-4574F6625C6A}</Project>
-      <Name>VexPipelineReader</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

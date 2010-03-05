@@ -343,13 +343,13 @@ namespace DDW.Display
 
 			return result;
 		}
-		protected virtual DisplayObject RemoveInstance(DisplayObject obj)
+		protected virtual bool RemoveInstance(DisplayObject obj)
 		{
-			DisplayObject d = this.children.Find(elem => obj.id == elem.id);
-			if (d != null)
+			bool result = false;
+			if (this.children.Contains(obj))
 			{
-				this.RemoveChild(d);
-				d.Parent = null;
+				this.RemoveChild(obj);
+				result = true;
 			}
 			else 
 			{
@@ -358,16 +358,15 @@ namespace DDW.Display
 					if (children[i] is DisplayObjectContainer)
 					{
 						DisplayObjectContainer doc = (DisplayObjectContainer)children[i];
-						d = doc.RemoveInstance(obj);
-						if (d != null)
+						if (doc.RemoveInstance(obj))
 						{
-							break;
+							result = true;
+							break;							
 						}
 					}
 				}
 			}
-
-			return d;
+			return result;
 		}
 		//protected virtual void RemoveInstanceByName(string name)
 		//{
@@ -386,12 +385,13 @@ namespace DDW.Display
 		{
 			if (obj is DisplayObjectContainer)
 			{
-				DisplayObjectContainer doc = (DisplayObjectContainer)obj;
-				for (int i = 0; i < doc.children.Count; i++)
+				DisplayObject[] ch = ((DisplayObjectContainer)obj).children.ToArray();
+				foreach(DisplayObject d in ch)
 				{
-					doc.DestroyElement(doc.children[i]);
+					((DisplayObjectContainer)obj).DestroyElement(d);
 				}
 			}
+			obj.isInitialized = false;
 			this.RemoveInstance(obj);
 		}
 		#endregion

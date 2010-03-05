@@ -26,9 +26,9 @@ namespace DDW.Display
         protected float mspf;
 
         public int id;
+		public bool isInitialized = false;
         private static int idCounter = 0;//int.MinValue;
 		private bool isOnStage = false;
-		protected bool isInitialized = false;
 
 		public DisplayObject()
 		{
@@ -312,7 +312,6 @@ namespace DDW.Display
 		protected virtual void OnInitializeComplete()
 		{
 			this.Initialize();
-			isInitialized = true;
 		}
         public virtual DisplayObject Clone()
         {
@@ -403,7 +402,7 @@ namespace DDW.Display
 		/// When object is removed to a parent object. Parent isn't neccesarily on stage.
 		/// </summary>
         public virtual void Removed(EventArgs e)
-        {
+		{
             if (isOnStage)
             {
                 this.RemovedFromStage(e);
@@ -535,7 +534,9 @@ namespace DDW.Display
 					//this.destinationRectangle = new V2DRectangle(0, 0, 0, 0);
 					this.destinationRectangle = new V2DRectangle((int)instanceDefinition.X, (int)instanceDefinition.Y, 0, 0);
 				}
-				this.origin = new Vector2(-instanceDefinition.Definition.OffsetX, -instanceDefinition.Definition.OffsetY);
+				this.origin = instanceDefinition.Definition == null ? 
+					Vector2.Zero :
+					new Vector2(-instanceDefinition.Definition.OffsetX, -instanceDefinition.Definition.OffsetY);
 
 				this.InstanceName = instanceDefinition.InstanceName;
 				this.DefinitionName = instanceDefinition.DefinitionName;

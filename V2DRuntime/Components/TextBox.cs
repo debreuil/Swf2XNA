@@ -125,7 +125,7 @@ namespace V2DRuntime.Components
 			Vector2 gOffset = GetGlobalOffset(Vector2.Zero);
 			float gRotation = GetGlobalRotation(0);
 			Vector2 gScale = GetGlobalScale(new Vector2(1, 1));
-			Vector2 gOrigin = origin;
+			Vector2 gOrigin = State.Origin;
 
 			for (int i = 0; i < textAtoms.Count; i++)
 			{

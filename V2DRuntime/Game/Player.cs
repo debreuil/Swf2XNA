@@ -100,8 +100,8 @@ namespace V2DRuntime.Game
 		}
 		public override void Update(Microsoft.Xna.Framework.GameTime gameTime)
 		{
-			base.Update(gameTime);
 			UpdateLocalPlayer(gameTime);
+			base.Update(gameTime);
 		}
 		public override void Initialize()
 		{

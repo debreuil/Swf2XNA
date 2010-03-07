@@ -45,8 +45,8 @@ namespace V2DTest
 			base.Initialize();
 			spriteFont1 = V2DGame.contentManager.Load<SpriteFont>(@"Arial");
 			TextBox tb = new TextBox(null);
-			tb.StartFrame = 0;
-			tb.EndFrame = 9;
+			tb.State.StartFrame = 0;
+			tb.State.EndFrame = 9;
 			tb.Color = Microsoft.Xna.Framework.Graphics.Color.DarkSalmon;
 			tb.X = 100;
 			tb.Y = 200;

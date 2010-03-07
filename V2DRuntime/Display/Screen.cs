@@ -88,8 +88,8 @@ namespace DDW.Display
 			V2DGame.currentRootName = instanceDefinition.InstanceName == null ? V2DGame.ROOT_NAME : instanceDefinition.InstanceName;
 
 			//ClearChildren();
-			this.Width = v2dWorld.Width;
-			this.Height = v2dWorld.Height;
+			//this.destinationRectangle.Width = v2dWorld.Width;
+			//this.destinationRectangle.Height = v2dWorld.Height;
 
 			//AddInstance(instanceDefinition, this);
 

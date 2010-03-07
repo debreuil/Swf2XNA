@@ -303,9 +303,9 @@ namespace DDW.VexTo2DPhysics
         }
         private Instance2D CreateInstance2D(Instance inst, IDefinition def)
         {
-            MatrixComponents mc = inst.Transformations[0].Matrix.GetMatrixComponents();
-            Instance2D result = new Instance2D(inst.Name, def.Name, mc.TranslateX, mc.TranslateY, (float)(mc.Rotation * Math.PI / 180), mc.ScaleX, mc.ScaleY);
-            //Instance2D result = new Instance2D(inst.Name, def.Name, 0,0,0,1,1);
+			//MatrixComponents mc = inst.Transformations[0].Matrix.GetMatrixComponents();
+			//Instance2D result = new Instance2D(inst.Name, def.Name, mc.TranslateX, mc.TranslateY, (float)(mc.Rotation * Math.PI / 180), mc.ScaleX, mc.ScaleY);
+            Instance2D result = new Instance2D(inst.Name, def.Name, 0,0,0,1,1);
             result.Depth = inst.Depth;
             result.Transforms = inst.Transformations;
             result.Definition = definitions.Find(d => d.Id == inst.DefinitionId);
@@ -315,9 +315,9 @@ namespace DDW.VexTo2DPhysics
         }
         private Instance2D CreateInstance2D(IDefinition def)
         {
-            MatrixComponents mc = Matrix.Identitiy.GetMatrixComponents();
-            Instance2D result = new Instance2D(def.Name, def.Name, mc.TranslateX, mc.TranslateY, (float)(mc.Rotation * Math.PI / 180), mc.ScaleX, mc.ScaleY);
-            //Instance2D result = new Instance2D(inst.Name, def.Name, 0,0,0,1,1);
+			//MatrixComponents mc = Matrix.Identitiy.GetMatrixComponents();
+			//Instance2D result = new Instance2D(def.Name, def.Name, mc.TranslateX, mc.TranslateY, (float)(mc.Rotation * Math.PI / 180), mc.ScaleX, mc.ScaleY);
+            Instance2D result = new Instance2D(def.Name, def.Name, 0,0,0,1,1);
             result.Depth = 0;
             result.Transforms = new List<Transform>();
             result.Transforms.Add(new Transform(0, 0, Matrix.Identitiy, 1, ColorTransform.Identity));

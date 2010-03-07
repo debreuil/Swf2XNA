@@ -12,8 +12,8 @@ namespace DDW.Display
     {
         float X { get; set; }
         float Y { get; set; }
-        float Width { get; set; }
-        float Height { get; set; }
+        float Width { get; }
+        float Height { get; }
         float Rotation { get; set; }
         Vector2 Scale { get; set; }
         Color Color { get; set; }

@@ -16,6 +16,7 @@ namespace V2DTests
     public class Demo : V2DScreen
 	{
 		private Sprite bkg;
+		private V2DSprite ball;
 
 		[V2DSpriteAttribute(isBullet=true)]
 		private V2DSprite hex;
@@ -35,6 +36,7 @@ namespace V2DTests
 		{
 			base.Initialize();
 			//bkg.Visible = false;
+			//boy.Play();
 		}
 		public override void Update(GameTime gameTime)
 		{

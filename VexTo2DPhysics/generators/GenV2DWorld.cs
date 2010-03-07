@@ -130,7 +130,7 @@ namespace DDW.VexTo2DPhysics
             result.InstanceName = inst.InstanceName;
             //result.Joints = inst.Joints;
             DDW.Vex.Matrix m = inst.Matrix;
-            result.Matrix = new V2DMatrix(m.ScaleX, m.Rotate0, m.Rotate1, m.ScaleY, m.TranslateX, m.TranslateY);
+            //result.Matrix = new V2DMatrix(m.ScaleX, m.Rotate0, m.Rotate1, m.ScaleY, m.TranslateX, m.TranslateY);
             result.Restitution = inst.Restitution;
             result.Rotation = inst.Rotation;
             result.ScaleX = inst.ScaleX;

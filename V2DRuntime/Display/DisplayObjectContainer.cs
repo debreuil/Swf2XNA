@@ -40,9 +40,9 @@ namespace DDW.Display
         {
             o.Parent = this;
 			children.Add(o);
-            if (o.EndFrame > LastChildFrame)
+			if (o.State.EndFrame > LastChildFrame)
             {
-                LastChildFrame = o.EndFrame;
+				LastChildFrame = o.State.EndFrame;
             }
             children.Sort(DisplayObject.CompareTo);
 
@@ -116,9 +116,9 @@ namespace DDW.Display
 			//    }
 			//}
 
-            if (o.EndFrame >= LastChildFrame)
+			if (o.State.EndFrame >= LastChildFrame)
             {
-                LastChildFrame = children.Count == 0 ? 0 : children.Max(ef => ef.EndFrame);
+				LastChildFrame = children.Count == 0 ? 0 : children.Max(ef => ef.State.EndFrame);
             }
 		    children.Remove(o);
 
@@ -249,10 +249,6 @@ namespace DDW.Display
 				result.Definition = def;
 				result.DefinitionName = def.Name;
 				result.InstanceName = instName;
-				//result.X = x; // body
-				//result.Y = y;
-				//result.Rotation = rot;
-				result.Matrix = V2DMatrix.Identity;
 				result.Transforms = new V2DTransform[1];
 				result.Transforms[0] = new V2DTransform(0, 0, 1, 1, 0, 0, 0, 1);
 				result.Visible = true;
@@ -272,12 +268,11 @@ namespace DDW.Display
 				V2DInstance v2dInst = new V2DInstance();
 				v2dInst.Depth = depth;
 				v2dInst.InstanceName = instanceName;
-				v2dInst.X = x; // body
+				v2dInst.X = x;
 				v2dInst.Y = y;
 				v2dInst.Rotation = rot;
-				v2dInst.Matrix = V2DMatrix.Identity;
 				v2dInst.Transforms = new V2DTransform[1];
-				v2dInst.Transforms[0] = new V2DTransform(0, 0, 1, 1, 0, x, y, 1); // image
+				v2dInst.Transforms[0] = new V2DTransform(0, 0, 1, 1, 0, 0, 0, 1); // image
 				v2dInst.Visible = true;
 				result = AddInstance(v2dInst, this);
 			}
@@ -294,9 +289,8 @@ namespace DDW.Display
 					v2dInst.X = x; // body
 					v2dInst.Y = y;
 					v2dInst.Rotation = rot;
-					v2dInst.Matrix = V2DMatrix.Identity;
 					v2dInst.Transforms = new V2DTransform[1];
-					v2dInst.Transforms[0] = new V2DTransform(0, 0, 1, 1, 0, x, y, 1); // image
+					v2dInst.Transforms[0] = new V2DTransform(0, 0, 1, 1, 0, 0, 0, 1); // image
 					v2dInst.Visible = true;
 
 					result = AddInstance(v2dInst, this);
@@ -603,7 +597,6 @@ namespace DDW.Display
         }
         public override void Update(GameTime gameTime)
         {
-            base.Update(gameTime);
 
             if (isPlaying && LastChildFrame > 0)
             {
@@ -616,9 +609,17 @@ namespace DDW.Display
                 }
             }
 
+            base.Update(gameTime);
+
             foreach (DisplayObject d in children)
             {
-                d.Update(gameTime);
+				if (d.Visible && d.Alpha > 0)
+				{
+					if (CurChildFrame >= d.State.StartFrame && CurChildFrame <= d.State.EndFrame)
+					{
+						d.Update(gameTime);
+					}
+				}
             }
 		}
         public override void Draw(SpriteBatch batch)
@@ -627,7 +628,7 @@ namespace DDW.Display
 			{
 				if (d.Visible && d.Alpha > 0 && d.DepthGroup < 0)
 				{
-					if (CurChildFrame >= d.StartFrame && CurChildFrame <= d.EndFrame)
+					if (CurChildFrame >= d.State.StartFrame && CurChildFrame <= d.State.EndFrame)
 					{
 						DrawChild(d, batch);						
 					}
@@ -638,7 +639,7 @@ namespace DDW.Display
 			{
 				if (d.Visible && d.Alpha > 0 && d.DepthGroup >= 0)
 				{
-					if (CurChildFrame >= d.StartFrame && CurChildFrame <= d.EndFrame)
+					if (CurChildFrame >= d.State.StartFrame && CurChildFrame <= d.State.EndFrame)
 					{
 						DrawChild(d, batch);						
 					}

@@ -122,14 +122,14 @@ namespace V2DRuntime.Particles
 			particleHeight = texture.Height;
 			particleWidth = (int)(texture.Width / textureCount);
 			sourceRectangle = new Rectangle(0, 0, particleWidth, particleHeight);
-			origin = new Vector2(particleWidth / 2, particleHeight / 2);
+			State.Origin = new Vector2(particleWidth / 2, particleHeight / 2);
 		}
 		protected virtual void BatchUpdate(Microsoft.Xna.Framework.GameTime gameTime)
 		{
 			effectPosition = GetGlobalOffset(Vector2.Zero);
 			effectRotation = GetGlobalRotation(0);
 			effectScale = GetGlobalScale(new Vector2(1, 1));
-			effectOrigin = origin;
+			effectOrigin = State.Origin;
 
 			pPosition = effectPosition;
 			pRotation = effectRotation;

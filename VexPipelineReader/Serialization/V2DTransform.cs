@@ -16,16 +16,20 @@ namespace DDW.V2D
 		public uint StartFrame;
 		public uint EndFrame;
 
-        //public V2DMatrix Matrix;
-
-        public float ScaleX;
-        public float ScaleY;
+		public Vector2 Position;
+		public Vector2 Origin;
+		public Vector2 Scale;
         public float Rotation;
-        public float TranslationX;
-        public float TranslationY;
+
+		//public float ScaleX;
+		//public float ScaleY;
+		//public float Rotation;
+		//public float TranslationX;
+		//public float TranslationY;
 
         public float Alpha;
         public bool IsTweening = false;
+        public bool Visible = true;
 
 
         public V2DTransform()
@@ -35,36 +39,20 @@ namespace DDW.V2D
         {
             StartFrame = startFrame;
             EndFrame = endFrame;
-            ScaleX = scaleX;
-            ScaleY = scaleY;
+            Scale.X = scaleX;
+            Scale.Y = scaleY;
             Rotation = rotation;
-            TranslationX = translationX;
-            TranslationY = translationY;
+			Position.X = translationX;
+			Position.Y = translationY;
             Alpha = alpha;
         }
-        //public V2DTransform(uint startFrame, uint endFrame, V2DMatrix matrix, float alpha)
-        //{
-        //    StartFrame = startFrame;
-        //    EndFrame = endFrame;
-        //    Matrix = matrix;
-        //    Alpha = alpha;
-        //}
-
-        //public bool HasMatrix()
-        //{
-        //    return !(this.Matrix.Equals(V2DMatrix.Empty));
-        //}
 		public bool HasAlpha()
 		{
 			return this.Alpha != 1F;
 		}
         public V2DTransform Clone()
         {
-            return new V2DTransform(StartFrame, EndFrame, ScaleX, ScaleY, Rotation, TranslationX, TranslationY, Alpha);
+			return new V2DTransform(StartFrame, EndFrame, Scale.X, Scale.Y, Rotation, Position.X, Position.Y, Alpha);
         }
-        //public V2DTransform Clone()
-		//{
-        //    return new V2DTransform(StartFrame, EndFrame, Matrix, Alpha);
-		//}
 	}
 }

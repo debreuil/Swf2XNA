@@ -196,26 +196,23 @@ namespace DDW.V2D
             if (this.polygons.Count > 0)
             {
                 BodyDef bodyDef = new BodyDef();
-				float localX = 0;
-				float localY = 0;
-				LocalToGlobal(ref localX, ref localY);
-				bodyDef.Position.Set(localX / worldScale, localY / worldScale);
-				bodyDef.Angle = this.rotation;
+				Vector2 pos = GetGlobalOffset(Vector2.Zero);
+				bodyDef.Position.Set(pos.X / worldScale, pos.Y / worldScale);
+				bodyDef.Angle = GetGlobalRotation(0);
 				bodyDef.FixedRotation = this.fixedRotation;
 				bodyDef.AngularDamping = this.angularDamping;
                 bodyDef.LinearDamping = this.linearDamping;
 
-                if (!fixedRotation &&
-                    rotation != 0 && 
-                    this.transforms != null && 
-                    this.transforms.Length > 0 && 
-                    this.transforms[0].Rotation == this.rotation)
-                {
-                    for (int i = 0; i < transforms.Length; i++)
-                    {
-                        this.transforms[0].Rotation -= rotation; // todo: fix and verify this error
-                    }
-                }
+				// todo: this needs to allow for nested levels
+				if (!fixedRotation)
+				{
+					for (int i = 0; i < transforms.Length; i++)
+					{
+						transforms[i].Position = transforms[i].Position - pos + State.Position;
+						transforms[i].Rotation = transforms[i].Rotation - bodyDef.Angle + State.Rotation;
+						//this.transforms[i].Scale /= bodyDef.Scale;
+					}
+				}
 
 				if (attributeProperties != null)
 				{
@@ -272,7 +269,7 @@ namespace DDW.V2D
             if (polygon.IsCircle)
             {
                 CircleDef circDef = new CircleDef();
-                circDef.Radius = polygon.Radius / (worldScale * scale.X);
+				circDef.Radius = polygon.Radius / (worldScale * State.Scale.X);
                 Vec2 lp = new Vec2();
                 lp.Set(polygon.CenterX / worldScale, polygon.CenterY / worldScale);
                 circDef.LocalPosition = lp;
@@ -291,8 +288,8 @@ namespace DDW.V2D
                     float py = pts[i * 2 + 1];
 
                     polyDef.Vertices[i].Set(
-                        px / worldScale * scale.X,
-                        py / worldScale * scale.Y);
+						px / worldScale * State.Scale.X,
+						py / worldScale * State.Scale.Y);
                 }
             }
 

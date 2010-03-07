@@ -18,6 +18,8 @@ namespace DDW.V2D
         public string DefinitionName;
         [XmlAttribute]
         public float Depth;
+
+
         [XmlAttribute]
         public float X;
         [XmlAttribute]
@@ -32,19 +34,17 @@ namespace DDW.V2D
         public uint StartFrame;
         [XmlAttribute]
         public uint EndFrame;
-
         [XmlAttribute]
         public float Alpha = 1.0f;
         [XmlAttribute]
         public bool Visible = true;
+
         [XmlAttribute]
         public float Density = 2.0f;
         [XmlAttribute]
         public float Friction = 0.3f;
         [XmlAttribute]
         public float Restitution = 0.1f;
-        [XmlElement]
-        public V2DMatrix Matrix;
         [XmlElement]
         public V2DTransform[] Transforms;
 

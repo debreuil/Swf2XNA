@@ -20,8 +20,6 @@ namespace DDW.Display
         public static uint DepthCounter;
         public int Index = -1;
 		public int DepthGroup = 0;
-		public uint StartFrame = 0;
-		public uint EndFrame = 1;
 
         protected float mspf;
 
@@ -34,6 +32,7 @@ namespace DDW.Display
 		{
 			id = idCounter++;
 			this.instanceName = "_inst" + id;
+			transforms = new V2DTransform[]{State};
 		}
 		public DisplayObject(Texture2D texture, V2DInstance inst)
 		{
@@ -49,18 +48,20 @@ namespace DDW.Display
 		}
 
         #region Properties
-        protected Vector2 origin;
+
+		public V2DTransform State = new V2DTransform(0, 1, 1, 1, 0, 0, 0, 1);
+		protected V2DTransform CurrentState = new V2DTransform(0, 1, 1, 1, 0, 0, 0, 1);
+
         protected Rectangle sourceRectangle;
-        protected V2DRectangle destinationRectangle;
-        protected float rotation = 0;
-        protected Vector2 scale = Vector2.One;
+
         protected Color color = Color.White;
+
+        protected V2DTransform[] transforms;
+
         protected float depth;
         protected SpriteEffects spriteEffects = SpriteEffects.None;
-        protected float alpha = 1;
 
         protected bool visible = true;
-        protected V2DTransform[] transforms;
         protected DisplayObjectContainer parent;
 		protected Stage stage;
 		protected Screen screen;
@@ -76,9 +77,9 @@ namespace DDW.Display
             {
                 texture = value;
                 if (texture != null)
-                {
-                    sourceRectangle = new Rectangle(0, 0, texture.Width, texture.Height + 1);
-                    destinationRectangle = new V2DRectangle(0, 0, texture.Width, texture.Height + 1);
+				{
+                    sourceRectangle = new Rectangle(0, 0, texture.Width, texture.Height);
+					State.Position = new Vector2(0, 0);
                 }
                     
             }
@@ -109,11 +110,11 @@ namespace DDW.Display
         {
             get
             {
-                return origin;
+				return State.Origin;
             }
             set
             {
-                origin = value;
+				State.Origin = value;
             }
         }
         public Rectangle SourceRectangle
@@ -127,81 +128,73 @@ namespace DDW.Display
                 sourceRectangle = value;
             }
         }
+        public virtual Vector2 Position
+        {
+            get
+            {
+				return State.Position;
+            }
+            set
+            {
+				State.Position = value;
+            }
+        }
         public virtual float X
         {
             get
             {
-                return destinationRectangle.X;
+				return State.Position.X;
             }
             set
             {
-                destinationRectangle.X = value;
+				State.Position.X = value;
             }
         }
 		public virtual float Y
         {
             get
             {
-                return destinationRectangle.Y;
+				return State.Position.Y;
             }
             set
             {
-                destinationRectangle.Y = value;
+				State.Position.Y = value;
             }
         }
         public float Width
         {
             get
             {
-                return destinationRectangle.Width;
-            }
-            set
-            {
-                destinationRectangle.Width = value;
+				return (texture == null) ? 0 : texture.Width;
             }
         }
         public float Height
         {
             get
             {
-                return destinationRectangle.Height;
-            }
-            set
-            {
-                destinationRectangle.Height = value;
-            }
-        }
-        public V2DRectangle DestinationRectangle
-        {
-            get
-            {
-                return destinationRectangle;
-            }
-            set
-            {
-                destinationRectangle = value;
+				return (texture == null) ? 0 : texture.Height;
             }
         }
         public virtual float Rotation
         {
             get
             {
-                return rotation;
+                return State.Rotation;
             }
             set
             {
-                rotation = value;
+				State.Rotation = value;
             }
         }
         public Vector2 Scale
         {
             get
             {
-                return scale;
+				return State.Scale;
             }
             set
             {
-                scale = value;
+				State.Scale = value;
             }
         }
         public Color Color
@@ -241,12 +234,12 @@ namespace DDW.Display
         {
             get
             {
-                return alpha;
+                return State.Alpha;
             }
             set
             {
-                alpha = value;
-                color.A = (byte)(alpha * 255);
+				State.Alpha = value;
+				color.A = (byte)(State.Alpha * 255);
             }
         }
         public virtual bool Visible
@@ -318,15 +311,15 @@ namespace DDW.Display
             DisplayObject result = new DisplayObject();
             result.texture = texture;
             result.instanceDefinition = instanceDefinition;
-            result.origin = origin;
+			result.State.Origin = State.Origin;
             result.sourceRectangle = sourceRectangle;
-            result.destinationRectangle = destinationRectangle;
-            result.rotation = rotation;
-            result.scale = scale;
+			result.State.Position = State.Position;
+			result.State.Rotation = State.Rotation;
+			result.State.Scale = State.Scale;
             result.color = color;
             result.depth = depth;
             result.spriteEffects = spriteEffects;
-            result.alpha = alpha;
+			result.State.Alpha = State.Alpha;
             result.visible = visible;
             result.transforms = (V2DTransform[])transforms.Clone();
             result.parent = parent;
@@ -434,25 +427,26 @@ namespace DDW.Display
 			stage = null;
         }
 
-        public void LocalToGlobal(ref float x, ref float y)
-        {
-            if (parent != null)
-            {
-                parent.LocalToGlobal(ref x, ref y);
-            }
-            x += this.X;
-            y += this.Y;
-        }
-        public Vector2 LocalToGlobal(Vector2 p)
-        {
-            if (parent != null)
-            {
-                p = parent.LocalToGlobal(p);
-            }
-            p.X += this.X;
-            p.Y += this.Y;
-            return p;
-        }
+		//public void LocalToGlobal(ref float x, ref float y)
+		//{
+		//    if (parent != null)
+		//    {
+		//        parent.LocalToGlobal(ref x, ref y);
+		//    }
+		//    x += this.X;
+		//    y += this.Y;
+		//}
+		//public Vector2 LocalToGlobal(Vector2 p)
+		//{
+		//    if (parent != null)
+		//    {
+		//        p = parent.LocalToGlobal(p);
+		//    }
+		//    p.X += this.X;
+		//    p.Y += this.Y;
+		//    return p;
+		//}
+
         public Vector2 GetGlobalOffset(Vector2 offset)
         {
             if (parent != null)
@@ -460,15 +454,15 @@ namespace DDW.Display
                 offset = parent.GetGlobalOffset(offset);
                 if (transforms != null)
                 {
-                    V2DTransform t = transforms.First(tr =>
+                    V2DTransform t = transforms.FirstOrDefault(tr =>
                         tr.StartFrame <= (parent.CurChildFrame) && tr.EndFrame >= (parent.CurChildFrame));
-                    offset.X += t.TranslationX + destinationRectangle.X;
-                    offset.Y += t.TranslationY + destinationRectangle.Y;
+					offset.X += t.Position.X + State.Position.X;
+					offset.Y += t.Position.Y + State.Position.Y;
                 }
                 else
                 {
-                    offset.X += destinationRectangle.X;
-                    offset.Y += destinationRectangle.Y;
+					offset.X += State.Position.X;
+					offset.Y += State.Position.Y;
                 }
             }
             return offset;
@@ -482,16 +476,15 @@ namespace DDW.Display
                 {
                     V2DTransform t = transforms.First(tr =>
                         tr.StartFrame <= (parent.CurChildFrame) && tr.EndFrame >= (parent.CurChildFrame));
-                    rot += t.Rotation + rotation;//180f * 3.14159265f;
+					rot += t.Rotation + State.Rotation;//180f * 3.14159265f;
                 }
                 else
                 {
-                    rot += rotation;
+					rot += State.Rotation;
                 }
             }
             return rot;
         }
-
         public Vector2 GetGlobalScale(Vector2 sc)
         {
             if (parent != null)
@@ -501,8 +494,8 @@ namespace DDW.Display
                 {
                     V2DTransform t = transforms.First(tr =>
                         tr.StartFrame <= (parent.CurChildFrame) && tr.EndFrame >= (parent.CurChildFrame));
-                    sc.X *= t.ScaleX;
-                    sc.Y *= t.ScaleY;
+                    sc.X *= t.Scale.X;
+                    sc.Y *= t.Scale.Y;
                 }
                 else
                 {
@@ -524,80 +517,83 @@ namespace DDW.Display
 		{
 			if (instanceDefinition != null)
 			{
-				if (texture != null)
-				{
-					//this.destinationRectangle = new V2DRectangle(0, 0, texture.Width, texture.Height);
-					this.destinationRectangle = new V2DRectangle((int)instanceDefinition.X, (int)instanceDefinition.Y, texture.Width, texture.Height);
-				}
-				else
-				{
-					//this.destinationRectangle = new V2DRectangle(0, 0, 0, 0);
-					this.destinationRectangle = new V2DRectangle((int)instanceDefinition.X, (int)instanceDefinition.Y, 0, 0);
-				}
-				this.origin = instanceDefinition.Definition == null ? 
+				this.InstanceName = instanceDefinition.InstanceName;
+				this.DefinitionName = instanceDefinition.DefinitionName;
+
+				this.Position = new Vector2((int)instanceDefinition.X, (int)instanceDefinition.Y);
+				this.Rotation = instanceDefinition.Rotation;
+				this.Scale = new Vector2(instanceDefinition.ScaleX, instanceDefinition.ScaleY);
+				this.State.Origin = instanceDefinition.Definition == null ? 
 					Vector2.Zero :
 					new Vector2(-instanceDefinition.Definition.OffsetX, -instanceDefinition.Definition.OffsetY);
 
-				this.InstanceName = instanceDefinition.InstanceName;
-				this.DefinitionName = instanceDefinition.DefinitionName;
-				this.Rotation = instanceDefinition.Rotation;
-				this.Scale = new Vector2(instanceDefinition.ScaleX, instanceDefinition.ScaleY);
 				this.Alpha = instanceDefinition.Alpha;
 				this.Visible = instanceDefinition.Visible;
 				this.Depth = instanceDefinition.Depth;
 
-				// normalize all transforms to base position
-				this.transforms = new V2DTransform[instanceDefinition.Transforms.Length];
-				float ox = instanceDefinition.X;
-				float oy = instanceDefinition.Y;
-				for (int i = 0; i < instanceDefinition.Transforms.Length; i++)
-				{
-					transforms[i] = instanceDefinition.Transforms[i].Clone();
-					transforms[i].TranslationX -= ox;
-					transforms[i].TranslationY -= oy;
-				}
-				this.StartFrame = instanceDefinition.StartFrame;
-				this.EndFrame = instanceDefinition.EndFrame;
+				transforms = instanceDefinition.Transforms;
+				//// normalize all transforms to base position
+				//this.transforms = new V2DTransform[instanceDefinition.Transforms.Length];
+				//float ox = instanceDefinition.X;
+				//float oy = instanceDefinition.Y;
+				//for (int i = 0; i < instanceDefinition.Transforms.Length; i++)
+				//{
+				//    transforms[i] = instanceDefinition.Transforms[i].Clone();
+				//    //transforms[i].Position.X -= ox;
+				//    //transforms[i].Position.Y -= oy;
+				//}
+				this.State.StartFrame = instanceDefinition.StartFrame;
+				this.State.EndFrame = instanceDefinition.EndFrame;
 			}
 		}
         public virtual bool OnPlayerInput(int playerIndex, Move move, TimeSpan time)
 		{
 			return true;
         }
+		protected Rectangle destRect;
+		SpriteEffects se = SpriteEffects.None;
         public virtual void Update(GameTime gameTime)
-        {
+		{
+			V2DTransform t = transforms.First(tr => tr.StartFrame <= (parent.CurChildFrame) && tr.EndFrame >= (parent.CurChildFrame));
+			CurrentState.Position = parent.CurrentState.Position + State.Position + t.Position;
+			CurrentState.Scale = parent.CurrentState.Scale * State.Scale * t.Scale;
+			CurrentState.Rotation = parent.CurrentState.Rotation + State.Rotation + t.Rotation;
+			CurrentState.Origin = State.Origin;
+			se = SpriteEffects.None;
+
+
+			float xdif = 0;
+			float ydif = 0;
+			if (CurrentState.Scale.X < 0)
+			{
+				se |= SpriteEffects.FlipHorizontally;
+				CurrentState.Scale.X = Math.Abs(CurrentState.Scale.X);
+				xdif = Width - (Width - State.Origin.X) * 2;
+				CurrentState.Origin.X += xdif;
+				//CurrentState.Rotation /= 2f;
+			}
+			if (CurrentState.Scale.Y < 0)
+			{
+				se |= SpriteEffects.FlipVertically;
+				CurrentState.Scale.Y = Math.Abs(CurrentState.Scale.Y);
+				ydif = Height - (Height - State.Origin.Y) * 2;
+				CurrentState.Origin.Y -= ydif;
+				//CurrentState.Rotation /= 2f;
+			}
+
+			destRect = new Rectangle(
+				(int)CurrentState.Position.X,
+				(int)CurrentState.Position.Y,
+				(int)Math.Floor(CurrentState.Scale.X * Width),
+				(int)Math.Floor(CurrentState.Scale.Y * Height));
+
         }
         public virtual void Draw(SpriteBatch batch)
 		{
             if (texture != null)
             {
-                Vector2 gOffset = GetGlobalOffset(Vector2.Zero);
-                float gRotation = GetGlobalRotation(0);
-                Vector2 gScale =  GetGlobalScale(new Vector2(1, 1));
-                Vector2 gOrigin = origin;
-
-                SpriteEffects se = SpriteEffects.None;
-                float xdif = 0;
-                float ydif = 0;
-                if (gScale.X < 0)
-                {
-                    se |= SpriteEffects.FlipHorizontally;
-                    gScale.X = Math.Abs(gScale.X); 
-                    xdif = Width - (Width - origin.X) * 2;
-                    gOrigin.X += xdif;
-                    gRotation /= 2f;
-                }
-                if (gScale.Y < 0)
-                {
-                   se |= SpriteEffects.FlipVertically;
-                    gScale.Y = Math.Abs(gScale.Y);
-                    ydif = Height - (Height - origin.Y) * 2;
-                    gOrigin.Y -= ydif;
-                    gRotation /= 2f;
-				}
-				Rectangle destRect = new Rectangle((int)gOffset.X, (int)gOffset.Y, (int)Math.Floor(gScale.X * Width + .99999), (int)Math.Floor(gScale.X * Height + .99999));
 				batch.Draw(texture, destRect, sourceRectangle, color,
-					gRotation, gOrigin, se, 1f / DepthCounter++);
+					CurrentState.Rotation, CurrentState.Origin, se, 1f / DepthCounter++);
 				//batch.Draw(texture, gOffset, sourceRectangle, color,
 				//    gRotation, gOrigin, gScale, se, 1f / DepthCounter++);
             }

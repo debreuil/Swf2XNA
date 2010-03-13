@@ -116,13 +116,13 @@ namespace DDW.V2D
             }
         }
 
-		public void SetB2DPosition(float x, float y)
-		{
-			Vector2 go = parent.GetGlobalOffset(Vector2.Zero);
-			XForm xf = body.GetXForm();
-			body.SetXForm(new Vec2((x + go.X) / worldScale, (y + go.Y) / worldScale), xf.R.GetAngle());
-			//body.SetXForm(new Vec2(x / worldScale, y / worldScale), Rotation);
-		}
+		//public void SetB2DPosition(float x, float y)
+		//{
+		//    Vector2 go = parent.GetGlobalOffset(Vector2.Zero);
+		//    XForm xf = body.GetXForm();
+		//    body.SetXForm(new Vec2((x + go.X) / worldScale, (y + go.Y) / worldScale), xf.R.GetAngle());
+		//    //body.SetXForm(new Vec2(x / worldScale, y / worldScale), Rotation);
+		//}
 
         public override void Play()
         {
@@ -375,9 +375,9 @@ namespace DDW.V2D
 				hasRChange = true;
 			}
 		}
-		private bool hasXChange = false;
-		private bool hasYChange = false;
-		private bool hasRChange = false;
+		private bool hasXChange = true;
+		private bool hasYChange = true;
+		private bool hasRChange = true;
 		public void UpdateTransform()
 		{
 			if (body != null && parent != null)
@@ -386,24 +386,25 @@ namespace DDW.V2D
 				{
 					Vec2 newPos = body.GetPosition();
 					float rot = body.GetAngle();
+					V2DTransform t = transforms[transformIndex];
 
 					if (hasXChange)
 					{
-						newPos.X = (State.Position.X + parent.CurrentState.Position.X) / worldScale;
+						newPos.X = (State.Position.X + parent.CurrentState.Position.X + t.Position.X) / worldScale;
 					}
 					if (hasYChange)
 					{
-						newPos.Y = (State.Position.Y + parent.CurrentState.Position.Y) / worldScale;
+						newPos.Y = (State.Position.Y + parent.CurrentState.Position.Y + t.Position.Y) / worldScale;
 					}
 					if (hasRChange)
 					{
-						rot = State.Rotation - parent.CurrentState.Rotation;
+						rot = State.Rotation - parent.CurrentState.Rotation + t.Rotation;
 					}
 
 					body.SetXForm(newPos, rot);
 
 					Vector2 v = new Vector2(newPos.X, newPos.Y);
-					State.Position = (v *  worldScale) - parent.CurrentState.Position;
+					State.Position = (v *  worldScale) - parent.CurrentState.Position - t.Position;
 					State.Scale = CurrentState.Scale;
 					State.Rotation = rot - parent.CurrentState.Rotation;
 					State.Origin = CurrentState.Origin;
@@ -429,11 +430,6 @@ namespace DDW.V2D
 			}
 			else// 
 			{
-				if (hasRChange || hasXChange || hasYChange)
-				{
-					UpdateTransform();
-				}
-
 				for (int i = 0; i < transforms.Length; i++)
 				{
 					if (transforms[i].StartFrame <= parent.CurChildFrame && transforms[i].EndFrame >= (parent.CurChildFrame))
@@ -444,6 +440,11 @@ namespace DDW.V2D
 				}
 				V2DTransform t = transforms[transformIndex];
 
+				if (hasRChange || hasXChange || hasYChange)
+				{
+					UpdateTransform();
+				}
+
 				Vector2 bPosition = new Vector2((int)(body.GetPosition().X * WorldScale), (int)(body.GetPosition().Y * WorldScale));
 				float br = body.GetAngle();
 
@@ -452,7 +453,7 @@ namespace DDW.V2D
 				CurrentState.Rotation = br;// -parent.CurrentState.Rotation + t.Rotation;
 				CurrentState.Origin = State.Origin;
 
-				State.Position = CurrentState.Position - parent.CurrentState.Position;
+				State.Position = CurrentState.Position - parent.CurrentState.Position - t.Position;
 				//State.Scale = CurrentState.Scale;
 				State.Rotation = CurrentState.Rotation - parent.CurrentState.Rotation;
 				//State.Origin = CurrentState.Origin;

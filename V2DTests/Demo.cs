@@ -29,6 +29,9 @@ namespace V2DTests
 		[RevoluteJointAttribute(motorSpeed = 50, maxMotorTorque = 500)]
 		private RevoluteJoint r2;
 
+		[V2DSpriteAttribute(depthGroup = 40)]
+		public TurretMachine turretMachine;
+
 		public Demo(SymbolImport si) : base(si)
         {
         }

@@ -196,14 +196,14 @@ namespace DDW.Display
         public uint CurChildFrame;
         public uint LastChildFrame;
 
-		protected override void OnInitializeComplete()
+		protected override void OnAddToStageComplete()
 		{
-			base.OnInitializeComplete();
+			base.OnAddToStageComplete();
 			foreach (DisplayObject d in children)
 			{
 				if (d is DisplayObjectContainer)
 				{
-					((DisplayObjectContainer)d).OnInitializeComplete();
+					((DisplayObjectContainer)d).OnAddToStageComplete();
 				}
 				else
 				{

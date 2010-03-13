@@ -150,9 +150,9 @@ namespace DDW.Display
 			base.Added(e);
 			Deactivate();
 		}
-		protected override void OnInitializeComplete()
+		protected override void OnAddToStageComplete()
 		{
-			base.OnInitializeComplete();
+			base.OnAddToStageComplete();
 		}
 
         public SymbolImport SymbolImport

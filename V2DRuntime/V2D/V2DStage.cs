@@ -17,7 +17,6 @@ namespace DDW.V2D
 {
     public class V2DStage : Stage
     {
-		//todo: World needs to be per Screen
         public V2DWorld v2dWorld;
     
 

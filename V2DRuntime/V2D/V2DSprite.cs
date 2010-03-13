@@ -203,16 +203,16 @@ namespace DDW.V2D
 				bodyDef.AngularDamping = this.angularDamping;
                 bodyDef.LinearDamping = this.linearDamping;
 
-				// todo: this needs to allow for nested levels
-				if (!fixedRotation)
-				{
-					for (int i = 0; i < transforms.Length; i++)
-					{
-						transforms[i].Position = transforms[i].Position - pos + State.Position;
-						transforms[i].Rotation = transforms[i].Rotation - bodyDef.Angle + State.Rotation;
-						//this.transforms[i].Scale /= bodyDef.Scale;
-					}
-				}
+				//// todo: this needs to allow for nested levels
+				//if (!fixedRotation)
+				//{
+				//    for (int i = 0; i < transforms.Length; i++)
+				//    {
+				//        transforms[i].Position = transforms[i].Position - pos + State.Position;
+				//        transforms[i].Rotation = transforms[i].Rotation - bodyDef.Angle + State.Rotation;
+				//        //this.transforms[i].Scale /= bodyDef.Scale;
+				//    }
+				//}
 
 				if (attributeProperties != null)
 				{
@@ -338,7 +338,134 @@ namespace DDW.V2D
 		public override void RemoveChild(DisplayObject o)
 		{
 			base.RemoveChild(o);
-			//RemoveBodyInstanceFromRuntime();
 		}
+		public override float X
+		{
+			get
+			{
+				return base.X;
+			}
+			set
+			{
+				base.X = value;
+				hasXChange = true;
+			}
+		}
+		public override float Y
+		{
+			get
+			{
+				return base.Y;
+			}
+			set
+			{
+				base.Y = value;
+				hasYChange = true;
+			}
+		}
+		public override float Rotation
+		{
+			get
+			{
+				return base.Rotation;
+			}
+			set
+			{
+				base.Rotation = value;
+				hasRChange = true;
+			}
+		}
+		private bool hasXChange = false;
+		private bool hasYChange = false;
+		private bool hasRChange = false;
+		public void UpdateTransform()
+		{
+			if (body != null && parent != null)
+			{
+				if (hasXChange || hasYChange || hasRChange)
+				{
+					Vec2 newPos = body.GetPosition();
+					float rot = body.GetAngle();
+
+					if (hasXChange)
+					{
+						newPos.X = (State.Position.X + parent.CurrentState.Position.X) / worldScale;
+					}
+					if (hasYChange)
+					{
+						newPos.Y = (State.Position.Y + parent.CurrentState.Position.Y) / worldScale;
+					}
+					if (hasRChange)
+					{
+						rot = State.Rotation - parent.CurrentState.Rotation;
+					}
+
+					body.SetXForm(newPos, rot);
+
+					Vector2 v = new Vector2(newPos.X, newPos.Y);
+					State.Position = (v *  worldScale) - parent.CurrentState.Position;
+					State.Scale = CurrentState.Scale;
+					State.Rotation = rot - parent.CurrentState.Rotation;
+					State.Origin = CurrentState.Origin;
+
+					hasXChange = false;
+					hasYChange = false;
+					hasRChange = false;
+				}
+			}
+		}
+		//protected void NeedsTransformUpdate()
+		//{
+		//    if (!v2dScreen.transformList.Contains(this))
+		//    {
+		//       v2dScreen.transformList.Add(this);
+		//    }
+		//}
+		protected override void SetCurrentState()
+		{
+			if (body == null)
+			{
+				base.SetCurrentState();
+			}
+			else// 
+			{
+				if (hasRChange || hasXChange || hasYChange)
+				{
+					UpdateTransform();
+				}
+
+				for (int i = 0; i < transforms.Length; i++)
+				{
+					if (transforms[i].StartFrame <= parent.CurChildFrame && transforms[i].EndFrame >= (parent.CurChildFrame))
+					{
+						transformIndex = i;
+						break;
+					}
+				}
+				V2DTransform t = transforms[transformIndex];
+
+				Vector2 bPosition = new Vector2((int)(body.GetPosition().X * WorldScale), (int)(body.GetPosition().Y * WorldScale));
+				float br = body.GetAngle();
+
+				CurrentState.Position = bPosition;// -parent.CurrentState.Position;// +t.Position;
+				CurrentState.Scale = parent.CurrentState.Scale * State.Scale * t.Scale;
+				CurrentState.Rotation = br;// -parent.CurrentState.Rotation + t.Rotation;
+				CurrentState.Origin = State.Origin;
+
+				State.Position = CurrentState.Position - parent.CurrentState.Position;
+				//State.Scale = CurrentState.Scale;
+				State.Rotation = CurrentState.Rotation - parent.CurrentState.Rotation;
+				//State.Origin = CurrentState.Origin;
+			}
+		}
+
+		//public override void Update(GameTime gameTime)
+		//{
+		//    base.Update(gameTime);
+		//    if (hasRChange || hasXChange || hasYChange)
+		//    {
+		//        NeedsTransformUpdate();
+		//    }
+		//}
     }
 }

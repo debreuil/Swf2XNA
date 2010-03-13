@@ -683,7 +683,19 @@ namespace DDW.V2D
 		}
 		*/
 
-
+		//public List<V2DSprite> transformList = new List<V2DSprite>();
+		//public override void OnUpdateComplete(GameTime gameTime)
+		//{
+		//    base.OnUpdateComplete(gameTime);
+		//    if (transformList.Count > 0)
+		//    {
+		//        foreach (V2DSprite sp in transformList)
+		//        {
+		//            sp.UpdateTransform();
+		//        }
+		//        transformList.Clear();
+		//    }
+		//}
 		public override void Update(GameTime gameTime)
 		{
 			base.Update(gameTime);
@@ -710,19 +722,19 @@ namespace DDW.V2D
 
 				world.Validate();
 
-				Body b = world.GetBodyList();
-				while (b != null)
-				{
-					if (b.GetUserData() is V2DSprite)
-					{
-						V2DSprite s = (V2DSprite)b.GetUserData();
-						Vector2 offset = s.Parent.GetGlobalOffset(Vector2.Zero); //Vector2.Zero;// 
-						s.X = (int)(b.GetPosition().X * WorldScale - offset.X);
-						s.Y = (int)(b.GetPosition().Y * WorldScale - offset.Y);
-						s.Rotation = b.GetAngle();
-					}
-					b = b.GetNext();
-				}
+				//Body b = world.GetBodyList();
+				//while (b != null)
+				//{
+				//    if (b.GetUserData() is V2DSprite)
+				//    {
+				//        V2DSprite s = (V2DSprite)b.GetUserData();
+				//        Vector2 offset = s.Parent.GetGlobalOffset(Vector2.Zero); //Vector2.Zero;// 
+				//        s.X = (int)(b.GetPosition().X * WorldScale - offset.X);
+				//        s.Y = (int)(b.GetPosition().Y * WorldScale - offset.Y);
+				//        s.Rotation = b.GetAngle();
+				//    }
+				//    b = b.GetNext();
+				//}
 			}
 		}
     }

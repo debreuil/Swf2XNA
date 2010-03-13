@@ -50,7 +50,7 @@ namespace DDW.Display
         #region Properties
 
 		public V2DTransform State = new V2DTransform(0, 1, 1, 1, 0, 0, 0, 1);
-		protected V2DTransform CurrentState = new V2DTransform(0, 1, 1, 1, 0, 0, 0, 1);
+		public V2DTransform CurrentState = new V2DTransform(0, 1, 1, 1, 0, 0, 0, 1);
 
         protected Rectangle sourceRectangle;
 
@@ -143,7 +143,7 @@ namespace DDW.Display
         {
             get
             {
-				return State.Position.X;
+				return State.Position.X + transforms[transformIndex].Position.X;
             }
             set
             {
@@ -154,7 +154,7 @@ namespace DDW.Display
         {
             get
             {
-				return State.Position.Y;
+				return State.Position.Y + transforms[transformIndex].Position.Y;
             }
             set
             {
@@ -179,7 +179,7 @@ namespace DDW.Display
         {
             get
             {
-                return State.Rotation;
+				return State.Rotation + transforms[transformIndex].Rotation;
             }
             set
             {
@@ -302,7 +302,7 @@ namespace DDW.Display
         {
 			isInitialized = true;
         }
-		protected virtual void OnInitializeComplete()
+		protected virtual void OnAddToStageComplete()
 		{
 			this.Initialize();
 		}
@@ -411,7 +411,7 @@ namespace DDW.Display
 			isOnStage = true;
 			if (parent.isInitialized)
 			{
-				OnInitializeComplete();
+				OnAddToStageComplete();
 			}
         }
 		/// <summary>
@@ -550,18 +550,31 @@ namespace DDW.Display
 		{
 			return true;
         }
-		protected Rectangle destRect;
-		SpriteEffects se = SpriteEffects.None;
-        public virtual void Update(GameTime gameTime)
+		protected int transformIndex = 0;
+		protected virtual void SetCurrentState()
 		{
-			V2DTransform t = transforms.First(tr => tr.StartFrame <= (parent.CurChildFrame) && tr.EndFrame >= (parent.CurChildFrame));
+			for (int i = 0; i < transforms.Length; i++)
+			{
+				if(transforms[i].StartFrame <= parent.CurChildFrame && transforms[i].EndFrame >= (parent.CurChildFrame))
+				{
+					transformIndex = i;
+					break;
+				}
+			}
+			V2DTransform t = transforms[transformIndex];
+
 			CurrentState.Position = parent.CurrentState.Position + State.Position + t.Position;
 			CurrentState.Scale = parent.CurrentState.Scale * State.Scale * t.Scale;
 			CurrentState.Rotation = parent.CurrentState.Rotation + State.Rotation + t.Rotation;
 			CurrentState.Origin = State.Origin;
+		}
+		protected Rectangle destRect;
+		protected SpriteEffects se = SpriteEffects.None;
+        public virtual void Update(GameTime gameTime)
+		{
+			SetCurrentState();
+
 			se = SpriteEffects.None;
-
-
 			float xdif = 0;
 			float ydif = 0;
 			if (CurrentState.Scale.X < 0)

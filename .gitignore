@@ -2,6 +2,7 @@ $ cat .gitignore
 
 # Can ignore specific files
 .DS_Store
+Thumbs.db
 
 # Use wildcards as well
 *~
@@ -15,4 +16,3 @@ Box2D/*
 **/Content/exports/*
 **/Content/obj/*
 **/Content/bin/*
-**/Thumbs.db

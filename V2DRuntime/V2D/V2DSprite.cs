@@ -347,8 +347,22 @@ namespace DDW.V2D
 			}
 			set
 			{
-				base.X = value;
 				hasXChange = true;
+
+				//if (parent != null)
+				//{
+				//    float dif = X;
+				//    base.X = value;
+				//    dif = X - dif;
+				//    foreach (DisplayObject obj in children)
+				//    {
+				//        obj.X += dif;
+				//    }
+				//}
+				//else
+				//{
+					base.X = value;
+				//}
 			}
 		}
 		public override float Y
@@ -390,11 +404,13 @@ namespace DDW.V2D
 
 					if (hasXChange)
 					{
-						newPos.X = (State.Position.X + parent.CurrentState.Position.X + t.Position.X) / worldScale;
+						//newPos.X = (State.Position.X + parent.CurrentState.Position.X + t.Position.X) / worldScale;
+						newPos.X = (State.Position.X + parent.CurrentState.Position.X) / worldScale;
 					}
 					if (hasYChange)
 					{
-						newPos.Y = (State.Position.Y + parent.CurrentState.Position.Y + t.Position.Y) / worldScale;
+						//newPos.Y = (State.Position.Y + parent.CurrentState.Position.Y + t.Position.Y) / worldScale;
+						newPos.Y = (State.Position.Y + parent.CurrentState.Position.Y) / worldScale;
 					}
 					if (hasRChange)
 					{
@@ -404,10 +420,21 @@ namespace DDW.V2D
 					body.SetXForm(newPos, rot);
 
 					Vector2 v = new Vector2(newPos.X, newPos.Y);
-					State.Position = (v *  worldScale) - parent.CurrentState.Position - t.Position;
-					State.Scale = CurrentState.Scale;
-					State.Rotation = rot - parent.CurrentState.Rotation;
-					State.Origin = CurrentState.Origin;
+					//State.Position = (v *  worldScale) - parent.CurrentState.Position - t.Position;
+					//State.Scale = CurrentState.Scale;
+					//State.Rotation = rot - parent.CurrentState.Rotation;
+					//State.Origin = CurrentState.Origin;
+
+					//foreach (DisplayObject obj in children)
+					//{
+					//    if (obj is V2DSprite)
+					//    {
+					//        V2DSprite sp = (V2DSprite)obj;
+					//        sp.hasRChange = hasRChange;
+					//        sp.hasXChange = hasXChange;
+					//        sp.hasYChange = hasYChange;
+					//    }
+					//}
 
 					hasXChange = false;
 					hasYChange = false;
@@ -453,7 +480,8 @@ namespace DDW.V2D
 				CurrentState.Rotation = br;// -parent.CurrentState.Rotation + t.Rotation;
 				CurrentState.Origin = State.Origin;
 
-				State.Position = CurrentState.Position - parent.CurrentState.Position - t.Position;
+				//State.Position = CurrentState.Position - parent.CurrentState.Position - t.Position;
+				State.Position = CurrentState.Position - parent.CurrentState.Position;
 				//State.Scale = CurrentState.Scale;
 				State.Rotation = CurrentState.Rotation - parent.CurrentState.Rotation;
 				//State.Origin = CurrentState.Origin;

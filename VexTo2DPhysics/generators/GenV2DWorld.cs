@@ -122,7 +122,6 @@ namespace DDW.VexTo2DPhysics
         private V2DInstance GetV2DInstance(Instance2D inst)
         {
             V2DInstance result = new V2DInstance();
-            result.Alpha = inst.Alpha;
             result.DefinitionName = inst.DefinitionName;
             result.Density = inst.Density;
             result.Depth = inst.Depth;
@@ -132,15 +131,18 @@ namespace DDW.VexTo2DPhysics
             DDW.Vex.Matrix m = inst.Matrix;
             //result.Matrix = new V2DMatrix(m.ScaleX, m.Rotate0, m.Rotate1, m.ScaleY, m.TranslateX, m.TranslateY);
             result.Restitution = inst.Restitution;
+            result.StartFrame = inst.StartFrame;
+            result.EndFrame = inst.TotalFrames + inst.StartFrame;
+            result.Visible = inst.Visible;
+
+            result.Alpha = inst.Alpha;
+            result.X = inst.X;
+            result.Y = inst.Y;
             result.Rotation = inst.Rotation;
             result.ScaleX = inst.ScaleX;
             result.ScaleY = inst.ScaleY;
-            result.StartFrame = inst.StartFrame;
-            result.EndFrame = inst.TotalFrames + inst.StartFrame;
-            result.Transforms = TransformsConversion(inst.Transforms);
-            result.Visible = inst.Visible;
-            result.X = inst.X;
-            result.Y = inst.Y;
+            result.Transforms = TransformsConversion(result, inst.Transforms);
+
             return result;
 
             //Dictionary<string, string> dict = null;
@@ -150,37 +152,49 @@ namespace DDW.VexTo2DPhysics
             //}
             //return inst.GetV2DInstance(dict);
         }
-        public V2DTransform[] TransformsConversion(List<Transform> trs)
+		public V2DTransform[] TransformsConversion(V2DInstance obj, List<Transform> trs)
         {
             V2DTransform[] result = new V2DTransform[trs.Count];
-            for (int i = 0; i < trs.Count; i++)
-            {
-                Transform tin = trs[i];
+			if (trs.Count > 0)
+			{
+				MatrixComponents firstMc = trs[0].Matrix.GetMatrixComponents();
+				float firstAlpha = trs[0].Alpha;
+				obj.X += firstMc.TranslateX;
+				obj.Y += firstMc.TranslateY;
+				obj.Rotation += (float)(firstMc.Rotation * Math.PI / 180);
+				obj.ScaleX *= firstMc.ScaleX;
+				obj.ScaleY *= firstMc.ScaleY;
+				obj.Alpha *= firstAlpha;
 
-                uint sf = (uint)Math.Round(tin.StartTime / (1000d / v2dWorld.FrameRate));
-                uint ef = (uint)Math.Round(tin.EndTime / (1000d / v2dWorld.FrameRate)) - 1;
-                MatrixComponents mc = tin.Matrix.GetMatrixComponents();
-                V2DTransform tout = new V2DTransform(
-                    sf,
-                    ef,
-                    mc.ScaleX,
-                    mc.ScaleY,
-                    (float)(mc.Rotation * Math.PI / 180),
-                    mc.TranslateX,
-                    mc.TranslateY,
-                    tin.Alpha);
-                
-                //V2DTransform tout = new V2DTransform(
-                //    (uint)Math.Floor(tin.StartTime / (1000d / v2dWorld.FrameRate)), 
-                //    (uint)Math.Floor(tin.EndTime / (1000d / v2dWorld.FrameRate)),
-                //    new V2DMatrix(  tin.Matrix.ScaleX, tin.Matrix.Rotate0, tin.Matrix.Rotate1, tin.Matrix.ScaleX, 
-                //                    tin.Matrix.TranslateX, tin.Matrix.TranslateY),
-                //    tin.Alpha);
+				for (int i = 0; i < trs.Count; i++)
+				{
+					Transform tin = trs[i];
 
-                tout.IsTweening = tin.IsTweening;
+					uint sf = (uint)Math.Round(tin.StartTime / (1000d / v2dWorld.FrameRate));
+					uint ef = (uint)Math.Round(tin.EndTime / (1000d / v2dWorld.FrameRate)) - 1;
+					MatrixComponents mc = tin.Matrix.GetMatrixComponents();
+					V2DTransform tout = new V2DTransform(
+						sf,
+						ef,
+						mc.ScaleX / firstMc.ScaleX,
+						mc.ScaleY / firstMc.ScaleY,
+						(float)(mc.Rotation * Math.PI / 180) - (float)(firstMc.Rotation * Math.PI / 180),
+						mc.TranslateX - firstMc.TranslateX,
+						mc.TranslateY - firstMc.TranslateY,
+						tin.Alpha / firstAlpha);
 
-                result[i] = tout;
-            }
+					//V2DTransform tout = new V2DTransform(
+					//    (uint)Math.Floor(tin.StartTime / (1000d / v2dWorld.FrameRate)), 
+					//    (uint)Math.Floor(tin.EndTime / (1000d / v2dWorld.FrameRate)),
+					//    new V2DMatrix(  tin.Matrix.ScaleX, tin.Matrix.Rotate0, tin.Matrix.Rotate1, tin.Matrix.ScaleX, 
+					//                    tin.Matrix.TranslateX, tin.Matrix.TranslateY),
+					//    tin.Alpha);
+
+					tout.IsTweening = tin.IsTweening;
+
+					result[i] = tout;
+				}
+			}
             return result;
         }
     }

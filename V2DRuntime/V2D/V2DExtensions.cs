@@ -49,6 +49,15 @@ namespace V2DRuntime.V2D
 			//Body targ1 = ithis.VScreen.bodyMap[joint.Body2];
 			Body targ0 = GetBody(ithis, joint.Body1);
 			Body targ1 = GetBody(ithis, joint.Body2);
+
+			// gears need the first body static
+			if (targ0 != null && targ1 != null && targ1.IsStatic() && !targ0.IsStatic())
+			{
+				Body temp = targ0;
+				targ0 = targ1;
+				targ1 = temp;
+			}
+
 			Vector2 pt0 = new Vector2(joint.X + offsetX, joint.Y + offsetY);
 
 			string name = joint.Name;

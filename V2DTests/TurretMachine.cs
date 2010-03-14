@@ -40,7 +40,6 @@ namespace V2DTests
 		public override void Update(Microsoft.Xna.Framework.GameTime gameTime)
 		{			
 			base.Update(gameTime);
-			Console.WriteLine(turret.body.GetAngle());
 		}
 		public override void Draw(SpriteBatch batch)
 		{

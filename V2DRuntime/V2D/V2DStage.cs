@@ -1,17 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Box2DX.Dynamics;
+﻿using DDW.Display;
 using DDW.V2D.Serialization;
-using Microsoft.Xna.Framework;
-using Box2DX.Collision;
-using Box2DX.Common;
-using Microsoft.Xna.Framework.Graphics;
-using DDW.Display;
-using Microsoft.Xna.Framework.Input;
-using DDW.Input;
-using V2DRuntime.Enums;
 
 namespace DDW.V2D
 {

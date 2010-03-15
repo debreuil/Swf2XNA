@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Xml.Serialization;
 
-//using Box2DX.Dynamics;
+//using Box2D.XNA;
 //using DDW.Display;
 using Microsoft.Xna.Framework.Content;
 

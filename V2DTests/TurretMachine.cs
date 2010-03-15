@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using V2DRuntime.Attributes;
 using DDW.V2D;
-using Box2DX.Dynamics;
+using Box2D.XNA;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace V2DTests

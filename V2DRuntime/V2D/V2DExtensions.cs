@@ -3,8 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using DDW.V2D;
-using Box2DX.Dynamics;
-using Box2DX.Common;
+using Box2D.XNA;
 using Microsoft.Xna.Framework;
 using System.Reflection;
 using System.Text.RegularExpressions;
@@ -44,14 +43,15 @@ namespace V2DRuntime.V2D
 
 		public static Joint AddJoint(this IJointable ithis, V2DJoint joint, float offsetX, float offsetY)
 		{
-			Joint jnt = null;
+			Joint result = null;
+			JointDef jointDef = null;
 			//Body targ0 = ithis.VScreen.bodyMap[joint.Body1];
 			//Body targ1 = ithis.VScreen.bodyMap[joint.Body2];
 			Body targ0 = GetBody(ithis, joint.Body1);
 			Body targ1 = GetBody(ithis, joint.Body2);
 
 			// gears need the first body static
-			if (targ0 != null && targ1 != null && targ1.IsStatic() && !targ0.IsStatic())
+			if (targ0 != null && targ1 != null && targ1.GetType() == BodyType.Static && targ0.GetType() != BodyType.Static)
 			{
 				Body temp = targ0;
 				targ0 = targ1;
@@ -63,27 +63,26 @@ namespace V2DRuntime.V2D
 			string name = joint.Name;
 			float scale = ithis.WorldScale;
 
-			Vec2 anchor0 = new Vec2();
-			anchor0.Set(pt0.X / scale, pt0.Y / scale);
-			Vec2 anchor1 = new Vec2();
+			Vector2 anchor0 = new Vector2(pt0.X / scale, pt0.Y / scale);
+			Vector2 anchor1 = new Vector2();
 
 			switch (joint.Type)
 			{
 				case V2DJointKind.Distance:
-					Vec2 pt1 = new Vec2(joint.X2 + offsetX, joint.Y2 + offsetY);
-					anchor1.Set(pt1.X / scale, pt1.Y / scale);
+					Vector2 pt1 = new Vector2(joint.X2 + offsetX, joint.Y2 + offsetY);
+					anchor1 = new Vector2(pt1.X / scale, pt1.Y / scale);
 
 					DistanceJointDef dj = new DistanceJointDef();
 					dj.Initialize(targ0, targ1, anchor0, anchor1);
-					dj.CollideConnected = joint.CollideConnected;
-					dj.DampingRatio = joint.DampingRatio;
-					dj.FrequencyHz = joint.FrequencyHz;
+					dj.collideConnected = joint.CollideConnected;
+					dj.dampingRatio = joint.DampingRatio;
+					dj.frequencyHz = joint.FrequencyHz;
 					if (joint.Length != -1)
 					{
-						dj.Length = joint.Length / scale;
+						dj.length = joint.Length / scale;
 					}
 
-					jnt = ithis.VScreen.world.CreateJoint(dj);
+					jointDef = dj;
 					break;
 
 				case V2DJointKind.Revolute:
@@ -92,15 +91,15 @@ namespace V2DRuntime.V2D
 
 					RevoluteJointDef rj = new RevoluteJointDef();
 					rj.Initialize(targ0, targ1, anchor0);
-					rj.LowerAngle = rot0;
-					rj.UpperAngle = rot1;
+					rj.lowerAngle = rot0;
+					rj.upperAngle = rot1;
 
-					rj.EnableLimit = rot0 != 0 && rot1 != 0;
-					rj.MaxMotorTorque = joint.MaxMotorTorque;
-					rj.MotorSpeed = joint.MotorSpeed;
-					rj.EnableMotor = joint.EnableMotor;
+					rj.enableLimit = rot0 != 0 && rot1 != 0;
+					rj.maxMotorTorque = joint.MaxMotorTorque;
+					rj.motorSpeed = joint.MotorSpeed;
+					rj.enableMotor = joint.EnableMotor;
 
-					jnt = ithis.VScreen.world.CreateJoint(rj);
+					jointDef = rj;
 					break;
 
 				case V2DJointKind.Prismatic:
@@ -110,29 +109,26 @@ namespace V2DRuntime.V2D
 					float max = joint.Max;
 
 					PrismaticJointDef pj = new PrismaticJointDef();
-					Vec2 worldAxis = new Vec2();
-					worldAxis.Set(axisX, axisY);
+					Vector2 worldAxis = new Vector2(axisX, axisY);
 					pj.Initialize(targ0, targ1, anchor0, worldAxis);
-					pj.LowerTranslation = min / scale;
-					pj.UpperTranslation = max / scale;
+					pj.lowerTranslation = min / scale;
+					pj.upperTranslation = max / scale;
 
-					pj.EnableLimit = joint.EnableLimit;
-					pj.MaxMotorForce = joint.MaxMotorTorque;
-					pj.MotorSpeed = joint.MotorSpeed;
-					pj.EnableMotor = joint.EnableMotor;
+					pj.enableLimit = joint.EnableLimit;
+					pj.maxMotorForce = joint.MaxMotorTorque;
+					pj.motorSpeed = joint.MotorSpeed;
+					pj.enableMotor = joint.EnableMotor;
 
-					jnt = ithis.VScreen.world.CreateJoint(pj);
+					jointDef = pj;
 					break;
 
 				case V2DJointKind.Pully:
 					Vector2 pt2 = new Vector2(joint.X2 + offsetX, joint.Y2 + offsetY);
-					anchor1.Set(pt2.X / scale, pt2.Y / scale);
+					anchor1 = new Vector2(pt2.X / scale, pt2.Y / scale);
 
-					Vec2 groundAnchor0 = new Vec2();
-					groundAnchor0.Set(joint.GroundAnchor1X / scale, joint.GroundAnchor1Y / scale);
+					Vector2 groundAnchor0 = new Vector2(joint.GroundAnchor1X / scale, joint.GroundAnchor1Y / scale);
 
-					Vec2 groundAnchor1 = new Vec2();
-					groundAnchor1.Set(joint.GroundAnchor2X / scale, joint.GroundAnchor2Y / scale);
+					Vector2 groundAnchor1 = new Vector2(joint.GroundAnchor2X / scale, joint.GroundAnchor2Y / scale);
 
 					float max0 = joint.MaxLength1;
 					float max1 = joint.MaxLength2;
@@ -141,37 +137,39 @@ namespace V2DRuntime.V2D
 
 					PulleyJointDef puj = new PulleyJointDef();
 					puj.Initialize(targ0, targ1, groundAnchor0, groundAnchor1, anchor0, anchor1, rat);
-					puj.MaxLength1 = (max0 + max1) / scale;
-					puj.MaxLength2 = (max0 + max1) / scale;
+					puj.maxLengthA = (max0 + max1) / scale;
+					puj.maxLengthB = (max0 + max1) / scale;
 
-					puj.CollideConnected = joint.CollideConnected;
+					puj.collideConnected = joint.CollideConnected;
 
-					jnt = ithis.VScreen.world.CreateJoint(puj);
+					jointDef = puj;
 					break;
 
 				case V2DJointKind.Gear:
 					GearJointDef gj = new GearJointDef();
-					gj.Body1 = targ0;
-					gj.Body2 = targ1;
-					gj.Joint1 = GetFirstGearableJoint(targ0.GetJointList());
-					gj.Joint2 = GetFirstGearableJoint(targ1.GetJointList());
-					gj.Ratio = joint.Ratio;
-					jnt = ithis.VScreen.world.CreateJoint(gj);
+					gj.bodyA = targ0;
+					gj.bodyB = targ1;
+					gj.joint1 = GetFirstGearableJoint(targ0.GetJointList());
+					gj.joint2 = GetFirstGearableJoint(targ1.GetJointList());
+					gj.ratio = joint.Ratio;
+					jointDef = gj;
 					break;
 			}
 
-			if (jnt != null)
+			if (jointDef != null)
 			{
-				Dictionary<string, string> dict = new Dictionary<string, string>();
-				dict["name"] = name;
-				jnt.UserData = dict;
-				ithis.VScreen.joints.Add(jnt);
+				result = SetJointWithReflection(ithis, name, jointDef);
 
-				SetJointWithReflection(ithis, name, jnt);
+				if (result != null)
+				{
+					Dictionary<string, string> dict = new Dictionary<string, string>();
+					dict["name"] = name;
+					result.SetUserData(dict);
+					ithis.VScreen.joints.Add(result);
+				}
 			}
 
-
-			return jnt;
+			return result;
 		}
 
 		private static Joint GetFirstGearableJoint(JointEdge je)
@@ -199,8 +197,9 @@ namespace V2DRuntime.V2D
 		//}
 
 		private static Regex lastDigits = new Regex(@"^([a-zA-Z$_]*)([0-9]+)$", RegexOptions.Compiled);
-		public static void SetJointWithReflection(this IJointable ithis, string instName, Joint jnt)
+		public static Joint SetJointWithReflection(this IJointable ithis, string instName, JointDef jointDef)
 		{
+			Joint result = null;
 			Type t = ithis.GetType();
 
 			int index = -1;
@@ -221,6 +220,38 @@ namespace V2DRuntime.V2D
 			{
 				Type ft = fi.FieldType;
 
+				// apply attributes
+				System.Attribute[] attrs = System.Attribute.GetCustomAttributes(fi);  // reflection
+
+				foreach (System.Attribute attr in attrs)
+				{
+					if (jointDef is DistanceJointDef && attr is DistanceJointAttribute)
+					{
+						((DistanceJointAttribute)attr).ApplyAttribtues((DistanceJointDef)jointDef);
+					}
+					else if (jointDef is GearJointDef && attr is GearJointAttribute)
+					{
+						((GearJointAttribute)attr).ApplyAttribtues((GearJointDef)jointDef);
+					}
+					else if (jointDef is LineJointDef && attr is LineJointAttribute)
+					{
+						((LineJointAttribute)attr).ApplyAttribtues((LineJointDef)jointDef);
+					}
+					else if (jointDef is PrismaticJointDef && attr is PrismaticJointAttribute)
+					{
+						((PrismaticJointAttribute)attr).ApplyAttribtues((PrismaticJointDef)jointDef);
+					}
+					else if (jointDef is PulleyJointDef && attr is PulleyJointAttribute)
+					{
+						((PulleyJointAttribute)attr).ApplyAttribtues((PulleyJointDef)jointDef);
+					}
+					else if (jointDef is RevoluteJointDef && attr is RevoluteJointAttribute)
+					{
+						((RevoluteJointAttribute)attr).ApplyAttribtues((RevoluteJointDef)jointDef);
+					}
+				}
+				result = ithis.VScreen.world.CreateJoint(jointDef);
+
 				if (ft.IsArray)
 				{
 					object array = fi.GetValue(ithis);
@@ -233,7 +264,7 @@ namespace V2DRuntime.V2D
 					}
 
 					MethodInfo mi = array.GetType().GetMethod("SetValue", new Type[] { elementType, index.GetType() });
-					mi.Invoke(array, new object[] { jnt, index });
+					mi.Invoke(array, new object[] { result, index });
 				}
 				else if (typeof(System.Collections.ICollection).IsAssignableFrom(ft))
 				{
@@ -267,50 +298,24 @@ namespace V2DRuntime.V2D
 						}
 
 						MethodInfo mi = collection.GetType().GetMethod("Insert");
-						mi.Invoke(collection, new object[] { index, jnt });
+						mi.Invoke(collection, new object[] { index, result });
 					}
 				}
 				else if (ft.Equals(typeof(Joint)) || ft.IsSubclassOf(typeof(Joint)))
 				{
-					fi.SetValue(ithis, jnt);
+					fi.SetValue(ithis, result);
 				}
 				else
 				{
 					throw new ArgumentException("Not supported field type. " + ft.ToString() + " " + instName);
 				}
-
-
-				// apply attributes
-				System.Attribute[] attrs = System.Attribute.GetCustomAttributes(fi);  // reflection
-
-				foreach (System.Attribute attr in attrs)
-				{
-					if (jnt is DistanceJoint && attr is DistanceJointAttribute)
-					{
-						((DistanceJointAttribute)attr).ApplyAttribtues((DistanceJoint)jnt);
-					}
-					else if (jnt is GearJoint && attr is GearJointAttribute)
-					{
-						((GearJointAttribute)attr).ApplyAttribtues((GearJoint)jnt);
-					}
-					else if (jnt is LineJoint && attr is LineJointAttribute)
-					{
-						((LineJointAttribute)attr).ApplyAttribtues((LineJoint)jnt);
-					}
-					else if (jnt is PrismaticJoint && attr is PrismaticJointAttribute)
-					{
-						((PrismaticJointAttribute)attr).ApplyAttribtues((PrismaticJoint)jnt);
-					}
-					else if (jnt is PulleyJoint && attr is PulleyJointAttribute)
-					{
-						((PulleyJointAttribute)attr).ApplyAttribtues((PulleyJoint)jnt);
-					}
-					else if (jnt is RevoluteJoint && attr is RevoluteJointAttribute)
-					{
-						((RevoluteJointAttribute)attr).ApplyAttribtues((RevoluteJoint)jnt);
-					}
-				}
 			}
+			else
+			{
+				result = ithis.VScreen.world.CreateJoint(jointDef);
+			}
+
+			return result;
 		}
 
 		private static int GetJointArrayLength(this IJointable ithis, string instName)

@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Box2DX.Dynamics;
+using Box2D.XNA;
 
 namespace V2DRuntime.Attributes
 {
@@ -32,22 +32,22 @@ namespace V2DRuntime.Attributes
 			collideConnected = true;
 		}
 
-		public void ApplyAttribtues(PulleyJoint j)
+		public void ApplyAttribtues(PulleyJointDef j)
 		{
-			j.SetCollideConnected(collideConnected);
+			j.collideConnected = collideConnected;
 
 			if (maxLength1 != 0.0f)
 			{
-				j._maxLength1 = maxLength1;
+				j.maxLengthA = maxLength1;
 			}
 			if (maxLength2 != 0.0f)
 			{
-				j._maxLength2 = maxLength2;
+				j.maxLengthB = maxLength2;
 			}
 
 			if (ratio != 1.0f)
 			{
-				j._ratio = ratio;
+				j.ratio = ratio;
 			}
 		}
 	}

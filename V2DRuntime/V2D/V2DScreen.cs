@@ -9,15 +9,13 @@ using System.Xml.Serialization;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-using Box2DX.Common;
-using Box2DX.Dynamics;
+using Box2D.XNA;
 
 using DDW.Display;
 using DDW.V2D.Serialization;
 using DDW.Input;
 using V2DRuntime.Components;
 using V2DRuntime.V2D;
-using Box2DX.Collision;
 using V2DRuntime.Enums;
 using V2DRuntime.Attributes;
 
@@ -45,7 +43,7 @@ namespace DDW.V2D
 		public int enableTOI = 1;
 		public int Iterations = 10;
 		public float TimeStep = 1 / 30;
-		public Vec2 Gravity = new Vec2(0.0f, 10.0f); 
+		public Vector2 Gravity = new Vector2(0.0f, 10.0f); 
         
         public V2DScreen()
         {
@@ -101,22 +99,6 @@ namespace DDW.V2D
 				}
 			}
 		}
-		//protected override void RemoveInstanceByName(string name)
-		//{
-		//    Body bd = GetBodyByName(name);
-
-		//    if (bd != null)
-		//    {
-		//        if (bodyMap.ContainsKey(name))
-		//        {
-		//            DestroyBody(bd, name);
-		//        }
-		//        bd.SetUserData(null);
-
-		//    }
-
-		//    base.RemoveInstanceByName(name);
-		//}
 		public override void Initialize()
 		{
 			base.Initialize();
@@ -139,7 +121,7 @@ namespace DDW.V2D
 					V2DScreenAttribute a = (V2DScreenAttribute)attr;
 					if (a.gravityX != 0 | a.gravityY != 10)
 					{
-						Gravity = new Vec2(a.gravityX, a.gravityY);
+						Gravity = new Vector2(a.gravityX, a.gravityY);
 						world.Gravity = Gravity;
 					}
 				}
@@ -151,14 +133,19 @@ namespace DDW.V2D
 			{
 				bool doSleep = true;
 				ClientSize = new Vector2(v2dWorld.Width, v2dWorld.Height);
-				float w = ClientSize.X / WorldScale;
-				float h = ClientSize.Y / WorldScale;
-				AABB worldAABB = new AABB();
-				worldAABB.LowerBound.Set(0 - 500, (-h / 2) - 500);
-				worldAABB.UpperBound.Set((w / 2) + 500, (h / 2) + 500);
 
-				world = new World(worldAABB, Gravity, doSleep);
-				groundBody = world.GetGroundBody();
+				//float w = ClientSize.X / WorldScale;
+				//float h = ClientSize.Y / WorldScale;
+				//float t = (-h / 2) - 500f;
+				//float l = -500f;
+				//float b = (h / 2f) + 500f;
+				//float r = (w / 2f) + 500f;
+
+				world = new World(Gravity, doSleep);
+				BodyDef groundBodyDef = new BodyDef();
+				groundBodyDef.position = new Vector2(0f, 0f);
+				groundBody = world.CreateBody(groundBodyDef);
+
 				bodyMap.Add(V2DGame.ROOT_NAME, groundBody);
 				if (instanceName != V2DGame.ROOT_NAME)
 				{
@@ -182,24 +169,24 @@ namespace DDW.V2D
 		public override void Added(EventArgs e)
 		{
 			base.Added(e);
-			if (V2DGame.instance.HasCursor)
-			{
-				cursor = V2DGame.instance.GetCursor();
-				cursor.MouseDown += MouseDown;
-				cursor.MouseMove += MouseMove;
-				cursor.MouseUp += MouseUp;
-			}
+			//if (V2DGame.instance.HasCursor)
+			//{
+			//    cursor = V2DGame.instance.GetCursor();
+			//    cursor.MouseDown += MouseDown;
+			//    cursor.MouseMove += MouseMove;
+			//    cursor.MouseUp += MouseUp;
+			//}
 		}
         public override void Removed(EventArgs e)
         {
             base.Removed(e);
-			if (V2DGame.instance.HasCursor)
-			{
-				cursor = V2DGame.instance.GetCursor();
-				cursor.MouseDown -= MouseDown;
-				cursor.MouseMove -= MouseMove;
-				cursor.MouseUp -= MouseUp;
-			}
+			//if (V2DGame.instance.HasCursor)
+			//{
+			//    cursor = V2DGame.instance.GetCursor();
+			//    cursor.MouseDown -= MouseDown;
+			//    cursor.MouseMove -= MouseMove;
+			//    cursor.MouseUp -= MouseUp;
+			//}
         }
 
         public void  RemoveJoint(Joint joint)
@@ -214,7 +201,7 @@ namespace DDW.V2D
         {				
             for(int i = joints.Count - 1; i >= 0; i--)
             {
-                if((string)joints[i].UserData == name)
+                if((string)joints[i].GetUserData() == name)
                 {
                     RemoveJoint(joints[i]);
                     break;    
@@ -253,110 +240,109 @@ namespace DDW.V2D
 		}
 		public void DestroyBody(Body b, string name)
 		{
-			if (world.Contains(b))
+			if (bodyMap.ContainsKey(name))//world.Contains(b))
 			{
-				List<Joint> relatedJoints = new List<Joint>();
-				for (int j = 0; j < joints.Count; j++)
-				{
-					if (joints[j].GetBody1() == b || joints[j].GetBody2() == b)
-					{
-						//joints.RemoveAt(j);
-						relatedJoints.Add(joints[j]);
-					}
-				}
+				//List<Joint> relatedJoints = new List<Joint>();
+				//for (int j = 0; j < joints.Count; j++)
+				//{
+				//    if (joints[j].GetBodyA() == b || joints[j].GetBodyB() == b)
+				//    {
+				//        //joints.RemoveAt(j);
+				//        relatedJoints.Add(joints[j]);
+				//    }
+				//}
 
-				for (int j = relatedJoints.Count - 1; j >= 0; j--)
-				{
-					if (joints.Contains(relatedJoints[j]))
-					{
-						world.DestroyJoint(relatedJoints[j]);
-						joints.Remove(relatedJoints[j]);
-					}
-				}
+				//for (int j = relatedJoints.Count - 1; j >= 0; j--)
+				//{
+				//    if (joints.Contains(relatedJoints[j]))
+				//    {
+				//        world.DestroyJoint(relatedJoints[j]);
+				//        joints.Remove(relatedJoints[j]);
+				//    }
+				//}
 
 				world.DestroyBody(b);
 				this.bodies.Remove(b);
 
-				if (bodyMap.ContainsKey(name))
-				{
+				//if (bodyMap.ContainsKey(name))
+				//{
 					bodyMap.Remove(name);
-				}
+				//}
 			}
 		}
-		public void SetGravity(Vec2 v2)
+		public void SetGravity(Vector2 v2)
 		{
 			world.Gravity = v2;
 		}
-		public void SetContactListener(ContactListener contactListener)
+		public void SetContactListener(IContactListener contactListener)
 		{
-			world.SetContactListener(contactListener);
+			world.ContactListener = contactListener;
 		}
 		public void ClearContactListener()
 		{
-			world.SetContactListener(null);
+			world.ContactListener = null;
 		}
 
-		public void MouseDown(Vector2 position)
-		{
-			if (_mouseJoint != null)
-			{
-				return;
-			}
+		//public void MouseDown(Vector2 position)
+		//{
+		//    if (_mouseJoint != null)
+		//    {
+		//        return;
+		//    }
 
-			Vec2 p = new Vec2(position.X / WorldScale, position.Y / WorldScale);
-			// Make a small box.
-			AABB aabb = new AABB();
-			Vec2 d = new Vec2();
-			d.Set(0.001f, 0.001f);
-			aabb.LowerBound = p - d;
-			aabb.UpperBound = p + d;
+		//    Vector2 p = new Vector2(position.X / WorldScale, position.Y / WorldScale);
+		//    // Make a small box.
+		//    AABB aabb = new AABB();
+		//    Vector2 d = new Vector2(0.001f, 0.001f);
+		//    aabb.lowerBound = p - d;
+		//    aabb.upperBound = p + d;
 
-			// Query the world for overlapping shapes.
-			int k_maxCount = 10;
-			Shape[] shapes = new Shape[k_maxCount];
-			int count = world.Query(aabb, shapes, k_maxCount);
-			Body bd = null;
-			for (int i = 0; i < count; ++i)
-			{
-				Body shapeBody = shapes[i].GetBody();
-				if (shapeBody.IsStatic() == false && shapeBody.GetMass() > 0.0f)
-				{
-					bool inside = shapes[i].TestPoint(shapeBody.GetXForm(), p);
-					if (inside)
-					{
-						bd = shapes[i].GetBody();
-						break;
-					}
-				}
-			}
+		//    // Query the world for overlapping shapes.
+		//    int k_maxCount = 10;
+		//    Shape[] shapes = new Shape[k_maxCount];
+		//    int count = world.QueryAABB(aabb, shapes, k_maxCount);
+		//    Body bd = null;
+		//    for (int i = 0; i < count; ++i)
+		//    {
+		//        Body shapeBody = shapes[i].GetBody();
+		//        if (shapeBody.IsStatic() == false && shapeBody.GetMass() > 0.0f)
+		//        {
+		//            bool inside = shapes[i].TestPoint(shapeBody.GetXForm(), p);
+		//            if (inside)
+		//            {
+		//                bd = shapes[i].GetBody();
+		//                break;
+		//            }
+		//        }
+		//    }
 
-			if (bd != null)
-			{
-				MouseJointDef md = new MouseJointDef();
-				md.Body1 = world.GetGroundBody();
-				md.Body2 = bd;
-				md.Target = p;
-				md.MaxForce = 1000.0f * bd.GetMass();
-				_mouseJoint = (MouseJoint)world.CreateJoint(md);
-				bd.WakeUp();
-			}
-		}
-		public void MouseUp(Vector2 position)
-		{
-			if (_mouseJoint != null)
-			{
-				world.DestroyJoint(_mouseJoint);
-				_mouseJoint = null;
-			}
-		}
-		public void MouseMove(Vector2 position)
-		{
-			if (_mouseJoint != null)
-			{
-				Vec2 p = new Vec2(position.X / WorldScale, position.Y / WorldScale);
-				_mouseJoint.SetTarget(p);
-			}
-		}
+		//    if (bd != null)
+		//    {
+		//        MouseJointDef md = new MouseJointDef();
+		//        md.Body1 = world.GetGroundBody();
+		//        md.Body2 = bd;
+		//        md.Target = p;
+		//        md.MaxForce = 1000.0f * bd.GetMass();
+		//        _mouseJoint = (MouseJoint)world.CreateJoint(md);
+		//        bd.WakeUp();
+		//    }
+		//}
+		//public void MouseUp(Vector2 position)
+		//{
+		//    if (_mouseJoint != null)
+		//    {
+		//        world.DestroyJoint(_mouseJoint);
+		//        _mouseJoint = null;
+		//    }
+		//}
+		//public void MouseMove(Vector2 position)
+		//{
+		//    if (_mouseJoint != null)
+		//    {
+		//        Vector2 p = new Vector2(position.X / WorldScale, position.Y / WorldScale);
+		//        _mouseJoint.SetTarget(p);
+		//    }
+		//}
 
 		Body[] boundsBodies = new Body[4];
 
@@ -364,7 +350,7 @@ namespace DDW.V2D
 		{
 			foreach (Body b in boundsBodies)
 			{
-				if (b != null && world.Contains(b))
+				if (b != null)// && world.Contains(b))
 				{
 					world.DestroyBody(b);
 				}
@@ -395,307 +381,25 @@ namespace DDW.V2D
 			h /= WorldScale;
 
 			BodyDef bodyDef = new BodyDef();
-			bodyDef.Position.Set(x, y);
+			bodyDef.position = new Vector2(x, y);
 
-			PolygonDef polyDef = new PolygonDef();
-			polyDef.VertexCount = 4;
-			polyDef.Vertices[0].Set(0, 0);
-			polyDef.Vertices[1].Set(w, 0);
-			polyDef.Vertices[2].Set(w, h);
-			polyDef.Vertices[3].Set(0, h);
+			PolygonShape polyShape = new PolygonShape();
+			polyShape._vertexCount = 4;
+			polyShape._vertices[0] = new Vector2(0, 0);
+			polyShape._vertices[1] = new Vector2(w, 0);
+			polyShape._vertices[2] = new Vector2(w, h);
+			polyShape._vertices[3] = new Vector2(0, h);
 
 			Body body = world.CreateBody(bodyDef);
-			body.CreateShape(polyDef);
-			body.SetMassFromShapes();
+			body.CreateFixture(polyShape);
+
+			MassData md;
+			body.GetMassData(out md);
+			body.SetMassData(ref md);
 
 			return body;
 		}
 
-		/* Joint stuff moved to extension method
-		public Joint AddJoint(V2DJoint joint, float offsetX, float offsetY)
-		{
-			Joint jnt = null;
-			Body targ0 = this.bodyMap[joint.Body1];
-			Body targ1 = this.bodyMap[joint.Body2];
-			Vector2 pt0 = new Vector2(joint.X + offsetX, joint.Y + offsetY);
-
-			string name = joint.Name;
-			float scale = WorldScale;
-
-			Vec2 anchor0 = new Vec2();
-			anchor0.Set(pt0.X / scale, pt0.Y / scale);
-			Vec2 anchor1 = new Vec2();
-
-			switch (joint.Type)
-			{
-				case V2DJointKind.Distance:
-					Vec2 pt1 = new Vec2(joint.X2 + offsetX, joint.Y2 + offsetY);
-					anchor1.Set(pt1.X / scale, pt1.Y / scale);
-
-					DistanceJointDef dj = new DistanceJointDef();
-					dj.Initialize(targ0, targ1, anchor0, anchor1);
-					dj.CollideConnected = joint.CollideConnected;
-					dj.DampingRatio = joint.DampingRatio;
-					dj.FrequencyHz = joint.FrequencyHz;
-					if (joint.Length != -1)
-					{
-						dj.Length = joint.Length / scale;
-					}
-
-					jnt = this.world.CreateJoint(dj);
-					break;
-
-				case V2DJointKind.Revolute:
-					float rot0 = joint.Min; //(typeof(joint["min"]) == "string") ? parseFloat(joint["min"]) / 180 * Math.PI : joint["min"];
-					float rot1 = joint.Max; //(typeof(joint["max"]) == "string") ? parseFloat(joint["max"]) / 180 * Math.PI : joint["max"];
-
-					RevoluteJointDef rj = new RevoluteJointDef();
-					rj.Initialize(targ0, targ1, anchor0);
-					rj.LowerAngle = rot0;
-					rj.UpperAngle = rot1;
-
-					rj.EnableLimit = rot0 != 0 && rot1 != 0;
-					rj.MaxMotorTorque = joint.MaxMotorTorque;
-					rj.MotorSpeed = joint.MotorSpeed;
-					rj.EnableMotor = joint.EnableMotor;
-
-					jnt = this.world.CreateJoint(rj);
-					break;
-
-				case V2DJointKind.Prismatic:
-					float axisX = joint.AxisX;
-					float axisY = joint.AxisY;
-					float min = joint.Min;
-					float max = joint.Max;
-
-					PrismaticJointDef pj = new PrismaticJointDef();
-					Vec2 worldAxis = new Vec2();
-					worldAxis.Set(axisX, axisY);
-					pj.Initialize(targ0, targ1, anchor0, worldAxis);
-					pj.LowerTranslation = min / scale;
-					pj.UpperTranslation = max / scale;
-
-					pj.EnableLimit = joint.EnableLimit;
-					pj.MaxMotorForce = joint.MaxMotorTorque;
-					pj.MotorSpeed = joint.MotorSpeed;
-					pj.EnableMotor = joint.EnableMotor;
-
-					jnt = this.world.CreateJoint(pj);
-					break;
-
-				case V2DJointKind.Pully:
-					Vector2 pt2 = new Vector2(joint.X2 + offsetX, joint.Y2 + offsetY);
-					anchor1.Set(pt2.X / scale, pt2.Y / scale);
-
-					Vec2 groundAnchor0 = new Vec2();
-					groundAnchor0.Set(joint.GroundAnchor1X / scale, joint.GroundAnchor1Y / scale);
-
-					Vec2 groundAnchor1 = new Vec2();
-					groundAnchor1.Set(joint.GroundAnchor2X / scale, joint.GroundAnchor2Y / scale);
-
-					float max0 = joint.MaxLength1;
-					float max1 = joint.MaxLength2;
-
-					float rat = joint.Ratio;
-
-					PulleyJointDef puj = new PulleyJointDef();
-					puj.Initialize(targ0, targ1, groundAnchor0, groundAnchor1, anchor0, anchor1, rat);
-					puj.MaxLength1 = (max0 + max1) / scale;
-					puj.MaxLength2 = (max0 + max1) / scale;
-
-					puj.CollideConnected = joint.CollideConnected;
-
-					jnt = this.world.CreateJoint(puj);
-					break;
-
-				case V2DJointKind.Gear:
-					GearJointDef gj = new GearJointDef();
-					gj.Body1 = targ0;
-					gj.Body2 = targ1;
-					gj.Joint1 = GetFirstGearableJoint(targ0.GetJointList());
-					gj.Joint2 = GetFirstGearableJoint(targ1.GetJointList());
-					gj.Ratio = joint.Ratio;
-					jnt = this.world.CreateJoint(gj);
-					break;
-			}
-
-			if (jnt != null)
-			{
-				Dictionary<string, string> dict = new Dictionary<string, string>();
-				dict["name"] = name;
-				jnt.UserData = dict;
-				this.joints.Add(jnt);
-
-				SetJointWithReflection(name, jnt);
-			}
-
-
-			return jnt;
-		}
-		protected Joint GetFirstGearableJoint(JointEdge je)
-		{
-			Joint result = je.Joint;
-			while (result != null && !(result is PrismaticJoint || result is RevoluteJoint))
-			{
-				je = je.Next;
-				result = je.Joint;
-				break;
-			}
-			return result;
-		}
-		public virtual void SetJointWithReflection(string instName, Joint jnt)
-		{
-			Type t = this.GetType();
-
-			int index = -1;
-			FieldInfo fi = t.GetField(instName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
-
-			if (fi == null)
-			{
-				Match m = lastDigits.Match(instName);
-				if (m.Groups.Count > 2 && t.GetField(instName) == null)
-				{
-					instName = m.Groups[1].Value;
-					index = int.Parse(m.Groups[2].Value, System.Globalization.NumberStyles.None);
-					fi = t.GetField(instName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
-				}
-			}
-
-			if (fi != null)
-			{
-				Type ft = fi.FieldType;
-				
-				if (ft.IsArray)
-				{
-					object array = fi.GetValue(this);
-					Type elementType = ft.GetElementType();
-					if (array == null)
-					{
-						int arrayLength = GetJointArrayLength(instName);
-						array = Array.CreateInstance(elementType, arrayLength);
-						fi.SetValue(this, array);
-					}
-
-					MethodInfo mi = array.GetType().GetMethod("SetValue", new Type[] { elementType, index.GetType() });
-					mi.Invoke(array, new object[] { jnt, index });
-				}
-				else if (typeof(System.Collections.ICollection).IsAssignableFrom(ft))
-				{
-					Type[] genTypes = ft.GetGenericArguments();
-					if (genTypes.Length == 1) // only support single type generics (eg List<>) for now
-					{
-						Type gt = genTypes[0];
-						object collection = fi.GetValue(this);
-						if (collection == null) // ensure list created
-						{
-							ConstructorInfo ci = ft.GetConstructor(new Type[] { });
-							collection = ci.Invoke(new object[] { });
-							fi.SetValue(this, collection);
-						}
-
-						PropertyInfo cm = collection.GetType().GetProperty("Count");
-						int cnt = (int)cm.GetValue(collection, new object[] { });
-
-						// pad with nulls if needs to skip indexes (order is based on flash depth, not index)
-						while (index > cnt)
-						{
-							MethodInfo mia = collection.GetType().GetMethod("Add");
-							mia.Invoke(collection, new object[] { null });
-							cnt = (int)cm.GetValue(collection, new object[] { });
-						}
-
-						if (index < cnt)
-						{
-							MethodInfo mia = collection.GetType().GetMethod("RemoveAt");
-							mia.Invoke(collection, new object[] { index });
-						}
-
-						MethodInfo mi = collection.GetType().GetMethod("Insert");
-						mi.Invoke(collection, new object[] { index, jnt });
-					}
-				}
-				else if (ft.Equals(typeof(Joint)) || ft.IsSubclassOf(typeof(Joint)))
-				{
-					fi.SetValue(this, jnt);
-				}
-				else
-				{
-					throw new ArgumentException("Not supported field type. " + ft.ToString() + " " + instName);
-				}
-
-
-				// apply attributes
-				System.Attribute[] attrs = System.Attribute.GetCustomAttributes(fi);  // reflection
-
-				foreach (System.Attribute attr in attrs)
-				{
-					if (jnt is DistanceJoint && attr is DistanceJointAttribute)
-					{
-						((DistanceJointAttribute)attr).ApplyAttribtues((DistanceJoint)jnt);
-					}
-					else if (jnt is GearJoint && attr is GearJointAttribute)
-					{
-						((GearJointAttribute)attr).ApplyAttribtues((GearJoint)jnt);
-					}
-					else if (jnt is LineJoint && attr is LineJointAttribute)
-					{
-						((LineJointAttribute)attr).ApplyAttribtues((LineJoint)jnt);
-					}
-					else if (jnt is PrismaticJoint && attr is PrismaticJointAttribute)
-					{
-						((PrismaticJointAttribute)attr).ApplyAttribtues((PrismaticJoint)jnt);
-					}
-					else if (jnt is PulleyJoint && attr is PulleyJointAttribute)
-					{
-						((PulleyJointAttribute)attr).ApplyAttribtues((PulleyJoint)jnt);
-					}
-					else if (jnt is RevoluteJoint && attr is RevoluteJointAttribute)
-					{
-						((RevoluteJointAttribute)attr).ApplyAttribtues((RevoluteJoint)jnt);
-					}
-				}
-			}
-		}
-		private int GetJointArrayLength(string instName)
-		{
-			int result = 1; // will always be at least one, allows dopping index in def for single arrays
-			V2DDefinition def = screen.v2dWorld.GetDefinitionByName(definitionName);
-			if (def != null)
-			{
-				foreach (V2DJoint vi in def.Joints)
-				{
-					if (vi.Name.StartsWith(instName))
-					{
-						string s = vi.Name.Substring(instName.Length);
-						int val = 0;
-						try
-						{
-							val = int.Parse(s, System.Globalization.NumberStyles.None);
-						}
-						catch (Exception)
-						{
-						}
-						result = System.Math.Max(val + 1, result);
-					}
-				}
-			}
-			return result;
-		}
-		*/
-
-		//public List<V2DSprite> transformList = new List<V2DSprite>();
-		//public override void OnUpdateComplete(GameTime gameTime)
-		//{
-		//    base.OnUpdateComplete(gameTime);
-		//    if (transformList.Count > 0)
-		//    {
-		//        foreach (V2DSprite sp in transformList)
-		//        {
-		//            sp.UpdateTransform();
-		//        }
-		//        transformList.Clear();
-		//    }
-		//}
 		public override void Update(GameTime gameTime)
 		{
 			base.Update(gameTime);
@@ -715,12 +419,12 @@ namespace DDW.V2D
 					}
 				}
 
-				world.SetWarmStarting(enableWarmStarting > 0);
-				world.SetContinuousPhysics(enableTOI > 0);
+				world.WarmStarting = enableWarmStarting > 0;
+				world.ContinuousPhysics = enableTOI > 0;
 
 				world.Step(timeStep, velocityIterations, positionIterations);
 
-				world.Validate();
+				//world.Validate();
 
 				//Body b = world.GetBodyList();
 				//while (b != null)

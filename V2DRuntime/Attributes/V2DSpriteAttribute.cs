@@ -1,8 +1,7 @@
 ﻿using System;
 using DDW.V2D;
-using Box2DX.Dynamics;
-using Box2DX.Collision;
-using Box2DX.Common;
+using Box2D.XNA;
+using Microsoft.Xna.Framework;
 
 namespace V2DRuntime.Attributes
 {
@@ -50,66 +49,67 @@ namespace V2DRuntime.Attributes
 			fixedRotation = false;
 			isBullet = false;
 		}
-		public void ApplyAttribtues(ShapeDef def)
+		public void ApplyAttribtues(FixtureDef def)
 		{
+			Filter fd;
 			if (friction != 0.2f)
 			{
-				def.Friction = friction;
+				def.friction = friction;
 			}
 			if (restitution != 0)
 			{
-				def.Restitution = restitution;
+				def.restitution = restitution;
 			}
 			if (density != 0)
 			{
-				def.Density = density;
+				def.density = density;
 			}
 			if (categoryBits != 0x0001)
 			{
-				def.Filter.CategoryBits = categoryBits;
+				def.filter.categoryBits = categoryBits;
 			}
 			if (maskBits != 0xFFFF)
 			{
-				def.Filter.MaskBits = maskBits;
+				def.filter.maskBits = maskBits;
 			}
 			if (groupIndex != 0)
 			{
-				def.Filter.GroupIndex = groupIndex;
+				def.filter.groupIndex = groupIndex;
 			}
 			if (isSensor != false)
 			{
-				def.IsSensor = isSensor;
+				def.isSensor = isSensor;
 			}
 		}
 		public void ApplyAttribtues(BodyDef def)
 		{
-			if (centerOfMassX != 0 || centerOfMassY != 0)
-			{
-				def.MassData.Center = new Vec2(centerOfMassX, centerOfMassY);
-			}
-			if (mass != 0.0f)
-			{
-				def.MassData.Mass = mass;
-			}
+			//if (centerOfMassX != 0 || centerOfMassY != 0)
+			//{
+			//    def.MassData.Center = new Vector2(centerOfMassX, centerOfMassY);
+			//}
+			//if (mass != 0.0f)
+			//{
+			//    def.MassData.Mass = mass;
+			//}
 			if (linearDamping != 0.0f)
 			{
-				def.LinearDamping = linearDamping;
+				def.linearDamping = linearDamping;
 			}
 			if (angularDamping != 0.0f)
 			{
-				def.AngularDamping = angularDamping;
+				def.angularDamping = angularDamping;
 			}
 			if (allowSleep != true)
 			{
-				def.AllowSleep = allowSleep;
+				def.allowSleep = allowSleep;
 			}
 			if (fixedRotation != false)
 			{
-				def.FixedRotation = fixedRotation;
+				def.fixedRotation = fixedRotation;
 			}
 			if (isBullet != false)
 			{
-				def.IsBullet = isBullet;
+				def.bullet = isBullet;
 			}
 		}
 	} 

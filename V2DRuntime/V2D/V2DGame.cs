@@ -1,17 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Box2DX.Dynamics;
+using DDW.Display;
+using DDW.Input;
 using DDW.V2D.Serialization;
 using Microsoft.Xna.Framework;
-using Box2DX.Collision;
-using Box2DX.Common;
-using Microsoft.Xna.Framework.Graphics;
-using DDW.Display;
-using Microsoft.Xna.Framework.Input;
-using DDW.Input;
 using Microsoft.Xna.Framework.Content;
+using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Net;
 using V2DRuntime.Network;
 

@@ -5,7 +5,6 @@ using System.Text;
 using Microsoft.Xna.Framework.Net;
 using DDW.V2D;
 using Microsoft.Xna.Framework.Input;
-using Box2DX.Common;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -21,8 +20,8 @@ namespace V2DRuntime.Game
 
 		protected struct PlayerState
 		{
-			public Vec2 Position;
-			public Vec2 LinearVelocity;
+			public Vector2 Position;
+			public Vector2 LinearVelocity;
 		}
 
 		public Player(Texture2D texture, V2DInstance instance) : base(texture, instance)
@@ -43,8 +42,8 @@ namespace V2DRuntime.Game
 				packetWriter.Write(body.GetLinearVelocity().Y);
 			}
 		}
-		protected Vec2 rawPostion = Vec2.Zero;
-		protected Vec2 rawVelocity = Vec2.Zero;
+		protected Vector2 rawPostion = Vector2.Zero;
+		protected Vector2 rawVelocity = Vector2.Zero;
 		public void ReadNetworkPacket(PacketReader packetReader, GameTime gameTime, TimeSpan latency)
 		{
 			float packetSendTime = packetReader.ReadSingle();
@@ -55,8 +54,8 @@ namespace V2DRuntime.Game
 				float py = packetReader.ReadSingle();
 				float vx = packetReader.ReadSingle();
 				float vy = packetReader.ReadSingle();
-				rawPostion = new Vec2(px, py);
-				rawVelocity = new Vec2(vx, vy);
+				rawPostion = new Vector2(px, py);
+				rawVelocity = new Vector2(vx, vy);
 			}
 
 			//if (enableSmoothing)

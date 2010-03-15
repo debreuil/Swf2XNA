@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Box2DX.Dynamics;
+using Box2D.XNA;
 
 namespace V2DRuntime.Attributes
 {
@@ -54,33 +54,33 @@ namespace V2DRuntime.Attributes
 			enableLimit = false;
 			enableMotor = false;
 		}
-		public void ApplyAttribtues(RevoluteJoint j)
+		public void ApplyAttribtues(RevoluteJointDef j)
 		{
-			j.SetCollideConnected(collideConnected);
+			j.collideConnected = collideConnected;
 
 			if (lowerAngle != 0.0f)
 			{
-				j._lowerAngle = lowerAngle;
+				j.lowerAngle = lowerAngle;
 			}
 			if (upperAngle != 0.0f)
 			{
-				j._upperAngle = upperAngle;
+				j.upperAngle = upperAngle;
 			}
 			if (maxMotorTorque != 0.0f)
 			{
-				j._maxMotorTorque = maxMotorTorque;
+				j.maxMotorTorque = maxMotorTorque;
 			}
 			if (motorSpeed != 0.0f)
 			{
-				j._motorSpeed = motorSpeed;
+				j.motorSpeed = motorSpeed;
 			}
 			if (enableLimit != false)
 			{
-				j._enableLimit = enableLimit;
+				j.enableLimit = enableLimit;
 			}
 			if (enableMotor != false)
 			{
-				j._enableMotor = enableMotor;
+				j.enableMotor = enableMotor;
 			}
 		}
 	}

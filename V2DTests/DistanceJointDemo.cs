@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using DDW.V2D;
 using DDW.V2D.Serialization;
-using Box2DX.Dynamics;
+using Box2D.XNA;
 using DDW.Display;
 using DDW.Input;
 using V2DRuntime.Components;

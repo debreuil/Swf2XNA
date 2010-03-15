@@ -5,9 +5,7 @@ using System.Text;
 using Microsoft.Xna.Framework.Graphics;
 using DDW.Display;
 using Microsoft.Xna.Framework;
-using Box2DX.Dynamics;
-using Box2DX.Collision;
-using Box2DX.Common;
+using Box2D.XNA;
 using V2DRuntime.V2D;
 using V2DRuntime.Attributes;
 
@@ -65,15 +63,15 @@ namespace DDW.V2D
             {
                 isStatic = value;
                 if (value && body != null)
-                {
-                    Shape s = body.GetShapeList();
-                    while (s != null)
+				{
+					Fixture fl = body.GetFixtureList();
+                    while (fl != null)
                     {
-                        s.Density = 0;
-                        s = s.GetNext();
+                        fl.SetDensity(0);
+                        fl = fl.GetNext();
                     }
 
-                    body.SetMassFromShapes();
+                    //body.SetMassFromShapes();
                 }
             }
 		}
@@ -81,17 +79,17 @@ namespace DDW.V2D
 		{
 			if (body != null)
 			{
-				Shape sh = body.GetShapeList();
-				while (sh != null)
+				Fixture fl = body.GetFixtureList();
+				while (fl != null)
 				{
 					// note: can't change variables of structs that are properties
-					FilterData fd = new FilterData();
-					fd.GroupIndex = sh.FilterData.GroupIndex;
-					fd.MaskBits = mask;
-					fd.CategoryBits = category;
-					sh.FilterData = fd;
+					Filter fd;
+					fl.GetFilterData(out fd);
+					fd.maskBits = mask;
+					fd.categoryBits = category;
+					fl.SetFilterData(ref fd);
 
-					sh = sh.GetNext();
+					fl = fl.GetNext();
 				}
 			}
 		}
@@ -100,19 +98,18 @@ namespace DDW.V2D
             this.groupIndex = value;
 
             if (body != null)
-            {
-                Shape sh = body.GetShapeList();
-                while (sh != null)
-                {
-                    // note: can't change variables of structs that are properties
-                    FilterData fd = new FilterData();
-                    fd.GroupIndex = value;
-                    fd.MaskBits = sh.FilterData.MaskBits;
-                    fd.CategoryBits = sh.FilterData.CategoryBits;
-                    sh.FilterData = fd;
+			{
+				Fixture fl = body.GetFixtureList();
+				while (fl != null)
+				{
+					// note: can't change variables of structs that are properties
+					Filter fd;
+					fl.GetFilterData(out fd);
+                    fd.groupIndex = value;
+					fl.SetFilterData(ref fd);
 
-                    sh = sh.GetNext();
-                }
+					fl = fl.GetNext();
+				}
             }
         }
 
@@ -120,8 +117,8 @@ namespace DDW.V2D
 		//{
 		//    Vector2 go = parent.GetGlobalOffset(Vector2.Zero);
 		//    XForm xf = body.GetXForm();
-		//    body.SetXForm(new Vec2((x + go.X) / worldScale, (y + go.Y) / worldScale), xf.R.GetAngle());
-		//    //body.SetXForm(new Vec2(x / worldScale, y / worldScale), Rotation);
+		//    body.SetXForm(new Vector2((x + go.X) / worldScale, (y + go.Y) / worldScale), xf.R.GetAngle());
+		//    //body.SetXForm(new Vector2(x / worldScale, y / worldScale), Rotation);
 		//}
 
         public override void Play()
@@ -197,11 +194,11 @@ namespace DDW.V2D
             {
                 BodyDef bodyDef = new BodyDef();
 				Vector2 pos = GetGlobalOffset(Vector2.Zero);
-				bodyDef.Position.Set(pos.X / worldScale, pos.Y / worldScale);
-				bodyDef.Angle = GetGlobalRotation(0);
-				bodyDef.FixedRotation = this.fixedRotation;
-				bodyDef.AngularDamping = this.angularDamping;
-                bodyDef.LinearDamping = this.linearDamping;
+				bodyDef.position = new Vector2(pos.X / worldScale, pos.Y / worldScale);
+				bodyDef.angle = GetGlobalRotation(0);
+				bodyDef.fixedRotation = this.fixedRotation;
+				bodyDef.angularDamping = this.angularDamping;
+                bodyDef.linearDamping = this.linearDamping;
 
 				//// todo: this needs to allow for nested levels
 				//if (!fixedRotation)
@@ -236,7 +233,7 @@ namespace DDW.V2D
 					IsStatic = isStatic;
 				}
 
-                body.SetMassFromShapes();
+                //body.SetMassFromShapes();
                 body.SetUserData(this);
             }
 
@@ -265,63 +262,59 @@ namespace DDW.V2D
 
         protected void AddPoly(Body body2Body, V2DShape polygon)
         {
-            ShapeDef sd;
+            Shape shape;
             if (polygon.IsCircle)
             {
-                CircleDef circDef = new CircleDef();
-				circDef.Radius = polygon.Radius / (worldScale * State.Scale.X);
-                Vec2 lp = new Vec2();
-                lp.Set(polygon.CenterX / worldScale, polygon.CenterY / worldScale);
-                circDef.LocalPosition = lp;
-                sd = circDef;
+				CircleShape circDef = new CircleShape();
+				circDef._radius = polygon.Radius / (worldScale * State.Scale.X);
+                Vector2 lp = new Vector2(polygon.CenterX / worldScale, polygon.CenterY / worldScale);
+                circDef._p = lp;
+                shape = circDef;
             }
             else
             {
                 float[] pts = polygon.Data;
-                PolygonDef polyDef = new PolygonDef();
-                sd = polyDef;
-                polyDef.VertexCount = (int)(pts.Length / 2);
+				PolygonShape polyDef = new PolygonShape();
+                shape = polyDef;
+                polyDef._vertexCount = (int)(pts.Length / 2);
 
-                for (int i = 0; i < polyDef.VertexCount; i++)
+                for (int i = 0; i < polyDef._vertexCount; i++)
                 {
                     float px = pts[i * 2];
                     float py = pts[i * 2 + 1];
 
-                    polyDef.Vertices[i].Set(
+                    polyDef._vertices[i] = new Vector2(
 						px / worldScale * State.Scale.X,
 						py / worldScale * State.Scale.Y);
                 }
             }
 
+			FixtureDef fd = new FixtureDef();
+			fd.shape = shape;
+
             if (instanceName.IndexOf("s_") == 0)
             {
                 isStatic = true;
-                sd.Density = 0.0F;
+				fd.density = 0.0f;
             }
             else
             {
-                sd.Density = this.density;
+				fd.density = density;
             }
-            sd.Friction = this.friction;
-            sd.Restitution = this.restitution;
+            fd.friction = friction;
+            fd.restitution = restitution;
 
             if (groupIndex != 0)
-            {
-                sd.Filter.GroupIndex = groupIndex;
-                // note: can't change variables of structs that are properties
-                FilterData fd = new FilterData();
-                fd.GroupIndex = groupIndex;
-                fd.MaskBits = sd.Filter.MaskBits;
-                fd.CategoryBits = sd.Filter.CategoryBits;
-                sd.Filter = fd;
+			{
+				fd.filter.groupIndex = groupIndex;
 			}
 
 			if (attributeProperties != null)
 			{
-				attributeProperties.ApplyAttribtues(sd);
+				attributeProperties.ApplyAttribtues(fd);
 			}
 
-            body.CreateShape(sd);
+            body.CreateFixture(fd);
         }
         protected override void ResetInstanceProperties()
         {
@@ -398,28 +391,31 @@ namespace DDW.V2D
 			{
 				if (hasXChange || hasYChange || hasRChange)
 				{
-					Vec2 newPos = body.GetPosition();
-					float rot = body.GetAngle();
 					V2DTransform t = transforms[transformIndex];
 
-					if (hasXChange)
+					if (hasXChange || hasYChange)
 					{
-						//newPos.X = (State.Position.X + parent.CurrentState.Position.X + t.Position.X) / worldScale;
-						newPos.X = (State.Position.X + parent.CurrentState.Position.X) / worldScale;
+						Vector2 newPos = body.GetPosition();
+						if (hasXChange)
+						{
+							//newPos.X = (State.Position.X + parent.CurrentState.Position.X + t.Position.X) / worldScale;
+							newPos.X = (State.Position.X + parent.CurrentState.Position.X) / worldScale;
+						}
+						if (hasYChange)
+						{
+							//newPos.Y = (State.Position.Y + parent.CurrentState.Position.Y + t.Position.Y) / worldScale;
+							newPos.Y = (State.Position.Y + parent.CurrentState.Position.Y) / worldScale;
+						}
+						body.Position = newPos;
 					}
-					if (hasYChange)
-					{
-						//newPos.Y = (State.Position.Y + parent.CurrentState.Position.Y + t.Position.Y) / worldScale;
-						newPos.Y = (State.Position.Y + parent.CurrentState.Position.Y) / worldScale;
-					}
+
 					if (hasRChange)
 					{
-						rot = State.Rotation - parent.CurrentState.Rotation + t.Rotation;
+						body.Rotation = State.Rotation - parent.CurrentState.Rotation + t.Rotation;
 					}
 
-					body.SetXForm(newPos, rot);
 
-					Vector2 v = new Vector2(newPos.X, newPos.Y);
+					//Vector2 v = new Vector2(newPos.X, newPos.Y);
 					//State.Position = (v *  worldScale) - parent.CurrentState.Position - t.Position;
 					//State.Scale = CurrentState.Scale;
 					//State.Rotation = rot - parent.CurrentState.Rotation;

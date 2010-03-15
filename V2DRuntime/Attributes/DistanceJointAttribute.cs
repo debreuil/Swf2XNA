@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Box2DX.Dynamics;
+using Box2D.XNA;
 
 namespace V2DRuntime.Attributes
 {
@@ -31,23 +31,23 @@ namespace V2DRuntime.Attributes
 			dampingRatio = 0.0f;
 		}
 
-		public void ApplyAttribtues(DistanceJoint j)
+		public void ApplyAttribtues(DistanceJointDef j)
 		{
-			j.SetCollideConnected(collideConnected);
+			j.collideConnected = collideConnected;
 
 			if (length != 1.0f)
 			{
-				j._length = length;
+				j.length = length;
 			}
 
 			if(frequencyHz != 0.0f)
 			{
-				j._frequencyHz = frequencyHz;
+				j.frequencyHz = frequencyHz;
 			}
 
 			if (dampingRatio != 0.0f)
 			{
-				j._dampingRatio = dampingRatio;
+				j.dampingRatio = dampingRatio;
 			}
 		}
 	}

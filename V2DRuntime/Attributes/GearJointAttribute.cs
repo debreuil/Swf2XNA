@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Box2DX.Dynamics;
+using Box2D.XNA;
 
 namespace V2DRuntime.Attributes
 {
@@ -19,13 +19,13 @@ namespace V2DRuntime.Attributes
 			ratio = 1.0f;
 		}
 
-		public void ApplyAttribtues(GearJoint j)
+		public void ApplyAttribtues(GearJointDef j)
 		{
-			j.SetCollideConnected(collideConnected);
+			j.collideConnected = collideConnected;
 
 			if (ratio != 1.0f)
 			{
-				j._ratio = ratio;
+				j.ratio = ratio;
 			}
 		}
 	}

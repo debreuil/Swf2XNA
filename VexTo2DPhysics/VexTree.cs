@@ -764,11 +764,11 @@ namespace DDW.VexTo2DPhysics
 
                         //if (hasChildren)
                         //{
-                        //    d.UserData = (int)DefinitionKind.Timeline;
+                        //    d.GetUserData() = (int)DefinitionKind.Timeline;
                         //}
                         //else
                         //{
-                        //    d.UserData = (int)DefinitionKind.Symbol;
+                        //    d.GetUserData() = (int)DefinitionKind.Symbol;
                         //}
                     }
                 }

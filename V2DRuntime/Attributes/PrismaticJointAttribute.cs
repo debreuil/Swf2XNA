@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Box2DX.Dynamics;
+using Box2D.XNA;
 
 namespace V2DRuntime.Attributes
 {
@@ -48,38 +48,38 @@ namespace V2DRuntime.Attributes
 			maxMotorForce = 0.0f;
 			motorSpeed = 0.0f;
 		}
-		public void ApplyAttribtues(PrismaticJoint j)
+		public void ApplyAttribtues(PrismaticJointDef j)
 		{
-			j.SetCollideConnected(collideConnected);
+			j.collideConnected = collideConnected;
 
 			if (enableLimit != false)
 			{
-				j._enableLimit = enableLimit;
+				j.enableLimit = enableLimit;
 			}
 
 			if (lowerTranslation != 0.0f)
 			{
-				j._lowerTranslation = lowerTranslation;
+				j.lowerTranslation = lowerTranslation;
 			}
 
 			if (upperTranslation != 0.0f)
 			{
-				j._upperTranslation = upperTranslation;
+				j.upperTranslation = upperTranslation;
 			}
 
 			if (enableMotor != false)
 			{
-				j._enableMotor = enableMotor;
+				j.enableMotor = enableMotor;
 			}
 
 			if (maxMotorForce != 0.0f)
 			{
-				j._maxMotorForce = maxMotorForce;
+				j.maxMotorForce = maxMotorForce;
 			}
 
 			if (motorSpeed != 0.0f)
 			{
-				j._motorSpeed = motorSpeed;
+				j.motorSpeed = motorSpeed;
 			}
 		}
 	}

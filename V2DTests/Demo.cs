@@ -5,7 +5,7 @@ using System.Text;
 using DDW.V2D;
 using DDW.Display;
 using V2DRuntime.Attributes;
-using Box2DX.Dynamics;
+using Box2D.XNA;
 using V2DRuntime.Components;
 using Microsoft.Xna.Framework;
 using V2DRuntime.V2D;

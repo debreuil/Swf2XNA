@@ -184,9 +184,9 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Box2D\src\Box2DX.csproj">
-      <Project>{C157BCA5-BAC7-455F-A7DE-59D506D46ECF}</Project>
-      <Name>Box2DX</Name>
+    <ProjectReference Include="..\Box2dXna\Box2D.XNA\Box2D.XNA.csproj">
+      <Project>{22791486-E721-4511-AA4B-DA26CF5D0F2E}</Project>
+      <Name>Box2D.XNA</Name>
     </ProjectReference>
     <ProjectReference Include="..\VexPipelineReader\VexPipelineReader.csproj">
       <Project>{D5D6310E-2D9D-4931-8D3B-4574F6625C6A}</Project>

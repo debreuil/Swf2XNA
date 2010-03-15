@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Reflection;
-using Box2DX.Common;
 using Microsoft.Xna.Framework;
 
 namespace V2DRuntime.V2D

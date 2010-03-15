@@ -4,10 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Xml.Serialization;
 using System.IO;
-//using Box2DX.Dynamics;
+//using Box2D.XNA;
 using Microsoft.Xna.Framework;
-//using Box2DX.Collision;
-//using Box2DX.Common;
+//using Box2D.XNA.Collision;
+//using Box2D.XNA.Common;
 
 namespace DDW.V2D.Serialization
 {

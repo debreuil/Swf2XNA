@@ -116,7 +116,7 @@ namespace DDW.V2D
 			base.Update(gameTime);
         }
         protected override void Draw(GameTime gameTime)
-        {
+		{
             stage.Draw(spriteBatch);
 
             base.Draw(gameTime);

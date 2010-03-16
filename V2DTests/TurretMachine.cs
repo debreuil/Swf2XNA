@@ -26,6 +26,8 @@ namespace V2DTests
 		[V2DSpriteAttribute(groupIndex = -2, depthGroup = 39, isSensor = true)]
 		public V2DSprite gaugeDialA;
 
+		[RevoluteJointAttribute(enableMotor=true, motorSpeed=500)]
+		private RevoluteJoint rev;
 		[GearJointAttribute(ratio = .2f, collideConnected = false)]
 		private GearJoint rollerGear;
 		[GearJointAttribute(ratio = .45f, collideConnected = false)]

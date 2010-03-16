@@ -18,6 +18,8 @@ using System.IO;
 using V2DRuntime.Shaders;
 using System.Reflection;
 using V2DRuntime.V2D;
+using Box2D.XNA.TestBed.Framework;
+using Box2D.XNA;
 
 namespace DDW.Display
 {
@@ -471,6 +473,56 @@ namespace DDW.Display
 				destructionList.Clear();
 			}	
 		}
+
+		public virtual void BeginContact(Contact contact) { }
+
+		public virtual void EndContact(Contact contact) { }
+
+		internal int _pointCount;
+		public static int k_maxContactPoints = 2048;
+		internal ContactPoint[] _points = new ContactPoint[k_maxContactPoints];
+		public virtual void PreSolve(Contact contact, ref Manifold oldManifold)
+		{
+			Manifold manifold;
+			contact.GetManifold(out manifold);
+
+			if (manifold._pointCount == 0)
+			{
+				return;
+			}
+
+			Fixture fixtureA = contact.GetFixtureA();
+			Fixture fixtureB = contact.GetFixtureB();
+
+			FixedArray2<PointState> state1, state2;
+			Collision.GetPointStates(out state1, out state2, ref oldManifold, ref manifold);
+
+			WorldManifold worldManifold;
+			contact.GetWorldManifold(out worldManifold);
+
+			for (int i = 0; i < manifold._pointCount && _pointCount < k_maxContactPoints; ++i)
+			{
+				if (fixtureA == null)
+				{
+					_points[i] = new ContactPoint();
+				}
+				ContactPoint cp = _points[_pointCount];
+				cp.fixtureA = fixtureA;
+				cp.fixtureB = fixtureB;
+				cp.position = worldManifold._points[i];
+				cp.normal = worldManifold._normal;
+				cp.state = state2[i];
+				_points[_pointCount] = cp;
+				++_pointCount;
+			}
+		}
+
+		public virtual void PostSolve(Contact contact, ref ContactImpulse impulse) { }
+
+		public virtual void DrawDebugData(SpriteBatch batch)
+		{
+		}
+
 		//Stack<V2DShader> shaderStack = new Stack<V2DShader>();
 		public V2DShader lastShader;
 		public V2DShader defaultShader;

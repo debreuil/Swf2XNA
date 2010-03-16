@@ -184,6 +184,10 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\box2dxna\Box2D.XNA.TestBed\Box2D.XNA.TestBed.csproj">
+      <Project>{299B2C66-6731-4FC6-8E2D-F08BBE2F999C}</Project>
+      <Name>Box2D.XNA.TestBed</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Box2dXna\Box2D.XNA\Box2D.XNA.csproj">
       <Project>{22791486-E721-4511-AA4B-DA26CF5D0F2E}</Project>
       <Name>Box2D.XNA</Name>

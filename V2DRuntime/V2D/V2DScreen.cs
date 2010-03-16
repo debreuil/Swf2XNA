@@ -127,6 +127,7 @@ namespace DDW.V2D
 				}
 			}
 		}
+		private Box2D.XNA.TestBed.Framework.DebugDraw _debugDraw;
 		private void CreateWorld()
 		{
 			if (world == null)
@@ -169,24 +170,24 @@ namespace DDW.V2D
 		public override void Added(EventArgs e)
 		{
 			base.Added(e);
-			//if (V2DGame.instance.HasCursor)
-			//{
-			//    cursor = V2DGame.instance.GetCursor();
-			//    cursor.MouseDown += MouseDown;
-			//    cursor.MouseMove += MouseMove;
-			//    cursor.MouseUp += MouseUp;
-			//}
+			if (V2DGame.instance.HasCursor)
+			{
+				cursor = V2DGame.instance.GetCursor();
+				cursor.MouseDown += MouseDown;
+				cursor.MouseMove += MouseMove;
+				cursor.MouseUp += MouseUp;
+			}
 		}
         public override void Removed(EventArgs e)
         {
             base.Removed(e);
-			//if (V2DGame.instance.HasCursor)
-			//{
-			//    cursor = V2DGame.instance.GetCursor();
-			//    cursor.MouseDown -= MouseDown;
-			//    cursor.MouseMove -= MouseMove;
-			//    cursor.MouseUp -= MouseUp;
-			//}
+			if (V2DGame.instance.HasCursor)
+			{
+				cursor = V2DGame.instance.GetCursor();
+				cursor.MouseDown -= MouseDown;
+				cursor.MouseMove -= MouseMove;
+				cursor.MouseUp -= MouseUp;
+			}
         }
 
         public void  RemoveJoint(Joint joint)
@@ -283,66 +284,71 @@ namespace DDW.V2D
 			world.ContactListener = null;
 		}
 
-		//public void MouseDown(Vector2 position)
-		//{
-		//    if (_mouseJoint != null)
-		//    {
-		//        return;
-		//    }
+		public virtual void MouseDown(Vector2 p)
+		{
+			if (_mouseJoint != null)
+			{
+				return;
+			}
 
-		//    Vector2 p = new Vector2(position.X / WorldScale, position.Y / WorldScale);
-		//    // Make a small box.
-		//    AABB aabb = new AABB();
-		//    Vector2 d = new Vector2(0.001f, 0.001f);
-		//    aabb.lowerBound = p - d;
-		//    aabb.upperBound = p + d;
+			p /= worldScale;
+			// Make a small box.
+			AABB aabb;
+			Vector2 d = new Vector2(0.001f, 0.001f);
+			aabb.lowerBound = p - d;
+			aabb.upperBound = p + d;
 
-		//    // Query the world for overlapping shapes.
-		//    int k_maxCount = 10;
-		//    Shape[] shapes = new Shape[k_maxCount];
-		//    int count = world.QueryAABB(aabb, shapes, k_maxCount);
-		//    Body bd = null;
-		//    for (int i = 0; i < count; ++i)
-		//    {
-		//        Body shapeBody = shapes[i].GetBody();
-		//        if (shapeBody.IsStatic() == false && shapeBody.GetMass() > 0.0f)
-		//        {
-		//            bool inside = shapes[i].TestPoint(shapeBody.GetXForm(), p);
-		//            if (inside)
-		//            {
-		//                bd = shapes[i].GetBody();
-		//                break;
-		//            }
-		//        }
-		//    }
+			Fixture _fixture = null;
 
-		//    if (bd != null)
-		//    {
-		//        MouseJointDef md = new MouseJointDef();
-		//        md.Body1 = world.GetGroundBody();
-		//        md.Body2 = bd;
-		//        md.Target = p;
-		//        md.MaxForce = 1000.0f * bd.GetMass();
-		//        _mouseJoint = (MouseJoint)world.CreateJoint(md);
-		//        bd.WakeUp();
-		//    }
-		//}
-		//public void MouseUp(Vector2 position)
-		//{
-		//    if (_mouseJoint != null)
-		//    {
-		//        world.DestroyJoint(_mouseJoint);
-		//        _mouseJoint = null;
-		//    }
-		//}
-		//public void MouseMove(Vector2 position)
-		//{
-		//    if (_mouseJoint != null)
-		//    {
-		//        Vector2 p = new Vector2(position.X / WorldScale, position.Y / WorldScale);
-		//        _mouseJoint.SetTarget(p);
-		//    }
-		//}
+			// Query the world for overlapping shapes.
+			world.QueryAABB(
+				(fixture) =>
+				{
+					Body body = fixture.GetBody();
+					if (body.GetType() == BodyType.Dynamic)
+					{
+						bool inside = fixture.TestPoint(p);
+						if (inside)
+						{
+							_fixture = fixture;
+
+							// We are done, terminate the query.
+							return false;
+						}
+					}
+
+					// Continue the query.
+					return true;
+				}, ref aabb);
+
+			if (_fixture != null)
+			{
+				Body body = _fixture.GetBody();
+				MouseJointDef md = new MouseJointDef();
+				md.bodyA = groundBody;
+				md.bodyB = body;
+				md.target = p;
+				md.maxForce = 1000.0f * body.GetMass();
+				_mouseJoint = (MouseJoint)world.CreateJoint(md);
+				body.SetAwake(true);
+			}
+		}
+		public virtual void MouseUp(Vector2 p)
+		{
+			if (_mouseJoint != null)
+			{
+				world.DestroyJoint(_mouseJoint);
+				_mouseJoint = null;
+			}
+		}
+		public void MouseMove(Vector2 p)
+		{
+			p /= worldScale;
+			if (_mouseJoint != null)
+			{
+				_mouseJoint.SetTarget(p);
+			}
+		}
 
 		Body[] boundsBodies = new Body[4];
 
@@ -399,12 +405,21 @@ namespace DDW.V2D
 
 			return body;
 		}
+		public override void DrawDebugData(SpriteBatch batch)
+		{
+			base.DrawDebugData(batch);
 
+			simpleColorEffect.Begin();
+			simpleColorEffect.Techniques[0].Passes[0].Begin();
+			_debugDraw.FinishDrawShapes();
+			simpleColorEffect.Techniques[0].Passes[0].End();
+			simpleColorEffect.End();
+		}
 		public override void Update(GameTime gameTime)
 		{
-			base.Update(gameTime);
-			if (V2DGame.instance.IsActive && isActive)
+			if (isActive)
 			{
+				base.Update(gameTime);
 				float timeStep = hz > 0.0f ? 1.0f / hz : 0.0f;
 
 				if (stage.pause)
@@ -423,6 +438,7 @@ namespace DDW.V2D
 				world.ContinuousPhysics = enableTOI > 0;
 
 				world.Step(timeStep, velocityIterations, positionIterations);
+				world.DrawDebugData();
 
 				//world.Validate();
 
@@ -439,6 +455,28 @@ namespace DDW.V2D
 				//    }
 				//    b = b.GetNext();
 				//}
+			}
+		}
+		private BasicEffect simpleColorEffect;
+		private bool firstTime = true;
+		public override void Draw(SpriteBatch batch)
+		{
+			if (isActive)
+			{
+				base.Draw(batch);
+				if (firstTime)
+				{
+					_debugDraw = new Box2D.XNA.TestBed.Framework.DebugDraw();
+					_debugDraw.AppendFlags(DebugDrawFlags.AABB | DebugDrawFlags.CenterOfMass | DebugDrawFlags.Joint | DebugDrawFlags.Pair | DebugDrawFlags.Shape);
+					world.DebugDraw = _debugDraw;
+					simpleColorEffect = new BasicEffect(batch.GraphicsDevice, null);
+					simpleColorEffect.VertexColorEnabled = true;
+					simpleColorEffect.Parameters["Projection"].SetValue(Matrix.CreateOrthographicOffCenter(0, ClientSize.X / WorldScale, ClientSize.Y / WorldScale, 0, -1, 1));
+
+					Box2D.XNA.TestBed.Framework.DebugDraw._batch = batch;
+					Box2D.XNA.TestBed.Framework.DebugDraw._device = batch.GraphicsDevice;
+					firstTime = false;
+				}
 			}
 		}
     }

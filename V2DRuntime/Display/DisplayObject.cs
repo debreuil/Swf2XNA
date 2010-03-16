@@ -604,7 +604,7 @@ namespace DDW.Display
         public virtual void Draw(SpriteBatch batch)
 		{
             if (texture != null)
-            {
+			{
 				batch.Draw(texture, destRect, sourceRectangle, color,
 					CurrentState.Rotation, CurrentState.Origin, se, 1f / DepthCounter++);
 				//batch.Draw(texture, gOffset, sourceRectangle, color,

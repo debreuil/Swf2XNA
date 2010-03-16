@@ -228,12 +228,18 @@ namespace DDW.V2D
                     SetGroupIndex(groupIndex);
                 }
 
-				if(isStatic != false)
+				IsStatic = isStatic;
+				// todo: add kinematic
+				if (isStatic)
 				{
-					IsStatic = isStatic;
+					body.SetType(BodyType.Static);
+				}
+				else
+				{
+					body.SetType(BodyType.Dynamic);
 				}
 
-                //body.SetMassFromShapes();
+				body.ResetMassData();
                 body.SetUserData(this);
             }
 

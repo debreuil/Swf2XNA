@@ -37,6 +37,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VexFormat", "VexFormat\VexF
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Box2D.XNA", "Box2dXna\Box2D.XNA\Box2D.XNA.csproj", "{22791486-E721-4511-AA4B-DA26CF5D0F2E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Box2D.XNA.TestBed", "..\box2dxna\Box2D.XNA.TestBed\Box2D.XNA.TestBed.csproj", "{299B2C66-6731-4FC6-8E2D-F08BBE2F999C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -341,6 +343,30 @@ Global
 		{22791486-E721-4511-AA4B-DA26CF5D0F2E}.Release|x86.ActiveCfg = Release|Any CPU
 		{22791486-E721-4511-AA4B-DA26CF5D0F2E}.Release|Xbox 360.ActiveCfg = Release|Any CPU
 		{22791486-E721-4511-AA4B-DA26CF5D0F2E}.Release|Zune.ActiveCfg = Release|Any CPU
+		{299B2C66-6731-4FC6-8E2D-F08BBE2F999C}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{299B2C66-6731-4FC6-8E2D-F08BBE2F999C}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
+		{299B2C66-6731-4FC6-8E2D-F08BBE2F999C}.Debug|Mixed Platforms.Build.0 = Debug|x86
+		{299B2C66-6731-4FC6-8E2D-F08BBE2F999C}.Debug|x86.ActiveCfg = Debug|x86
+		{299B2C66-6731-4FC6-8E2D-F08BBE2F999C}.Debug|x86.Build.0 = Debug|x86
+		{299B2C66-6731-4FC6-8E2D-F08BBE2F999C}.Debug|Xbox 360.ActiveCfg = Debug|x86
+		{299B2C66-6731-4FC6-8E2D-F08BBE2F999C}.Debug|Zune.ActiveCfg = Debug|x86
+		{299B2C66-6731-4FC6-8E2D-F08BBE2F999C}.Release|Any CPU.ActiveCfg = Release|x86
+		{299B2C66-6731-4FC6-8E2D-F08BBE2F999C}.Release|Mixed Platforms.ActiveCfg = Release|x86
+		{299B2C66-6731-4FC6-8E2D-F08BBE2F999C}.Release|Mixed Platforms.Build.0 = Release|x86
+		{299B2C66-6731-4FC6-8E2D-F08BBE2F999C}.Release|x86.ActiveCfg = Release|x86
+		{299B2C66-6731-4FC6-8E2D-F08BBE2F999C}.Release|x86.Build.0 = Release|x86
+		{299B2C66-6731-4FC6-8E2D-F08BBE2F999C}.Release|Xbox 360.ActiveCfg = Release|x86
+		{299B2C66-6731-4FC6-8E2D-F08BBE2F999C}.Release|Zune.ActiveCfg = Release|x86
+		{D56CE43B-5255-4E09-9BF0-D1F000DBB9D4}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{D56CE43B-5255-4E09-9BF0-D1F000DBB9D4}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
+		{D56CE43B-5255-4E09-9BF0-D1F000DBB9D4}.Debug|x86.ActiveCfg = Debug|x86
+		{D56CE43B-5255-4E09-9BF0-D1F000DBB9D4}.Debug|Xbox 360.ActiveCfg = Debug|x86
+		{D56CE43B-5255-4E09-9BF0-D1F000DBB9D4}.Debug|Zune.ActiveCfg = Debug|x86
+		{D56CE43B-5255-4E09-9BF0-D1F000DBB9D4}.Release|Any CPU.ActiveCfg = Release|x86
+		{D56CE43B-5255-4E09-9BF0-D1F000DBB9D4}.Release|Mixed Platforms.ActiveCfg = Release|x86
+		{D56CE43B-5255-4E09-9BF0-D1F000DBB9D4}.Release|x86.ActiveCfg = Release|x86
+		{D56CE43B-5255-4E09-9BF0-D1F000DBB9D4}.Release|Xbox 360.ActiveCfg = Release|x86
+		{D56CE43B-5255-4E09-9BF0-D1F000DBB9D4}.Release|Zune.ActiveCfg = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -99,28 +99,31 @@ namespace DDW.Display
 				{
 					d.Update(gameTime);
 				}
+
+				if (prevScreen != null && children.Contains(prevScreen) && !prevScreen.isActive)
+				{
+					this.RemoveChild(prevScreen);
+					prevScreen = null;
+				}
+
+				if (!children.Contains(curScreen))
+				{
+					this.AddChild(curScreen);
+				}
 			}
-
-            if (prevScreen != null && children.Contains(prevScreen) && !prevScreen.isActive)
-            {
-                this.RemoveChild(prevScreen);
-                prevScreen = null;
-            }
-
-            if (!children.Contains(curScreen))
-            {
-                this.AddChild(curScreen);
-            }
 		}
         public override void Draw(SpriteBatch batch)
         {
-            DepthCounter = 1;
-			batch.GraphicsDevice.Clear(curScreen.Color);
+			if (V2DGame.instance.IsActive)
+			{
+				DepthCounter = 1;
+				batch.GraphicsDevice.Clear(curScreen.Color);
+				batch.Begin(SpriteBlendMode.AlphaBlend, SpriteSortMode.Immediate, SaveStateMode.None);
+				base.Draw(batch);
+				batch.End();
 
-            batch.Begin(SpriteBlendMode.AlphaBlend, SpriteSortMode.Immediate, SaveStateMode.None);
-            base.Draw(batch);
-            batch.End();
-
+				curScreen.DrawDebugData(batch);
+			}
         }
     }
 }

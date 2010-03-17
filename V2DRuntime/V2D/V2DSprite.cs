@@ -35,8 +35,6 @@ namespace DDW.V2D
         {
         }
 
-		private float worldScale = 15;
-		public float WorldScale { get { return worldScale; } set { worldScale = value; } }
 		public V2DScreen VScreen { get { return v2dScreen; } set { v2dScreen = value; } }
 
 		public override void Initialize()
@@ -187,18 +185,27 @@ namespace DDW.V2D
 
         public virtual Body AddBodyInstanceToRuntime()
         {
-			this.worldScale = v2dScreen.WorldScale;
-
             // box2D body
             if (this.polygons.Count > 0)
             {
                 BodyDef bodyDef = new BodyDef();
 				Vector2 pos = GetGlobalOffset(Vector2.Zero);
-				bodyDef.position = new Vector2(pos.X / worldScale, pos.Y / worldScale);
+				bodyDef.position = new Vector2(pos.X / V2DScreen.WorldScale, pos.Y / V2DScreen.WorldScale);
 				bodyDef.angle = GetGlobalRotation(0);
 				bodyDef.fixedRotation = this.fixedRotation;
 				bodyDef.angularDamping = this.angularDamping;
                 bodyDef.linearDamping = this.linearDamping;
+
+				IsStatic = isStatic;
+				// todo: add kinematic
+				if (isStatic)
+				{
+					bodyDef.type = BodyType.Static;
+				}
+				else
+				{
+					bodyDef.type = BodyType.Dynamic;
+				}
 
 				//// todo: this needs to allow for nested levels
 				//if (!fixedRotation)
@@ -215,32 +222,18 @@ namespace DDW.V2D
 				{
 					attributeProperties.ApplyAttribtues(bodyDef);
 				}
+
 				body = v2dScreen.CreateBody(bodyDef);
 				v2dScreen.bodies.Add(body);
+                body.SetUserData(this);
                 
                 for (int i = 0; i < this.polygons.Count; i++)
                 {
                     AddPoly(body, this.polygons[i]);
-                }
-
-                if (groupIndex != 0)
-                {
-                    SetGroupIndex(groupIndex);
-                }
-
-				IsStatic = isStatic;
-				// todo: add kinematic
-				if (isStatic)
-				{
-					body.SetType(BodyType.Static);
-				}
-				else
-				{
-					body.SetType(BodyType.Dynamic);
 				}
 
-				body.ResetMassData();
-                body.SetUserData(this);
+
+				//body.ResetMassData();
             }
 
             if (body != null)
@@ -272,8 +265,8 @@ namespace DDW.V2D
             if (polygon.IsCircle)
             {
 				CircleShape circDef = new CircleShape();
-				circDef._radius = polygon.Radius / (worldScale * State.Scale.X);
-                Vector2 lp = new Vector2(polygon.CenterX / worldScale, polygon.CenterY / worldScale);
+				circDef._radius = polygon.Radius / (V2DScreen.WorldScale * State.Scale.X);
+				Vector2 lp = new Vector2(polygon.CenterX / V2DScreen.WorldScale, polygon.CenterY / V2DScreen.WorldScale);
                 circDef._p = lp;
                 shape = circDef;
             }
@@ -282,17 +275,19 @@ namespace DDW.V2D
                 float[] pts = polygon.Data;
 				PolygonShape polyDef = new PolygonShape();
                 shape = polyDef;
-                polyDef._vertexCount = (int)(pts.Length / 2);
+                int len= (int)(pts.Length / 2);
+				Vector2[] v2s = new Vector2[len];
 
-                for (int i = 0; i < polyDef._vertexCount; i++)
+                for (int i = 0; i < len; i++)
                 {
                     float px = pts[i * 2];
                     float py = pts[i * 2 + 1];
 
-                    polyDef._vertices[i] = new Vector2(
-						px / worldScale * State.Scale.X,
-						py / worldScale * State.Scale.Y);
+					v2s[i] = new Vector2(
+						px / V2DScreen.WorldScale * State.Scale.X,
+						py / V2DScreen.WorldScale * State.Scale.Y);
                 }
+				polyDef.Set(v2s, len);
             }
 
 			FixtureDef fd = new FixtureDef();
@@ -405,12 +400,12 @@ namespace DDW.V2D
 						if (hasXChange)
 						{
 							//newPos.X = (State.Position.X + parent.CurrentState.Position.X + t.Position.X) / worldScale;
-							newPos.X = (State.Position.X + parent.CurrentState.Position.X) / worldScale;
+							newPos.X = (State.Position.X + parent.CurrentState.Position.X) / V2DScreen.WorldScale;
 						}
 						if (hasYChange)
 						{
 							//newPos.Y = (State.Position.Y + parent.CurrentState.Position.Y + t.Position.Y) / worldScale;
-							newPos.Y = (State.Position.Y + parent.CurrentState.Position.Y) / worldScale;
+							newPos.Y = (State.Position.Y + parent.CurrentState.Position.Y) / V2DScreen.WorldScale;
 						}
 						body.Position = newPos;
 					}
@@ -474,7 +469,7 @@ namespace DDW.V2D
 					UpdateTransform();
 				}
 
-				Vector2 bPosition = new Vector2((int)(body.GetPosition().X * WorldScale), (int)(body.GetPosition().Y * WorldScale));
+				Vector2 bPosition = new Vector2((int)(body.GetPosition().X * V2DScreen.WorldScale), (int)(body.GetPosition().Y * V2DScreen.WorldScale));
 				float br = body.GetAngle();
 
 				CurrentState.Position = bPosition;// -parent.CurrentState.Position;// +t.Position;

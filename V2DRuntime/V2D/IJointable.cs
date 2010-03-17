@@ -12,7 +12,6 @@ namespace V2DRuntime.V2D
 		float X { get; }
 		float Y { get; }
 		V2DScreen VScreen { get; }
-		float WorldScale { get; }
 		string DefinitionName { get; }
 		DisplayObject GetChildByName(string name);
 	}

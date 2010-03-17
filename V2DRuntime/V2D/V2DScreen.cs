@@ -18,12 +18,14 @@ using V2DRuntime.Components;
 using V2DRuntime.V2D;
 using V2DRuntime.Enums;
 using V2DRuntime.Attributes;
+using Box2D.XNA.TestBed.Framework;
 
 namespace DDW.V2D
 {
     [XmlRoot]
-	public class V2DScreen : Screen, IJointable
-    {
+	public class V2DScreen : Screen, IJointable, IContactListener
+	{
+		public static float WorldScale = 15;
         public World world;
 		protected V2DScreen v2dScreen;
 		public Body groundBody;
@@ -43,7 +45,11 @@ namespace DDW.V2D
 		public int enableTOI = 1;
 		public int Iterations = 10;
 		public float TimeStep = 1 / 30;
-		public Vector2 Gravity = new Vector2(0.0f, 10.0f); 
+		public Vector2 Gravity = new Vector2(0.0f, 10.0f);
+
+		private Box2D.XNA.TestBed.Framework.DebugDraw _debugDraw;
+		private BasicEffect simpleColorEffect;
+		private bool firstTime = true;
         
         public V2DScreen()
         {
@@ -59,8 +65,6 @@ namespace DDW.V2D
 			CreateWorld();
         }
 
-		private float worldScale = 15;
-		public float WorldScale { get { return worldScale; } set { worldScale = value; } }
 		public V2DScreen VScreen { get { return v2dScreen; } set { v2dScreen = value; } }
 
 		public override Sprite CreateDefaultObject(Texture2D texture, V2DInstance inst)
@@ -127,7 +131,6 @@ namespace DDW.V2D
 				}
 			}
 		}
-		private Box2D.XNA.TestBed.Framework.DebugDraw _debugDraw;
 		private void CreateWorld()
 		{
 			if (world == null)
@@ -143,6 +146,7 @@ namespace DDW.V2D
 				//float r = (w / 2f) + 500f;
 
 				world = new World(Gravity, doSleep);
+				world.ContactListener = this;
 				BodyDef groundBodyDef = new BodyDef();
 				groundBodyDef.position = new Vector2(0f, 0f);
 				groundBody = world.CreateBody(groundBodyDef);
@@ -241,7 +245,8 @@ namespace DDW.V2D
 		}
 		public void DestroyBody(Body b, string name)
 		{
-			if (bodyMap.ContainsKey(name))//world.Contains(b))
+
+			if (b.GetWorld() != null)
 			{
 				//List<Joint> relatedJoints = new List<Joint>();
 				//for (int j = 0; j < joints.Count; j++)
@@ -262,6 +267,7 @@ namespace DDW.V2D
 				//    }
 				//}
 
+				
 				world.DestroyBody(b);
 				this.bodies.Remove(b);
 
@@ -291,7 +297,7 @@ namespace DDW.V2D
 				return;
 			}
 
-			p /= worldScale;
+			p /= V2DScreen.WorldScale;
 			// Make a small box.
 			AABB aabb;
 			Vector2 d = new Vector2(0.001f, 0.001f);
@@ -343,7 +349,7 @@ namespace DDW.V2D
 		}
 		public void MouseMove(Vector2 p)
 		{
-			p /= worldScale;
+			p /= V2DScreen.WorldScale;
 			if (_mouseJoint != null)
 			{
 				_mouseJoint.SetTarget(p);
@@ -377,7 +383,6 @@ namespace DDW.V2D
 			boundsBodies[1].SetUserData(EdgeName.Bottom);
 			boundsBodies[2].SetUserData(EdgeName.Left);
 			boundsBodies[3].SetUserData(EdgeName.Right);
-
 		}
 		protected Body CreateBox(float x, float y, float w, float h)
 		{
@@ -387,24 +392,69 @@ namespace DDW.V2D
 			h /= WorldScale;
 
 			BodyDef bodyDef = new BodyDef();
-			bodyDef.position = new Vector2(x, y);
-
-			PolygonShape polyShape = new PolygonShape();
-			polyShape._vertexCount = 4;
-			polyShape._vertices[0] = new Vector2(0, 0);
-			polyShape._vertices[1] = new Vector2(w, 0);
-			polyShape._vertices[2] = new Vector2(w, h);
-			polyShape._vertices[3] = new Vector2(0, h);
-
+			bodyDef.position = new Vector2(x + w / 2f, y + h / 2f);
+			bodyDef.type = BodyType.Static;
 			Body body = world.CreateBody(bodyDef);
-			body.CreateFixture(polyShape);
+			
+			PolygonShape polyShape = new PolygonShape();
+			polyShape.SetAsBox(w / 2f, h / 2f);
+			//polyShape._vertexCount = 4;
+			//polyShape._vertices[0] = new Vector2(0, 0);
+			//polyShape._vertices[1] = new Vector2(w, 0);
+			//polyShape._vertices[2] = new Vector2(w, h);
+			//polyShape._vertices[3] = new Vector2(0, h);
 
-			MassData md;
-			body.GetMassData(out md);
-			body.SetMassData(ref md);
+			FixtureDef fd = new FixtureDef();
+			fd.density = 1;
+			fd.shape = polyShape;
+			fd.filter.groupIndex = 0;
+			Fixture f = body.CreateFixture(fd);			
 
 			return body;
 		}
+
+		internal int _pointCount;
+		public static int k_maxContactPoints = 2048;
+		internal ContactPoint[] _points = new ContactPoint[k_maxContactPoints];
+		public virtual void BeginContact(Contact contact) { }
+		public virtual void EndContact(Contact contact) { }
+		public virtual void PreSolve(Contact contact, ref Manifold oldManifold)
+		{
+			Manifold manifold;
+			contact.GetManifold(out manifold);
+
+			if (manifold._pointCount == 0)
+			{
+				return;
+			}
+
+			Fixture fixtureA = contact.GetFixtureA();
+			Fixture fixtureB = contact.GetFixtureB();
+
+			FixedArray2<PointState> state1, state2;
+			Collision.GetPointStates(out state1, out state2, ref oldManifold, ref manifold);
+
+			WorldManifold worldManifold;
+			contact.GetWorldManifold(out worldManifold);
+
+			for (int i = 0; i < manifold._pointCount && _pointCount < k_maxContactPoints; ++i)
+			{
+				if (fixtureA == null)
+				{
+					_points[i] = new ContactPoint();
+				}
+				ContactPoint cp = _points[_pointCount];
+				cp.fixtureA = fixtureA;
+				cp.fixtureB = fixtureB;
+				cp.position = worldManifold._points[i];
+				cp.normal = worldManifold._normal;
+				cp.state = state2[i];
+				_points[_pointCount] = cp;
+				++_pointCount;
+			}
+		}
+		public virtual void PostSolve(Contact contact, ref ContactImpulse impulse) { }
+
 		public override void DrawDebugData(SpriteBatch batch)
 		{
 			base.DrawDebugData(batch);
@@ -437,7 +487,11 @@ namespace DDW.V2D
 				world.WarmStarting = enableWarmStarting > 0;
 				world.ContinuousPhysics = enableTOI > 0;
 
-				world.Step(timeStep, velocityIterations, positionIterations);
+				if (timeStep != 0)
+				{
+					world.Step(1F / 60F, 8, 10);
+					//world.Step(timeStep, velocityIterations, positionIterations);
+				}
 				world.DrawDebugData();
 
 				//world.Validate();
@@ -457,8 +511,6 @@ namespace DDW.V2D
 				//}
 			}
 		}
-		private BasicEffect simpleColorEffect;
-		private bool firstTime = true;
 		public override void Draw(SpriteBatch batch)
 		{
 			if (isActive)

@@ -25,11 +25,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VexPipeline", "VexPipeline\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "V2DRuntime", "V2DRuntime\V2DRuntime.csproj", "{269A1048-DA2C-475A-9C10-564A7D8A071D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Xbox 360 Copy of V2DRuntime", "V2DRuntime\Xbox 360 Copy of V2DRuntime.csproj", "{61E4CA6C-B70B-44E6-94BE-5D0409DB3602}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VexPipelineReader", "VexPipelineReader\VexPipelineReader.csproj", "{D5D6310E-2D9D-4931-8D3B-4574F6625C6A}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Xbox 360 Copy of VexPipelineReader", "VexPipelineReader\Xbox 360 Copy of VexPipelineReader.csproj", "{602A9B7F-A669-4025-ABD8-2BC4248FC7B1}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "V2DTests", "V2DTests\V2DTests.csproj", "{DC6234AB-6264-45C0-82F5-4FCD9D14AA3D}"
 EndProject
@@ -227,20 +223,6 @@ Global
 		{269A1048-DA2C-475A-9C10-564A7D8A071D}.Release|x86.Build.0 = Release|x86
 		{269A1048-DA2C-475A-9C10-564A7D8A071D}.Release|Xbox 360.ActiveCfg = Release|x86
 		{269A1048-DA2C-475A-9C10-564A7D8A071D}.Release|Zune.ActiveCfg = Release|x86
-		{61E4CA6C-B70B-44E6-94BE-5D0409DB3602}.Debug|Any CPU.ActiveCfg = Debug|Xbox 360
-		{61E4CA6C-B70B-44E6-94BE-5D0409DB3602}.Debug|Mixed Platforms.ActiveCfg = Debug|Xbox 360
-		{61E4CA6C-B70B-44E6-94BE-5D0409DB3602}.Debug|Mixed Platforms.Build.0 = Debug|Xbox 360
-		{61E4CA6C-B70B-44E6-94BE-5D0409DB3602}.Debug|x86.ActiveCfg = Debug|Xbox 360
-		{61E4CA6C-B70B-44E6-94BE-5D0409DB3602}.Debug|Xbox 360.ActiveCfg = Debug|Xbox 360
-		{61E4CA6C-B70B-44E6-94BE-5D0409DB3602}.Debug|Xbox 360.Build.0 = Debug|Xbox 360
-		{61E4CA6C-B70B-44E6-94BE-5D0409DB3602}.Debug|Zune.ActiveCfg = Debug|Xbox 360
-		{61E4CA6C-B70B-44E6-94BE-5D0409DB3602}.Release|Any CPU.ActiveCfg = Release|Xbox 360
-		{61E4CA6C-B70B-44E6-94BE-5D0409DB3602}.Release|Mixed Platforms.ActiveCfg = Release|Xbox 360
-		{61E4CA6C-B70B-44E6-94BE-5D0409DB3602}.Release|Mixed Platforms.Build.0 = Release|Xbox 360
-		{61E4CA6C-B70B-44E6-94BE-5D0409DB3602}.Release|x86.ActiveCfg = Release|Xbox 360
-		{61E4CA6C-B70B-44E6-94BE-5D0409DB3602}.Release|Xbox 360.ActiveCfg = Release|Xbox 360
-		{61E4CA6C-B70B-44E6-94BE-5D0409DB3602}.Release|Xbox 360.Build.0 = Release|Xbox 360
-		{61E4CA6C-B70B-44E6-94BE-5D0409DB3602}.Release|Zune.ActiveCfg = Release|Xbox 360
 		{D5D6310E-2D9D-4931-8D3B-4574F6625C6A}.Debug|Any CPU.ActiveCfg = Debug|x86
 		{D5D6310E-2D9D-4931-8D3B-4574F6625C6A}.Debug|Any CPU.Build.0 = Debug|x86
 		{D5D6310E-2D9D-4931-8D3B-4574F6625C6A}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
@@ -256,20 +238,6 @@ Global
 		{D5D6310E-2D9D-4931-8D3B-4574F6625C6A}.Release|x86.Build.0 = Release|x86
 		{D5D6310E-2D9D-4931-8D3B-4574F6625C6A}.Release|Xbox 360.ActiveCfg = Release|x86
 		{D5D6310E-2D9D-4931-8D3B-4574F6625C6A}.Release|Zune.ActiveCfg = Release|x86
-		{602A9B7F-A669-4025-ABD8-2BC4248FC7B1}.Debug|Any CPU.ActiveCfg = Debug|Xbox 360
-		{602A9B7F-A669-4025-ABD8-2BC4248FC7B1}.Debug|Mixed Platforms.ActiveCfg = Debug|Xbox 360
-		{602A9B7F-A669-4025-ABD8-2BC4248FC7B1}.Debug|Mixed Platforms.Build.0 = Debug|Xbox 360
-		{602A9B7F-A669-4025-ABD8-2BC4248FC7B1}.Debug|x86.ActiveCfg = Debug|Xbox 360
-		{602A9B7F-A669-4025-ABD8-2BC4248FC7B1}.Debug|Xbox 360.ActiveCfg = Debug|Xbox 360
-		{602A9B7F-A669-4025-ABD8-2BC4248FC7B1}.Debug|Xbox 360.Build.0 = Debug|Xbox 360
-		{602A9B7F-A669-4025-ABD8-2BC4248FC7B1}.Debug|Zune.ActiveCfg = Debug|Xbox 360
-		{602A9B7F-A669-4025-ABD8-2BC4248FC7B1}.Release|Any CPU.ActiveCfg = Release|Xbox 360
-		{602A9B7F-A669-4025-ABD8-2BC4248FC7B1}.Release|Mixed Platforms.ActiveCfg = Release|Xbox 360
-		{602A9B7F-A669-4025-ABD8-2BC4248FC7B1}.Release|Mixed Platforms.Build.0 = Release|Xbox 360
-		{602A9B7F-A669-4025-ABD8-2BC4248FC7B1}.Release|x86.ActiveCfg = Release|Xbox 360
-		{602A9B7F-A669-4025-ABD8-2BC4248FC7B1}.Release|Xbox 360.ActiveCfg = Release|Xbox 360
-		{602A9B7F-A669-4025-ABD8-2BC4248FC7B1}.Release|Xbox 360.Build.0 = Release|Xbox 360
-		{602A9B7F-A669-4025-ABD8-2BC4248FC7B1}.Release|Zune.ActiveCfg = Release|Xbox 360
 		{DC6234AB-6264-45C0-82F5-4FCD9D14AA3D}.Debug|Any CPU.ActiveCfg = Debug|x86
 		{DC6234AB-6264-45C0-82F5-4FCD9D14AA3D}.Debug|Any CPU.Build.0 = Debug|x86
 		{DC6234AB-6264-45C0-82F5-4FCD9D14AA3D}.Debug|Mixed Platforms.ActiveCfg = Debug|x86

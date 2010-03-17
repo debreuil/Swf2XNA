@@ -57,7 +57,7 @@ namespace Box2D.XNA
         /// The radius of the polygon/edge shape skin. This should not be modified. Making
         /// this smaller means polygons will have an insufficient buffer for continuous collision.
         /// Making it larger may create artifacts for vertex collision.
-        public const float b2_polygonRadius = (2.0f * b2_linearSlop);
+        public const float b2_polygonRadius = 0;//(2.0f * b2_linearSlop);
 
         // Dynamics
 

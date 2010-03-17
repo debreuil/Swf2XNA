@@ -61,16 +61,15 @@ namespace V2DRuntime.V2D
 			Vector2 pt0 = new Vector2(joint.X + offsetX, joint.Y + offsetY);
 
 			string name = joint.Name;
-			float scale = ithis.WorldScale;
 
-			Vector2 anchor0 = new Vector2(pt0.X / scale, pt0.Y / scale);
+			Vector2 anchor0 = new Vector2(pt0.X / V2DScreen.WorldScale, pt0.Y / V2DScreen.WorldScale);
 			Vector2 anchor1 = new Vector2();
 
 			switch (joint.Type)
 			{
 				case V2DJointKind.Distance:
 					Vector2 pt1 = new Vector2(joint.X2 + offsetX, joint.Y2 + offsetY);
-					anchor1 = new Vector2(pt1.X / scale, pt1.Y / scale);
+					anchor1 = new Vector2(pt1.X / V2DScreen.WorldScale, pt1.Y / V2DScreen.WorldScale);
 
 					DistanceJointDef dj = new DistanceJointDef();
 					dj.Initialize(targ0, targ1, anchor0, anchor1);
@@ -79,7 +78,7 @@ namespace V2DRuntime.V2D
 					dj.frequencyHz = joint.FrequencyHz;
 					if (joint.Length != -1)
 					{
-						dj.length = joint.Length / scale;
+						dj.length = joint.Length / V2DScreen.WorldScale;
 					}
 
 					jointDef = dj;
@@ -111,8 +110,8 @@ namespace V2DRuntime.V2D
 					PrismaticJointDef pj = new PrismaticJointDef();
 					Vector2 worldAxis = new Vector2(axisX, axisY);
 					pj.Initialize(targ0, targ1, anchor0, worldAxis);
-					pj.lowerTranslation = min / scale;
-					pj.upperTranslation = max / scale;
+					pj.lowerTranslation = min / V2DScreen.WorldScale;
+					pj.upperTranslation = max / V2DScreen.WorldScale;
 
 					pj.enableLimit = joint.EnableLimit;
 					pj.maxMotorForce = joint.MaxMotorTorque;
@@ -124,11 +123,11 @@ namespace V2DRuntime.V2D
 
 				case V2DJointKind.Pully:
 					Vector2 pt2 = new Vector2(joint.X2 + offsetX, joint.Y2 + offsetY);
-					anchor1 = new Vector2(pt2.X / scale, pt2.Y / scale);
+					anchor1 = new Vector2(pt2.X / V2DScreen.WorldScale, pt2.Y / V2DScreen.WorldScale);
 
-					Vector2 groundAnchor0 = new Vector2(joint.GroundAnchor1X / scale, joint.GroundAnchor1Y / scale);
+					Vector2 groundAnchor0 = new Vector2(joint.GroundAnchor1X / V2DScreen.WorldScale, joint.GroundAnchor1Y / V2DScreen.WorldScale);
 
-					Vector2 groundAnchor1 = new Vector2(joint.GroundAnchor2X / scale, joint.GroundAnchor2Y / scale);
+					Vector2 groundAnchor1 = new Vector2(joint.GroundAnchor2X / V2DScreen.WorldScale, joint.GroundAnchor2Y / V2DScreen.WorldScale);
 
 					float max0 = joint.MaxLength1;
 					float max1 = joint.MaxLength2;
@@ -137,8 +136,8 @@ namespace V2DRuntime.V2D
 
 					PulleyJointDef puj = new PulleyJointDef();
 					puj.Initialize(targ0, targ1, groundAnchor0, groundAnchor1, anchor0, anchor1, rat);
-					puj.maxLengthA = (max0 + max1) / scale;
-					puj.maxLengthB = (max0 + max1) / scale;
+					puj.maxLengthA = (max0 + max1) / V2DScreen.WorldScale;
+					puj.maxLengthB = (max0 + max1) / V2DScreen.WorldScale;
 
 					puj.collideConnected = joint.CollideConnected;
 

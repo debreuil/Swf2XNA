@@ -12,6 +12,7 @@ namespace V2DRuntime.V2D
 	{
 		public float gravityX = 0f;
 		public float gravityY = 10f;
+		public bool debugDraw = false;
 
 		public V2DScreenAttribute()
 		{

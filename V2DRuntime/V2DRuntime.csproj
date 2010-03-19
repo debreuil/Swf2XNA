@@ -54,6 +54,15 @@
     <XnaCompressContent>true</XnaCompressContent>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Box2D.XNA, Version=1.0.0.0, Culture=neutral, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Box2dXna\Box2D.XNA\bin\Debug\Box2D.XNA.dll</HintPath>
+    </Reference>
+    <Reference Include="Box2D.XNA.TestBed, Version=1.0.0.0, Culture=neutral, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <ExecutableExtension>.exe</ExecutableExtension>
+      <HintPath>..\..\box2dxna\Box2D.XNA.TestBed\bin\x86\Debug\Box2D.XNA.TestBed.exe</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Xna.Framework, Version=3.1.0.0, Culture=neutral, PublicKeyToken=6d5c3888ef60e27d, processorArchitecture=x86">
       <Private>False</Private>
       <SpecificVersion>True</SpecificVersion>
@@ -79,6 +88,10 @@
     <Reference Include="System.Xml.Linq">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
       <Private>False</Private>
+    </Reference>
+    <Reference Include="VexPipelineReader, Version=1.0.0.0, Culture=neutral, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\VexPipelineReader\bin\x86\Debug\VexPipelineReader.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -182,20 +195,6 @@
       <ProductName>Microsoft XNA Framework Redistributable 3.1</ProductName>
       <Install>true</Install>
     </BootstrapperPackage>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\box2dxna\Box2D.XNA.TestBed\Box2D.XNA.TestBed.csproj">
-      <Project>{299B2C66-6731-4FC6-8E2D-F08BBE2F999C}</Project>
-      <Name>Box2D.XNA.TestBed</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Box2dXna\Box2D.XNA\Box2D.XNA.csproj">
-      <Project>{22791486-E721-4511-AA4B-DA26CF5D0F2E}</Project>
-      <Name>Box2D.XNA</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\VexPipelineReader\VexPipelineReader.csproj">
-      <Project>{D5D6310E-2D9D-4931-8D3B-4574F6625C6A}</Project>
-      <Name>VexPipelineReader</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\Microsoft.Xna.GameStudio.targets" />

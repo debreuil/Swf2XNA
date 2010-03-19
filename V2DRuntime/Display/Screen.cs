@@ -274,7 +274,7 @@ namespace DDW.Display
 
 			int maxLocalGamers = 4;
 			inputManagers = new InputManager[maxLocalGamers];
-
+			Console.WriteLine("inputManagers init");
 			int sessionGamerIndex = 0;
 			for (int i = 0; i < maxLocalGamers; i++)
 			{

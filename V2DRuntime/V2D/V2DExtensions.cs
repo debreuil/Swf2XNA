@@ -164,7 +164,6 @@ namespace V2DRuntime.V2D
 					Dictionary<string, string> dict = new Dictionary<string, string>();
 					dict["name"] = name;
 					result.SetUserData(dict);
-					ithis.VScreen.joints.Add(result);
 				}
 			}
 

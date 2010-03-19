@@ -51,7 +51,6 @@ namespace V2DRuntime.Attributes
 		}
 		public void ApplyAttribtues(FixtureDef def)
 		{
-			Filter fd;
 			if (friction != 0.2f)
 			{
 				def.friction = friction;

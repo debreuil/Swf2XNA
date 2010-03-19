@@ -15,5 +15,7 @@
     <FallbackCulture>en-US</FallbackCulture>
     <VerifyUploadedFiles>false</VerifyUploadedFiles>
     <ProjectView>ProjectFiles</ProjectView>
+    <ReferencePath>
+    </ReferencePath>
   </PropertyGroup>
 </Project>

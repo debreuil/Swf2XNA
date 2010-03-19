@@ -224,7 +224,6 @@ namespace DDW.V2D
 				}
 
 				body = v2dScreen.CreateBody(bodyDef);
-				v2dScreen.bodies.Add(body);
                 body.SetUserData(this);
                 
                 for (int i = 0; i < this.polygons.Count; i++)

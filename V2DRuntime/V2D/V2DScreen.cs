@@ -30,11 +30,6 @@ namespace DDW.V2D
 		protected V2DScreen v2dScreen;
 		public Body groundBody;
 
-        public Dictionary<string, Body> bodyMap = new Dictionary<string, Body>();
-        public List<Body> bodies = new List<Body>();
-        public List<Joint> joints = new List<Joint>();
-		//private V2DInstance rootInstance;
-
 		Cursor cursor;
 		internal MouseJoint _mouseJoint;
 		public float hz = 60.0f;
@@ -47,10 +42,13 @@ namespace DDW.V2D
 		public float TimeStep = 1 / 30;
 		public Vector2 Gravity = new Vector2(0.0f, 10.0f);
 
+#if DEBUG
+		public bool useDebugDraw = false;
 		private Box2D.XNA.TestBed.Framework.DebugDraw _debugDraw;
 		private BasicEffect simpleColorEffect;
 		private bool firstTime = true;
-        
+#endif
+     
         public V2DScreen()
         {
 			CreateWorld();
@@ -81,28 +79,7 @@ namespace DDW.V2D
 			return result;
 		}
 
-		public override void SetStageAndScreen()
-		{
-			base.SetStageAndScreen();
-			if (screen == null || !(screen is V2DScreen))
-			{
-				throw new Exception("V2D can only be added to V2DScreens");
-			}
-			v2dScreen = (V2DScreen)screen;
-		}
-		public override void RemoveChild(DisplayObject obj)
-		{
-			base.RemoveChild(obj);
-			if (obj is V2DSprite)
-			{
-				V2DSprite sp = (V2DSprite)obj;
-				if(sp.body != null)
-				{
-					DestroyBody(sp.body, obj.InstanceName);
-					sp.body.SetUserData(null);
-				}
-			}
-		}
+		#region Creation
 		public override void Initialize()
 		{
 			base.Initialize();
@@ -128,48 +105,10 @@ namespace DDW.V2D
 						Gravity = new Vector2(a.gravityX, a.gravityY);
 						world.Gravity = Gravity;
 					}
+
+					useDebugDraw = a.debugDraw;
 				}
 			}
-		}
-		private void CreateWorld()
-		{
-			if (world == null)
-			{
-				bool doSleep = true;
-				ClientSize = new Vector2(v2dWorld.Width, v2dWorld.Height);
-
-				//float w = ClientSize.X / WorldScale;
-				//float h = ClientSize.Y / WorldScale;
-				//float t = (-h / 2) - 500f;
-				//float l = -500f;
-				//float b = (h / 2f) + 500f;
-				//float r = (w / 2f) + 500f;
-
-				world = new World(Gravity, doSleep);
-				world.ContactListener = this;
-				BodyDef groundBodyDef = new BodyDef();
-				groundBodyDef.position = new Vector2(0f, 0f);
-				groundBody = world.CreateBody(groundBodyDef);
-
-				bodyMap.Add(V2DGame.ROOT_NAME, groundBody);
-				if (instanceName != V2DGame.ROOT_NAME)
-				{
-					bodyMap.Add(this.instanceName, groundBody);
-				}
-			}
-		}
-		private void DestroyWorld()
-		{
-			// clear box2d
-			Body b = world.GetBodyList();
-			while (b != null)
-			{
-				DestroyBody(b, "");
-				b = b.GetNext();
-			}
-			joints.Clear();
-			bodyMap.Clear();
-			world = null;
 		}
 		public override void Added(EventArgs e)
 		{
@@ -193,103 +132,100 @@ namespace DDW.V2D
 				cursor.MouseUp -= MouseUp;
 			}
         }
-
-        public void  RemoveJoint(Joint joint)
-        {	
-            if(joints.Contains(joint))
-            {
-                joints.Remove(joint);
-                world.DestroyJoint(joint);
-            }
-        }
-        protected void  RemoveJointByName(string name)
-        {				
-            for(int i = joints.Count - 1; i >= 0; i--)
-            {
-                if((string)joints[i].GetUserData() == name)
-                {
-                    RemoveJoint(joints[i]);
-                    break;    
-                }
-            }	  
-        }
-        public virtual Body GetBodyByName(string name)
-        {
-            Body result = null;
-            for (int i = 0; i < bodies.Count; i++)
-		    {
-                object o = bodies[i].GetUserData();
-                if(o is DisplayObject)
-                {
-                    if ( ((DisplayObject)o).InstanceName == name)
-                    {
-                        result = bodies[i];
-                        break;
-                    }
-                }
-		    }
-            return result;
-        }
-
-		public override void DestroyElement(DisplayObject obj)
+		public override void SetStageAndScreen()
 		{
-			base.DestroyElement(obj);
+			base.SetStageAndScreen();
+			if (screen == null || !(screen is V2DScreen))
+			{
+				throw new Exception("V2D can only be added to V2DScreens");
+			}
+			v2dScreen = (V2DScreen)screen;
+		}
+		public override void RemoveChild(DisplayObject obj)
+		{
+			base.RemoveChild(obj);
 			if (obj is V2DSprite)
 			{
-				DestroyBody(((V2DSprite)obj).body, obj.InstanceName);
+				V2DSprite sp = (V2DSprite)obj;
+				if(sp.body != null)
+				{
+					DestroyBody(sp.body, obj.InstanceName);
+					sp.body.SetUserData(null);
+				}
 			}
 		}
+		#endregion
+		#region world
+		private void CreateWorld()
+		{
+			if (world == null)
+			{
+				bool doSleep = true;
+				ClientSize = new Vector2(v2dWorld.Width, v2dWorld.Height);
+
+				world = new World(Gravity, doSleep);
+				world.ContactListener = this;
+				BodyDef groundBodyDef = new BodyDef();
+				groundBodyDef.position = new Vector2(0f, 0f);
+				groundBody = world.CreateBody(groundBodyDef);
+			}
+		}
+		private void DestroyWorld()
+		{
+			// clear box2d
+			world.ContactListener = null;
+			Body b = world.GetBodyList();
+			while (b != null)
+			{
+				DestroyBody(b, "");
+				b = b.GetNext();
+			}
+			world = null;
+		}
+		#endregion
+		#region Body
 		public Body CreateBody(BodyDef bodyDef)
 		{
 			return world.CreateBody(bodyDef);
 		}
 		public void DestroyBody(Body b, string name)
 		{
-
-			if (b.GetWorld() != null)
-			{
-				//List<Joint> relatedJoints = new List<Joint>();
-				//for (int j = 0; j < joints.Count; j++)
-				//{
-				//    if (joints[j].GetBodyA() == b || joints[j].GetBodyB() == b)
-				//    {
-				//        //joints.RemoveAt(j);
-				//        relatedJoints.Add(joints[j]);
-				//    }
-				//}
-
-				//for (int j = relatedJoints.Count - 1; j >= 0; j--)
-				//{
-				//    if (joints.Contains(relatedJoints[j]))
-				//    {
-				//        world.DestroyJoint(relatedJoints[j]);
-				//        joints.Remove(relatedJoints[j]);
-				//    }
-				//}
-
-				
+			if (b != null && b.GetWorld() != null)
+			{				
 				world.DestroyBody(b);
-				this.bodies.Remove(b);
-
-				//if (bodyMap.ContainsKey(name))
-				//{
-					bodyMap.Remove(name);
-				//}
 			}
 		}
-		public void SetGravity(Vector2 v2)
+		#endregion
+		#region Joint
+		public void  RemoveJoint(Joint joint)
+        {
+			Joint j = world.GetJointList();
+			while (j != null)
+			{
+				if (j == joint)
+				{
+					world.DestroyJoint(joint);
+					break;
+				}
+				j = j.GetNext();
+			}
+        }
+        protected void  RemoveJointByName(string name)
 		{
-			world.Gravity = v2;
+			Joint j = world.GetJointList();
+			while (j != null)
+			{
+				if (j.GetUserData() != null && (string)j.GetUserData() == name)
+				{
+					world.DestroyJoint(j);
+					break;
+				}
+				j = j.GetNext();
+			}
 		}
-		public void SetContactListener(IContactListener contactListener)
-		{
-			world.ContactListener = contactListener;
-		}
-		public void ClearContactListener()
-		{
-			world.ContactListener = null;
-		}
+		#endregion
 
+		#region Mouse
 		public virtual void MouseDown(Vector2 p)
 		{
 			if (_mouseJoint != null)
@@ -355,9 +291,9 @@ namespace DDW.V2D
 				_mouseJoint.SetTarget(p);
 			}
 		}
-
+		#endregion
+		#region Bounds
 		Body[] boundsBodies = new Body[4];
-
 		protected void ClearBoundsBodies()
 		{
 			foreach (Body b in boundsBodies)
@@ -407,18 +343,27 @@ namespace DDW.V2D
 			FixtureDef fd = new FixtureDef();
 			fd.density = 1;
 			fd.shape = polyShape;
-			fd.filter.groupIndex = 0;
+			fd.filter.groupIndex = 1;
+			fd.filter.categoryBits = 1;
+			fd.filter.maskBits = 0xFFFF;
 			Fixture f = body.CreateFixture(fd);			
 
 			return body;
 		}
-
+		#endregion
+		#region Contact
 		internal int _pointCount;
 		public static int k_maxContactPoints = 2048;
 		internal ContactPoint[] _points = new ContactPoint[k_maxContactPoints];
 		public virtual void BeginContact(Contact contact) { }
 		public virtual void EndContact(Contact contact) { }
 		public virtual void PreSolve(Contact contact, ref Manifold oldManifold)
+		{
+			// call this in the base class if points are needed
+			// PreSolveCalcPoints(contact, ref oldManifold);
+		}
+		public virtual void PostSolve(Contact contact, ref ContactImpulse impulse) { }
+		protected void PreSolveCalcPoints(Contact contact, ref Manifold oldManifold)
 		{
 			Manifold manifold;
 			contact.GetManifold(out manifold);
@@ -453,18 +398,37 @@ namespace DDW.V2D
 				++_pointCount;
 			}
 		}
-		public virtual void PostSolve(Contact contact, ref ContactImpulse impulse) { }
+		#endregion
 
+#if DEBUG
 		public override void DrawDebugData(SpriteBatch batch)
 		{
 			base.DrawDebugData(batch);
 
-			simpleColorEffect.Begin();
-			simpleColorEffect.Techniques[0].Passes[0].Begin();
-			_debugDraw.FinishDrawShapes();
-			simpleColorEffect.Techniques[0].Passes[0].End();
-			simpleColorEffect.End();
+			if (useDebugDraw)
+			{
+				if (firstTime)
+				{
+					_debugDraw = new Box2D.XNA.TestBed.Framework.DebugDraw();
+					_debugDraw.AppendFlags(DebugDrawFlags.AABB | DebugDrawFlags.CenterOfMass | DebugDrawFlags.Joint | DebugDrawFlags.Pair | DebugDrawFlags.Shape);
+					world.DebugDraw = _debugDraw;
+					simpleColorEffect = new BasicEffect(batch.GraphicsDevice, null);
+					simpleColorEffect.VertexColorEnabled = true;
+					simpleColorEffect.Parameters["Projection"].SetValue(Matrix.CreateOrthographicOffCenter(0, ClientSize.X / WorldScale, ClientSize.Y / WorldScale, 0, -1, 1));
+
+					Box2D.XNA.TestBed.Framework.DebugDraw._batch = batch;
+					Box2D.XNA.TestBed.Framework.DebugDraw._device = batch.GraphicsDevice;
+					firstTime = false;
+				}
+
+				simpleColorEffect.Begin();
+				simpleColorEffect.Techniques[0].Passes[0].Begin();
+				_debugDraw.FinishDrawShapes();
+				simpleColorEffect.Techniques[0].Passes[0].End();
+				simpleColorEffect.End();
+			}
 		}
+#endif
 		public override void Update(GameTime gameTime)
 		{
 			if (isActive)
@@ -516,19 +480,6 @@ namespace DDW.V2D
 			if (isActive)
 			{
 				base.Draw(batch);
-				if (firstTime)
-				{
-					_debugDraw = new Box2D.XNA.TestBed.Framework.DebugDraw();
-					_debugDraw.AppendFlags(DebugDrawFlags.AABB | DebugDrawFlags.CenterOfMass | DebugDrawFlags.Joint | DebugDrawFlags.Pair | DebugDrawFlags.Shape);
-					world.DebugDraw = _debugDraw;
-					simpleColorEffect = new BasicEffect(batch.GraphicsDevice, null);
-					simpleColorEffect.VertexColorEnabled = true;
-					simpleColorEffect.Parameters["Projection"].SetValue(Matrix.CreateOrthographicOffCenter(0, ClientSize.X / WorldScale, ClientSize.Y / WorldScale, 0, -1, 1));
-
-					Box2D.XNA.TestBed.Framework.DebugDraw._batch = batch;
-					Box2D.XNA.TestBed.Framework.DebugDraw._device = batch.GraphicsDevice;
-					firstTime = false;
-				}
 			}
 		}
     }

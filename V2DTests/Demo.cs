@@ -12,7 +12,7 @@ using V2DRuntime.V2D;
 
 namespace V2DTests
 {
-	[V2DScreenAttribute(backgroundColor = 0x000001, gravityX = 10)]
+	[V2DScreenAttribute(backgroundColor = 0x000001, gravityX = 10, debugDraw = true)]
     public class Demo : V2DScreen
 	{
 		private Sprite bkg;
@@ -29,6 +29,7 @@ namespace V2DTests
 		[RevoluteJointAttribute(motorSpeed = 50, maxMotorTorque = 500)]
 		private RevoluteJoint r2;
 
+		private List<V2DSprite> arch;
 		[V2DSpriteAttribute(depthGroup = 40)]
 		public TurretMachine turretMachine;
 

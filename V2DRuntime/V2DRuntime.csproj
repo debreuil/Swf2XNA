@@ -58,11 +58,6 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Box2dXna\Box2D.XNA\bin\Debug\Box2D.XNA.dll</HintPath>
     </Reference>
-    <Reference Include="Box2D.XNA.TestBed, Version=1.0.0.0, Culture=neutral, processorArchitecture=x86">
-      <SpecificVersion>False</SpecificVersion>
-      <ExecutableExtension>.exe</ExecutableExtension>
-      <HintPath>..\..\box2dxna\Box2D.XNA.TestBed\bin\x86\Debug\Box2D.XNA.TestBed.exe</HintPath>
-    </Reference>
     <Reference Include="Microsoft.Xna.Framework, Version=3.1.0.0, Culture=neutral, PublicKeyToken=6d5c3888ef60e27d, processorArchitecture=x86">
       <Private>False</Private>
       <SpecificVersion>True</SpecificVersion>
@@ -109,6 +104,7 @@
     <Compile Include="Components\ButtonTabGroup.cs" />
     <Compile Include="Components\Group.cs" />
     <Compile Include="Components\TextBox.cs" />
+    <Compile Include="Debug\Render.cs" />
     <Compile Include="Display\DisplayObject.cs" />
     <Compile Include="Display\DisplayObjectContainer.cs" />
     <Compile Include="Display\FontManager.cs" />

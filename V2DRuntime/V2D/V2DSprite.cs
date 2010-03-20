@@ -414,44 +414,19 @@ namespace DDW.V2D
 						body.Rotation = State.Rotation - parent.CurrentState.Rotation + t.Rotation;
 					}
 
-
-					//Vector2 v = new Vector2(newPos.X, newPos.Y);
-					//State.Position = (v *  worldScale) - parent.CurrentState.Position - t.Position;
-					//State.Scale = CurrentState.Scale;
-					//State.Rotation = rot - parent.CurrentState.Rotation;
-					//State.Origin = CurrentState.Origin;
-
-					//foreach (DisplayObject obj in children)
-					//{
-					//    if (obj is V2DSprite)
-					//    {
-					//        V2DSprite sp = (V2DSprite)obj;
-					//        sp.hasRChange = hasRChange;
-					//        sp.hasXChange = hasXChange;
-					//        sp.hasYChange = hasYChange;
-					//    }
-					//}
-
 					hasXChange = false;
 					hasYChange = false;
 					hasRChange = false;
 				}
 			}
 		}
-		//protected void NeedsTransformUpdate()
-		//{
-		//    if (!v2dScreen.transformList.Contains(this))
-		//    {
-		//       v2dScreen.transformList.Add(this);
-		//    }
-		//}
 		protected override void SetCurrentState()
 		{
 			if (body == null)
 			{
 				base.SetCurrentState();
 			}
-			else// 
+			else
 			{
 				for (int i = 0; i < transforms.Length; i++)
 				{
@@ -480,17 +455,8 @@ namespace DDW.V2D
 				State.Position = CurrentState.Position - parent.CurrentState.Position;
 				//State.Scale = CurrentState.Scale;
 				State.Rotation = CurrentState.Rotation - parent.CurrentState.Rotation;
-				//State.Origin = CurrentState.Origin;
+				State.Origin = CurrentState.Origin;
 			}
 		}
-
-		//public override void Update(GameTime gameTime)
-		//{
-		//    base.Update(gameTime);
-		//    if (hasRChange || hasXChange || hasYChange)
-		//    {
-		//        NeedsTransformUpdate();
-		//    }
-		//}
     }
 }

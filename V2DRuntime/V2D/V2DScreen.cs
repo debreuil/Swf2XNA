@@ -31,18 +31,17 @@ namespace DDW.V2D
 		public Body groundBody;
 
 		Cursor cursor;
-		internal MouseJoint _mouseJoint;
 		public float hz = 60.0f;
 		public bool singleStep = false;
-		public int velocityIterations = 10;
-		public int positionIterations = 8;
+		public int velocityIterations = 8;
+		public int positionIterations = 10;
 		public int enableWarmStarting = 1;
 		public int enableTOI = 1;
-		public int Iterations = 10;
-		public float TimeStep = 1 / 30;
 		public Vector2 Gravity = new Vector2(0.0f, 10.0f);
 
 #if DEBUG
+		internal MouseJoint _mouseJoint;
+
 		public bool useDebugDraw = false;
 		private Box2D.XNA.TestBed.Framework.DebugDraw _debugDraw;
 		private BasicEffect simpleColorEffect;
@@ -226,6 +225,7 @@ namespace DDW.V2D
 		#endregion
 
 		#region Mouse
+#if DEBUG
 		public virtual void MouseDown(Vector2 p)
 		{
 			if (_mouseJoint != null)
@@ -291,6 +291,7 @@ namespace DDW.V2D
 				_mouseJoint.SetTarget(p);
 			}
 		}
+#endif
 		#endregion
 		#region Bounds
 		Body[] boundsBodies = new Body[4];
@@ -453,26 +454,9 @@ namespace DDW.V2D
 
 				if (timeStep != 0)
 				{
-					world.Step(1F / 60F, 8, 10);
-					//world.Step(timeStep, velocityIterations, positionIterations);
+					world.Step(timeStep, velocityIterations, positionIterations);
 				}
-				world.DrawDebugData();
 
-				//world.Validate();
-
-				//Body b = world.GetBodyList();
-				//while (b != null)
-				//{
-				//    if (b.GetUserData() is V2DSprite)
-				//    {
-				//        V2DSprite s = (V2DSprite)b.GetUserData();
-				//        Vector2 offset = s.Parent.GetGlobalOffset(Vector2.Zero); //Vector2.Zero;// 
-				//        s.X = (int)(b.GetPosition().X * WorldScale - offset.X);
-				//        s.Y = (int)(b.GetPosition().Y * WorldScale - offset.Y);
-				//        s.Rotation = b.GetAngle();
-				//    }
-				//    b = b.GetNext();
-				//}
 			}
 		}
 		public override void Draw(SpriteBatch batch)
@@ -481,6 +465,12 @@ namespace DDW.V2D
 			{
 				base.Draw(batch);
 			}
+#if DEBUG
+			if(useDebugDraw)
+			{
+				world.DrawDebugData();
+			}
+#endif
 		}
     }
 }

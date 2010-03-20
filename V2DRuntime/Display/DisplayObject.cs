@@ -583,7 +583,6 @@ namespace DDW.Display
 				CurrentState.Scale.X = Math.Abs(CurrentState.Scale.X);
 				xdif = Width - (Width - State.Origin.X) * 2;
 				CurrentState.Origin.X += xdif;
-				//CurrentState.Rotation /= 2f;
 			}
 			if (CurrentState.Scale.Y < 0)
 			{
@@ -591,7 +590,6 @@ namespace DDW.Display
 				CurrentState.Scale.Y = Math.Abs(CurrentState.Scale.Y);
 				ydif = Height - (Height - State.Origin.Y) * 2;
 				CurrentState.Origin.Y -= ydif;
-				//CurrentState.Rotation /= 2f;
 			}
 
 			destRect = new Rectangle(

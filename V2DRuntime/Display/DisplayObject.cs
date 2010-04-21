@@ -175,6 +175,20 @@ namespace DDW.Display
 				return (texture == null) ? 0 : texture.Height;
             }
         }
+        public virtual float VisibleWidth
+        {
+            get
+            {
+				return (texture == null) ? 0 : texture.Width;
+            }
+        }
+        public virtual float VisibleHeight
+        {
+            get
+            {
+				return (texture == null) ? 0 : texture.Height;
+            }
+        }
         public virtual float Rotation
         {
             get
@@ -550,7 +564,9 @@ namespace DDW.Display
 		{
 			return true;
         }
-		protected int transformIndex = 0;
+        protected int transformIndex = 0;
+        Vector2 curPos;
+        float curRot;
 		protected virtual void SetCurrentState()
 		{
 			for (int i = 0; i < transforms.Length; i++)
@@ -563,10 +579,25 @@ namespace DDW.Display
 			}
 			V2DTransform t = transforms[transformIndex];
 
-			CurrentState.Position = parent.CurrentState.Position + State.Position + t.Position;
 			CurrentState.Scale = parent.CurrentState.Scale * State.Scale * t.Scale;
-			CurrentState.Rotation = parent.CurrentState.Rotation + State.Rotation + t.Rotation;
+			//CurrentState.Rotation = parent.CurrentState.Rotation + State.Rotation + t.Rotation;
+			//CurrentState.Position = parent.CurrentState.Position + State.Position + t.Position;
 			CurrentState.Origin = State.Origin;
+
+            if (!(this is DisplayObjectContainer) || ((DisplayObjectContainer)this).NumChildren > 0)
+            {
+                CurrentState.Position = parent.CurrentState.Position + State.Position + t.Position;
+                CurrentState.Rotation = parent.CurrentState.Rotation + State.Rotation + t.Rotation;
+            }
+            else
+            {
+                curPos = State.Position + t.Position;
+                curRot = parent.CurrentState.Rotation + State.Rotation + t.Rotation;
+			    CurrentState.Rotation = parent.CurrentState.Rotation + State.Rotation + t.Rotation;
+                CurrentState.Position.X = parent.CurrentState.Position.X + (float)(Math.Cos(curRot) * curPos.X - Math.Sin(curRot) * curPos.Y);
+                CurrentState.Position.Y = parent.CurrentState.Position.Y + (float)(Math.Sin(curRot) * curPos.X + Math.Cos(curRot) * curPos.Y);
+            }
+           
 		}
 		protected Rectangle destRect;
 		protected SpriteEffects se = SpriteEffects.None;
@@ -594,7 +625,7 @@ namespace DDW.Display
 
 			destRect = new Rectangle(
 				(int)CurrentState.Position.X,
-				(int)CurrentState.Position.Y,
+                (int)CurrentState.Position.Y,
 				(int)Math.Floor(CurrentState.Scale.X * Width),
 				(int)Math.Floor(CurrentState.Scale.Y * Height));
 
@@ -603,10 +634,8 @@ namespace DDW.Display
 		{
             if (texture != null)
 			{
-				batch.Draw(texture, destRect, sourceRectangle, color,
-					CurrentState.Rotation, CurrentState.Origin, se, 1f / DepthCounter++);
-				//batch.Draw(texture, gOffset, sourceRectangle, color,
-				//    gRotation, gOrigin, gScale, se, 1f / DepthCounter++);
+				//batch.Draw(texture, destRect, sourceRectangle, color, CurrentState.Rotation, CurrentState.Origin, se, 1f / DepthCounter++);
+				batch.Draw(texture, destRect, sourceRectangle, color, CurrentState.Rotation, CurrentState.Origin, se, 1f / DepthCounter++);
             }
 
 

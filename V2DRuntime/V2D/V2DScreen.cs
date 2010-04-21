@@ -432,9 +432,9 @@ namespace DDW.V2D
 #endif
 		public override void Update(GameTime gameTime)
 		{
+			base.Update(gameTime);
 			if (isActive)
 			{
-				base.Update(gameTime);
 				float timeStep = hz > 0.0f ? 1.0f / hz : 0.0f;
 
 				if (stage.pause)
@@ -461,10 +461,7 @@ namespace DDW.V2D
 		}
 		public override void Draw(SpriteBatch batch)
 		{
-			if (isActive)
-			{
-				base.Draw(batch);
-			}
+			base.Draw(batch);
 #if DEBUG
 			if(useDebugDraw)
 			{

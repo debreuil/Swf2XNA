@@ -35,7 +35,41 @@ namespace DDW.Display
             {
                 return children.Count;
             }
-        }       
+        }
+        public override float VisibleWidth
+        {
+            get
+            {
+                float max = (texture == null) ? 0 : texture.Width;
+                float temp = 0;
+                for (int i = 0; i < children.Count; i++)
+                {
+                    temp = children[i].VisibleWidth;
+                    if (temp > max)
+                    {
+                        max = temp;
+                    }
+                }
+                return max;
+            }
+        }
+        public override float VisibleHeight
+        {
+            get
+            {
+                float max = (texture == null) ? 0 : texture.Height;
+                float temp = 0;
+                for (int i = 0; i < children.Count; i++)
+                {
+                    temp = children[i].VisibleHeight;
+                    if (temp > max)
+                    {
+                        max = temp;
+                    }
+                }
+                return max;
+            }
+        }
 	    public virtual void AddChild(DisplayObject o)
         {
             o.Parent = this;
@@ -298,7 +332,7 @@ namespace DDW.Display
 			}
 			return result;
 		}
-		protected virtual DisplayObject AddInstance(V2DInstance inst, DisplayObjectContainer parent)
+		public virtual DisplayObject AddInstance(V2DInstance inst, DisplayObjectContainer parent)
 		{
 			DisplayObject result = null;
 			if (inst != null)
@@ -337,7 +371,7 @@ namespace DDW.Display
 
 			return result;
 		}
-		protected virtual bool RemoveInstance(DisplayObject obj)
+		public virtual bool RemoveInstance(DisplayObject obj)
 		{
 			bool result = false;
 			if (this.children.Contains(obj))

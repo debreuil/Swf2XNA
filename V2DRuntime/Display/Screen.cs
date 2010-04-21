@@ -451,13 +451,13 @@ namespace DDW.Display
         {
 			ManageInput(gameTime);
 
+            base.Update(gameTime);
             if (isActive)
             {
 				if (NetworkManager.Session != null)
 				{
 					UpdateNetworkSession(gameTime);
 				}
-                base.Update(gameTime);
 			}
 			OnUpdateComplete(gameTime);		
 		}

@@ -114,8 +114,8 @@ namespace DDW.Display
 		}
         public override void Draw(SpriteBatch batch)
         {
-			if (V2DGame.instance.IsActive)
-			{
+            //if (V2DGame.instance.IsActive)
+            //{
 				DepthCounter = 1;
 				batch.GraphicsDevice.Clear(curScreen.Color);
 				batch.Begin(SpriteBlendMode.AlphaBlend, SpriteSortMode.Immediate, SaveStateMode.None);
@@ -123,7 +123,7 @@ namespace DDW.Display
 				batch.End();
 
 				curScreen.DrawDebugData(batch);
-			}
+			//}
         }
     }
 }

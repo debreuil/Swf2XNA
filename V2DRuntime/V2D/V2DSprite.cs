@@ -230,14 +230,6 @@ namespace DDW.V2D
                 {
                     AddPoly(body, this.polygons[i]);
 				}
-
-
-				//body.ResetMassData();
-            }
-
-            if (body != null)
-            {
-				//v2dScreen.bodyMap.Add(this.instanceName, body);
             }
             return body;
         }

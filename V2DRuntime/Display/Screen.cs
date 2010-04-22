@@ -454,7 +454,7 @@ namespace DDW.Display
             base.Update(gameTime);
             if (isActive)
             {
-				if (NetworkManager.Session != null)
+                if (NetworkManager.Session != null && NetworkManager.Session.SessionType != NetworkSessionType.Local)
 				{
 					UpdateNetworkSession(gameTime);
 				}

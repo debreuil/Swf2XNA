@@ -270,6 +270,14 @@ namespace DDW.Display
             }
             //children.Clear();
         }
+        public override void RemovedFromStage(EventArgs e)
+        {
+            base.RemovedFromStage(e);
+            for (int i = 0; i < children.Count; i++)
+            {
+                children[i].RemovedFromStage(e);
+            }
+        }
 
 		#region Instance Management
 		public V2DInstance CreateInstanceDefinition(string definitionName, string instName)
@@ -440,7 +448,7 @@ namespace DDW.Display
 				index = int.Parse(m.Groups[2].Value, System.Globalization.NumberStyles.None);
 			}
 
-			FieldInfo fi = t.GetField(instName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
+			FieldInfo fi = t.GetField(instName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static | BindingFlags.FlattenHierarchy);
 			if (fi != null)
 			{
 				Type ft = fi.FieldType;

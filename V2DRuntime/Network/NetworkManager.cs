@@ -1,5 +1,4 @@
-﻿//#define LOCALGAME
-
+﻿
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,6 +21,7 @@ namespace V2DRuntime.Network
 		private static NetworkManager instance;
 
 		public NetworkSession networkSession;
+		public NetworkSessionType networkSessionType;
 		protected const int maxGamers = 16;
 		protected const int maxLocalGamers = 4;
 		protected PacketWriter packetWriter = new PacketWriter();
@@ -57,15 +57,12 @@ namespace V2DRuntime.Network
 			}
 		}
 
-		public void CreateSession()
+        public void CreateSession(NetworkSessionType networkSessionType)
 		{
+            this.networkSessionType = networkSessionType;
 			try
 			{
-#if LOCALGAME
-				networkSession = NetworkSession.Create(NetworkSessionType.Local, maxLocalGamers, maxGamers);
-#else
-				networkSession = NetworkSession.Create(NetworkSessionType.SystemLink, maxLocalGamers, maxGamers);
-#endif
+                networkSession = NetworkSession.Create(networkSessionType, maxLocalGamers, maxGamers);
 				networkSession.AllowHostMigration = true;
 				networkSession.AllowJoinInProgress = true;
 				HookSessionEvents();
@@ -80,12 +77,7 @@ namespace V2DRuntime.Network
 		{
 			try
 			{
-				using (AvailableNetworkSessionCollection availableSessions =
-#if LOCALGAME
-							NetworkSession.Find(NetworkSessionType.Local, maxLocalGamers, null))
-#else
-							NetworkSession.Find(NetworkSessionType.SystemLink, maxLocalGamers, null))
-#endif
+				using (AvailableNetworkSessionCollection availableSessions = NetworkSession.Find(networkSessionType, maxLocalGamers, null))
 				{
 					if (availableSessions.Count == 0)
 					{

@@ -46,7 +46,7 @@ namespace DDW.V2D
         [XmlAttribute]
         public float Restitution = 0.1f;
         [XmlElement]
-        public V2DTransform[] Transforms;
+        public V2DGenericTransform[] Transforms;
 
         [ContentSerializerIgnore]
         [XmlIgnore]

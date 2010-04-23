@@ -1,6 +1,6 @@
 ﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
   <PropertyGroup>
-    <ProjectGuid>{602A9B7F-A669-4025-ABD8-2BC4248FC7B1}</ProjectGuid>
+    <ProjectGuid>{73AC2323-FB64-491F-AABF-16ECFC21755B}</ProjectGuid>
     <ProjectTypeGuids>{6D335F3A-9D43-41b4-9D22-F6F17C4BE596};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">Xbox 360</Platform>
@@ -58,6 +58,7 @@
     <Compile Include="Serialization\SymbolImport.cs" />
     <Compile Include="Serialization\V2DContent.cs" />
     <Compile Include="Serialization\V2DDefinition.cs" />
+    <Compile Include="Serialization\V2DGenericTransform.cs" />
     <Compile Include="Serialization\V2DInstance.cs" />
     <Compile Include="Serialization\V2DJoint.cs" />
     <Compile Include="Serialization\V2DJointKind.cs" />
@@ -68,7 +69,9 @@
     <Compile Include="Serialization\V2DText.cs" />
     <Compile Include="Serialization\V2DTextRun.cs" />
     <Compile Include="Serialization\V2DTexture.cs" />
-    <Compile Include="Serialization\V2DTransform.cs" />
+    <Compile Include="Serialization\V2DVector2.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Serialization\V2DWorld.cs" />
     <Compile Include="V2DReader.cs" />
   </ItemGroup>

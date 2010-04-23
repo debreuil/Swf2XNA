@@ -5,7 +5,7 @@ using Microsoft.Xna.Framework;
 
 namespace DDW.V2D
 {
-	public class V2DTransform
+	public class V2DGenericTransform
 	{
 		// color transform
 		// filters
@@ -16,9 +16,9 @@ namespace DDW.V2D
 		public uint StartFrame;
 		public uint EndFrame;
 
-		public Vector2 Position;
-		public Vector2 Origin;
-		public Vector2 Scale;
+        public V2DVector2 Position;
+        public V2DVector2 Origin;
+        public V2DVector2 Scale;
         public float Rotation;
 
 		//public float ScaleX;
@@ -32,10 +32,10 @@ namespace DDW.V2D
         public bool Visible = true;
 
 
-        public V2DTransform()
+        public V2DGenericTransform()
         {
         }
-        public V2DTransform(uint startFrame, uint endFrame, float scaleX, float scaleY, float rotation, float translationX, float translationY, float alpha)
+        public V2DGenericTransform(uint startFrame, uint endFrame, float scaleX, float scaleY, float rotation, float translationX, float translationY, float alpha)
         {
             StartFrame = startFrame;
             EndFrame = endFrame;
@@ -50,9 +50,9 @@ namespace DDW.V2D
 		{
 			return this.Alpha != 1F;
 		}
-        public V2DTransform Clone()
+        public V2DGenericTransform Clone()
         {
-			return new V2DTransform(StartFrame, EndFrame, Scale.X, Scale.Y, Rotation, Position.X, Position.Y, Alpha);
+            return new V2DGenericTransform(StartFrame, EndFrame, Scale.X, Scale.Y, Rotation, Position.X, Position.Y, Alpha);
         }
 	}
 }

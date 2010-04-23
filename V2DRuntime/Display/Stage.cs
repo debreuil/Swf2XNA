@@ -5,6 +5,7 @@ using System.Text;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
 using DDW.V2D;
+using V2DRuntime.Shaders;
 
 namespace DDW.Display
 {
@@ -15,6 +16,7 @@ namespace DDW.Display
         protected Screen curScreen;
 		protected Screen prevScreen;
 		public bool pause = false;
+        public V2DShader defaultEffect;
 
         public float MillisecondsPerFrame = 1000f / 12f;
 		

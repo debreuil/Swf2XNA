@@ -115,9 +115,11 @@ namespace DDW.V2D
 			if (V2DGame.instance.HasCursor)
 			{
 				cursor = V2DGame.instance.GetCursor();
+#if WINDOWS
 				cursor.MouseDown += MouseDown;
 				cursor.MouseMove += MouseMove;
 				cursor.MouseUp += MouseUp;
+#endif
 			}
 		}
         public override void Removed(EventArgs e)
@@ -126,9 +128,11 @@ namespace DDW.V2D
 			if (V2DGame.instance.HasCursor)
 			{
 				cursor = V2DGame.instance.GetCursor();
+#if WINDOWS
 				cursor.MouseDown -= MouseDown;
 				cursor.MouseMove -= MouseMove;
-				cursor.MouseUp -= MouseUp;
+                cursor.MouseUp -= MouseUp;
+#endif
 			}
         }
 		public override void SetStageAndScreen()
@@ -225,7 +229,8 @@ namespace DDW.V2D
 		#endregion
 
 		#region Mouse
-#if DEBUG
+#if WINDOWS
+        //#if DEBUG
 		public virtual void MouseDown(Vector2 p)
 		{
 			if (_mouseJoint != null)

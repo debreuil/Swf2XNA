@@ -68,6 +68,9 @@
     <Reference Include="System">
       <Private>False</Private>
     </Reference>
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml">
       <Private>False</Private>
     </Reference>
@@ -95,7 +98,8 @@
     <Compile Include="Serialization\V2DText.cs" />
     <Compile Include="Serialization\V2DTextRun.cs" />
     <Compile Include="Serialization\V2DTexture.cs" />
-    <Compile Include="Serialization\V2DTransform.cs" />
+    <Compile Include="Serialization\V2DGenericTransform.cs" />
+    <Compile Include="Serialization\V2DVector2.cs" />
     <Compile Include="Serialization\V2DWorld.cs" />
     <Compile Include="V2DReader.cs" />
   </ItemGroup>

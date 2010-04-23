@@ -138,6 +138,7 @@ namespace DDW.Display
 							});
 				}
 			}
+
             SetValidInput();
         }
 
@@ -473,7 +474,11 @@ namespace DDW.Display
 				destructionList.Clear();
 			}	
 		}
-
+        public override void Draw(SpriteBatch batch)
+        {
+            lastDepth = -1;
+            base.Draw(batch);
+        }
 		public virtual void DrawDebugData(SpriteBatch batch)
 		{
 		}
@@ -481,37 +486,37 @@ namespace DDW.Display
 		//Stack<V2DShader> shaderStack = new Stack<V2DShader>();
 		public V2DShader lastShader;
 		public V2DShader defaultShader;
+		public V2DShader currentShader;
 		protected static int lastDepth = 0;
 		protected override void DrawChild(DisplayObject d, SpriteBatch batch)
 		{
-			// temp
-			V2DShader shaderEffect = shaderMap.ContainsKey(d.DepthGroup) ? shaderMap[d.DepthGroup] : defaultShader;
+            V2DShader shaderEffect = shaderMap.ContainsKey(d.DepthGroup) ? shaderMap[d.DepthGroup] : defaultShader;
 
-			if (shaderEffect != lastShader)
-			{
-				if (lastShader != null)
-				{
-					lastShader.End(); 
-				}
+            if (shaderEffect != lastShader)
+            {
+                if (lastShader != null)
+                {
+                    lastShader.End();
+                }
 
-				lastShader = shaderEffect;
+                lastShader = shaderEffect;
+                batch.End();
+                batch.Begin(SpriteBlendMode.AlphaBlend, SpriteSortMode.Immediate, SaveStateMode.None);
 
-				if (shaderEffect != null)
-				{
-					batch.End();
-					batch.Begin(SpriteBlendMode.AlphaBlend, SpriteSortMode.Immediate, SaveStateMode.None);
-					shaderEffect.Begin();
-				}
-			}
+                if (shaderEffect != null)
+                {
+                    shaderEffect.Begin();
+                }
+            }
 
-			base.DrawChild(d, batch);
+            base.DrawChild(d, batch);
 
-			if (lastShader != null)
-			{
-				lastShader.End();
-				lastShader = null;
-			}
-		}
+        //    if (lastShader != null && d == children[children.Count - 1]) //if (lastShader != null)
+        //    {
+        //        lastShader.End();
+        //        lastShader = null;
+        //    }
+        }
 
     }
 }

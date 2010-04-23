@@ -13,12 +13,12 @@ namespace DDW.V2D
 {
     public abstract class V2DGame : Microsoft.Xna.Framework.Game
     {
+        public static V2DGame instance;
         public static Stage stage;
         public static ContentManager contentManager;
         public const string ROOT_NAME = V2DWorld.ROOT_NAME;
 		public static string currentRootName = V2DWorld.ROOT_NAME;
 
-        public static V2DGame instance;
         protected GraphicsDeviceManager graphics;
         protected SpriteBatch spriteBatch;
         protected bool keyDown = false;
@@ -37,6 +37,7 @@ namespace DDW.V2D
             contentManager = Content;
             Content.RootDirectory = "Content";
 			stage = new V2DStage();
+
             GetCursor();
         }
 

@@ -133,9 +133,9 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Box2dXna\Box2D.XNA\Box2D.XNA.csproj">
-      <Project>{22791486-E721-4511-AA4B-DA26CF5D0F2E}</Project>
-      <Name>Box2D.XNA</Name>
+    <ProjectReference Include="..\Box2dXNA\Box2dXNA.csproj">
+      <Project>{DCD006FD-D158-4C80-8E16-393EE5CA8AC1}</Project>
+      <Name>Box2dXNA</Name>
     </ProjectReference>
     <ProjectReference Include="..\V2DRuntime\V2DRuntime.csproj">
       <Project>{269A1048-DA2C-475A-9C10-564A7D8A071D}</Project>

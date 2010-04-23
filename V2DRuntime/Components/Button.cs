@@ -106,9 +106,5 @@ namespace V2DRuntime.Components
                 this.GotoAndStop(0);
             }
 		}
-		protected override void DrawChild(DisplayObject d, SpriteBatch batch)
-		{
-			base.DrawChild(d, batch);
-		}
     }
 }

@@ -291,8 +291,8 @@ namespace DDW.Display
 				result.Definition = def;
 				result.DefinitionName = def.Name;
 				result.InstanceName = instName;
-				result.Transforms = new V2DTransform[1];
-				result.Transforms[0] = new V2DTransform(0, 0, 1, 1, 0, 0, 0, 1);
+				result.Transforms = new V2DGenericTransform[1];
+                result.Transforms[0] = new V2DGenericTransform(0, 0, 1, 1, 0, 0, 0, 1);
 				result.Visible = true;
 			}
 
@@ -313,8 +313,8 @@ namespace DDW.Display
 				v2dInst.X = x;
 				v2dInst.Y = y;
 				v2dInst.Rotation = rot;
-				v2dInst.Transforms = new V2DTransform[1];
-				v2dInst.Transforms[0] = new V2DTransform(0, 0, 1, 1, 0, 0, 0, 1); // image
+				v2dInst.Transforms = new V2DGenericTransform[1];
+                v2dInst.Transforms[0] = new V2DGenericTransform(0, 0, 1, 1, 0, 0, 0, 1); // image
 				v2dInst.Visible = true;
 				result = AddInstance(v2dInst, this);
 			}
@@ -331,8 +331,8 @@ namespace DDW.Display
 					v2dInst.X = x; // body
 					v2dInst.Y = y;
 					v2dInst.Rotation = rot;
-					v2dInst.Transforms = new V2DTransform[1];
-					v2dInst.Transforms[0] = new V2DTransform(0, 0, 1, 1, 0, 0, 0, 1); // image
+                    v2dInst.Transforms = new V2DGenericTransform[1];
+                    v2dInst.Transforms[0] = new V2DGenericTransform(0, 0, 1, 1, 0, 0, 0, 1); // image
 					v2dInst.Visible = true;
 
 					result = AddInstance(v2dInst, this);

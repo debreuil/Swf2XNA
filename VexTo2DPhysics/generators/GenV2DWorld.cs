@@ -152,9 +152,9 @@ namespace DDW.VexTo2DPhysics
             //}
             //return inst.GetV2DInstance(dict);
         }
-		public V2DTransform[] TransformsConversion(V2DInstance obj, List<Transform> trs)
+		public V2DGenericTransform[] TransformsConversion(V2DInstance obj, List<Transform> trs)
         {
-            V2DTransform[] result = new V2DTransform[trs.Count];
+            V2DGenericTransform[] result = new V2DGenericTransform[trs.Count];
 			if (trs.Count > 0)
 			{
 				MatrixComponents firstMc = trs[0].Matrix.GetMatrixComponents();
@@ -173,7 +173,7 @@ namespace DDW.VexTo2DPhysics
 					uint sf = (uint)Math.Round(tin.StartTime / (1000d / v2dWorld.FrameRate));
 					uint ef = (uint)Math.Round(tin.EndTime / (1000d / v2dWorld.FrameRate)) - 1;
 					MatrixComponents mc = tin.Matrix.GetMatrixComponents();
-					V2DTransform tout = new V2DTransform(
+                    V2DGenericTransform tout = new V2DGenericTransform(
 						sf,
 						ef,
 						mc.ScaleX / firstMc.ScaleX,

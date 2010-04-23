@@ -545,7 +545,7 @@ namespace DDW.Display
 				this.Visible = instanceDefinition.Visible;
 				this.Depth = instanceDefinition.Depth;
 
-				transforms = instanceDefinition.Transforms;
+				transforms = V2DTransform.GetV2DTransformArray(instanceDefinition.Transforms);
 				//// normalize all transforms to base position
 				//this.transforms = new V2DTransform[instanceDefinition.Transforms.Length];
 				//float ox = instanceDefinition.X;

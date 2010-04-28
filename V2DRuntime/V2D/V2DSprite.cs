@@ -182,7 +182,14 @@ namespace DDW.V2D
 				v2dScreen.DestroyBody(((V2DSprite)obj).body, obj.InstanceName);
 			}
 		}
-
+        public override void CreateView()
+        {
+            base.CreateView();
+            if (this.body == null)
+            {
+                this.AddBodyInstanceToRuntime();
+            }
+        }
         public virtual Body AddBodyInstanceToRuntime()
         {
             // box2D body

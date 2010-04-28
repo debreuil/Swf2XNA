@@ -150,7 +150,7 @@ namespace DDW.Display
 		}
 		public override void Removed(EventArgs e)
 		{
-			base.Added(e);
+			base.Removed(e);
 			Deactivate();
 		}
 		protected override void OnAddToStageComplete()
@@ -275,7 +275,7 @@ namespace DDW.Display
 
 			int maxLocalGamers = 4;
 			inputManagers = new InputManager[maxLocalGamers];
-			Console.WriteLine("inputManagers init");
+
 			int sessionGamerIndex = 0;
 			for (int i = 0; i < maxLocalGamers; i++)
 			{
@@ -476,8 +476,14 @@ namespace DDW.Display
 		}
         public override void Draw(SpriteBatch batch)
         {
-            lastDepth = -1;
             base.Draw(batch);
+
+            // this needs to happen for screen (class) level shaders (vs depth group shaders)
+            if (lastShader != null)
+            {
+                lastShader.End();
+                lastShader = null;
+            }
         }
 		public virtual void DrawDebugData(SpriteBatch batch)
 		{
@@ -487,7 +493,6 @@ namespace DDW.Display
 		public V2DShader lastShader;
 		public V2DShader defaultShader;
 		public V2DShader currentShader;
-		protected static int lastDepth = 0;
 		protected override void DrawChild(DisplayObject d, SpriteBatch batch)
 		{
             V2DShader shaderEffect = shaderMap.ContainsKey(d.DepthGroup) ? shaderMap[d.DepthGroup] : defaultShader;
@@ -506,16 +511,11 @@ namespace DDW.Display
                 if (shaderEffect != null)
                 {
                     shaderEffect.Begin();
+                    shaderEffect = null;
                 }
             }
 
             base.DrawChild(d, batch);
-
-        //    if (lastShader != null && d == children[children.Count - 1]) //if (lastShader != null)
-        //    {
-        //        lastShader.End();
-        //        lastShader = null;
-        //    }
         }
 
     }

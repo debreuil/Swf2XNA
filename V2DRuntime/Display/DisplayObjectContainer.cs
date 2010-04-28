@@ -414,20 +414,29 @@ namespace DDW.Display
 		//    }
 		//}
 
+        private DisplayObject[] tempChildrenArray;
+        public override void DestroyView()
+        {
+            base.DestroyView();
+            tempChildrenArray = children.ToArray();
+            foreach (DisplayObject d in tempChildrenArray)
+            {
+                DestroyElement(d);
+            }
+            tempChildrenArray = null;
+        }
+        public override void CreateView()
+        {
+            base.CreateView();
+            SetStageAndScreen();
+            EnsureInstancesCreated();
+        }
 		/// <summary>
 		/// Destroys element, any attached bodies, and children
 		/// </summary>
 		public virtual void DestroyElement(DisplayObject obj)
 		{
-			if (obj is DisplayObjectContainer)
-			{
-				DisplayObject[] ch = ((DisplayObjectContainer)obj).children.ToArray();
-				foreach(DisplayObject d in ch)
-				{
-					((DisplayObjectContainer)obj).DestroyElement(d);
-				}
-			}
-			obj.isInitialized = false;
+            obj.DestroyView();
 			this.RemoveInstance(obj);
 		}
 		#endregion

@@ -12,7 +12,7 @@ using V2DRuntime.V2D;
 
 namespace V2DTests
 {
-	[V2DScreenAttribute(backgroundColor = 0x000001, gravityX = 10, debugDraw = true)]
+	[V2DScreenAttribute(backgroundColor = 0xFFFF88, gravityX = 10, debugDraw = true)]
     public class Demo : V2DScreen
 	{
 		private Sprite bkg;

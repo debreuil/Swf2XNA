@@ -368,7 +368,7 @@ namespace DDW.Display
             }
             else
             {
-                result = null;
+                result = screen;
             }
             return result;
         }
@@ -526,6 +526,19 @@ namespace DDW.Display
 			}
 		}
 
+        public virtual void DestroyView()
+        {
+            this.isInitialized = false;
+        }
+        public virtual void CreateView()
+        {
+        }
+        public virtual void ReplaceView(string definitionName)
+        {
+            DestroyView();
+            this.DefinitionName = definitionName;
+            CreateView();
+        }
 
 		protected virtual void ResetInstanceProperties()
 		{
@@ -594,8 +607,10 @@ namespace DDW.Display
                 curPos = State.Position + t.Position;
                 curRot = parent.CurrentState.Rotation + State.Rotation + t.Rotation;
 			    CurrentState.Rotation = parent.CurrentState.Rotation + State.Rotation + t.Rotation;
-                CurrentState.Position.X = parent.CurrentState.Position.X + (float)(Math.Cos(curRot) * curPos.X - Math.Sin(curRot) * curPos.Y);
-                CurrentState.Position.Y = parent.CurrentState.Position.Y + (float)(Math.Sin(curRot) * curPos.X + Math.Cos(curRot) * curPos.Y);
+                CurrentState.Position = parent.CurrentState.Position + curPos; 
+                // todo: this is needed for b2d elements, investigate
+                // CurrentState.Position.X = parent.CurrentState.Position.X + (float)(Math.Cos(curRot) * curPos.X - Math.Sin(curRot) * curPos.Y);
+                // CurrentState.Position.Y = parent.CurrentState.Position.Y + (float)(Math.Sin(curRot) * curPos.X + Math.Cos(curRot) * curPos.Y);
             }
            
 		}
@@ -604,8 +619,8 @@ namespace DDW.Display
         public virtual void Update(GameTime gameTime)
 		{
 			SetCurrentState();
-
 			se = SpriteEffects.None;
+
 			float xdif = 0;
 			float ydif = 0;
 			if (CurrentState.Scale.X < 0)

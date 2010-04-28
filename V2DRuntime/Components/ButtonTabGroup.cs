@@ -22,6 +22,7 @@ namespace V2DRuntime.Components
 
         public void SetFocus(int index)
         {
+            int orgIndex = focusIndex;
             focusIndex = index;
             if (focusIndex > element.Count - 1)
             {
@@ -58,6 +59,10 @@ namespace V2DRuntime.Components
                 }
             }
 
+            if (orgIndex != -1 && orgIndex != focusIndex && OnFocusChanged != null)
+            {
+                OnFocusChanged(element[focusIndex]);
+            }
         }
         public void NextFocus()
         {
@@ -100,6 +105,8 @@ namespace V2DRuntime.Components
         }
         public delegate void ButtonEventHandler(Button sender, int playerIndex, TimeSpan time);
         public event ButtonEventHandler OnClick;
+        public delegate void FocusChangedEventHandler(Button sender);
+        public event FocusChangedEventHandler OnFocusChanged;
 
 		public override void Draw(SpriteBatch batch)
 		{

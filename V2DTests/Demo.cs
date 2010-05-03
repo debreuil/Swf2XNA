@@ -21,6 +21,7 @@ namespace V2DTests
 		[V2DSpriteAttribute(isBullet=true)]
 		private V2DSprite hex;
 		private List<V2DSprite> flo;
+		private List<V2DSprite> boy;
 		private TextBox txTest;
 
 		[GearJointAttribute(ratio = 2)]
@@ -41,7 +42,17 @@ namespace V2DTests
 			base.Initialize();
 			//bkg.Visible = false;
 			//boy.Play();
+            foreach (V2DSprite b in boy)
+            {
+                b.Play();
+                b.PlayheadWrap += new AnimationEvent(b_PlayheadWrap);
+            }
 		}
+
+        void b_PlayheadWrap(DisplayObjectContainer sender)
+        {
+            sender.Stop();
+        }
 		public override void Update(GameTime gameTime)
 		{
 			base.Update(gameTime);

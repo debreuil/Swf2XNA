@@ -13,8 +13,11 @@ using V2DRuntime.Attributes;
 
 namespace DDW.Display
 {
+    public delegate void AnimationEvent(DisplayObjectContainer sender);   
     public class DisplayObjectContainer : DisplayObject
     {
+        public event AnimationEvent PlayheadWrap;
+
 		protected List<DisplayObject> children = new List<DisplayObject>();
 		public uint FrameCount = 1;
 		public uint CurFrame = 0;
@@ -141,20 +144,11 @@ namespace DDW.Display
         }
         public virtual void RemoveChild(DisplayObject o)
         {
-			//if (o is DisplayObjectContainer)
-			//{
-			//    DisplayObjectContainer doc = (DisplayObjectContainer)o;
-			//    for (int i = 0; i < doc.children.Count; i++)
-			//    {
-			//        doc.RemoveChild(doc.children[i]);
-			//    }
-			//}
-
+		    children.Remove(o);
 			if (o.State.EndFrame >= LastChildFrame)
             {
-				LastChildFrame = children.Count == 0 ? 0 : children.Max(ef => ef.State.EndFrame);
+			    LastChildFrame = children.Count == 0 ? 0 : children.Max(ef => ef.State.EndFrame);
             }
-		    children.Remove(o);
 
             o.Removed(EventArgs.Empty);
 			o.Parent = null;
@@ -657,6 +651,10 @@ namespace DDW.Display
                 {
                     CurChildFrame = 0;
                     CurFrameTime %= (mspf * LastChildFrame);
+                    if (PlayheadWrap != null)
+                    {
+                        PlayheadWrap(this);
+                    }
                 }
             }
 

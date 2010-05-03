@@ -641,8 +641,8 @@ namespace DDW.Display
 			destRect = new Rectangle(
 				(int)CurrentState.Position.X,
                 (int)CurrentState.Position.Y,
-				(int)Math.Floor(CurrentState.Scale.X * Width),
-				(int)Math.Floor(CurrentState.Scale.Y * Height));
+				(int)Math.Round(CurrentState.Scale.X * Width),
+                (int)Math.Round(CurrentState.Scale.Y * Height));
 
         }
         public virtual void Draw(SpriteBatch batch)

@@ -144,7 +144,8 @@ namespace DDW.Display
 
 		public override void Added(EventArgs e)
 		{
-			base.Added(e);
+            base.Added(e); 
+
 			V2DGame.instance.SetSize(v2dWorld.Width, v2dWorld.Height);
 			Activate();
 		}

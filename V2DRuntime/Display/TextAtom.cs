@@ -95,10 +95,14 @@ namespace DDW.Display
 			try
 			{
 				val = GetAttributeValueString(s, attributeName);
-				result = float.Parse(val, NumberStyles.Any);
+                if (val != "")
+                {
+                    result = float.Parse(val, NumberStyles.Any);
+                }
 			}
 			catch (Exception)
 			{
+                Console.WriteLine("Error with attribute. Name: " + attributeName + "  String: " + s);
 			}
 
 			return result;

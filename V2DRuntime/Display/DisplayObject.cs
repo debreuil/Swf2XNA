@@ -578,8 +578,9 @@ namespace DDW.Display
 			return true;
         }
         protected int transformIndex = 0;
-        Vector2 curPos;
+        Vector2 absPosition;
         float curRot;
+        //protected Matrix m = Matrix.Identity;
 		protected virtual void SetCurrentState()
 		{
 			for (int i = 0; i < transforms.Length; i++)
@@ -592,6 +593,63 @@ namespace DDW.Display
 			}
 			V2DTransform t = transforms[transformIndex];
 
+            //m = parent.m;
+            
+            //Matrix sm = Matrix.CreateScale(State.Scale.X * t.Scale.X, State.Scale.Y * t.Scale.Y, 0f);
+            //Matrix rm = Matrix.CreateRotationZ(State.Rotation + t.Rotation);
+            //Matrix tm = Matrix.CreateTranslation(State.Position.X + t.Position.X, State.Position.Y + t.Position.Y, 0f);
+            //Matrix om = Matrix.CreateTranslation(Origin.X, Origin.Y, 0f);
+
+            //Matrix.Multiply(ref sm, ref m, out m); // scale
+            //Matrix.Subtract(ref om, ref m, out m);
+            //Matrix.Multiply(ref rm, ref m, out m); // rotate
+            //Matrix.Add(ref om, ref m, out m);
+            //Matrix.Add(ref tm, ref m, out m); // translate
+
+            //Vector3 s;
+            //Quaternion r;
+            //Vector3 tr;
+            //m.Decompose(out s, out r, out tr);
+            Vector2 relativePosition = State.Position + t.Position;
+            relativePosition *= parent.CurrentState.Scale;
+
+			CurrentState.Scale = parent.CurrentState.Scale * State.Scale * t.Scale;
+            CurrentState.Rotation = parent.CurrentState.Rotation + State.Rotation + t.Rotation;
+            float tempX = relativePosition.X;
+            float cosRot = (float)Math.Cos(parent.CurrentState.Rotation);
+            float sinRot = (float)Math.Sin(parent.CurrentState.Rotation);
+            relativePosition.X = cosRot * tempX - sinRot * relativePosition.Y;
+            relativePosition.Y = sinRot * tempX + cosRot * relativePosition.Y;
+
+            CurrentState.Position = parent.CurrentState.Position + relativePosition;
+
+
+            //absPosition = parent.CurrentState.Position + State.Position + t.Position;
+            //CurrentState.Position.X = (absPosition.X - State.Origin.X) * (1f/CurrentState.Scale.X);
+            //CurrentState.Position.Y = absPosition.Y - State.Origin.Y * (1f/CurrentState.Scale.Y);
+
+            //CurrentState.Scale = parent.CurrentState.Scale * State.Scale * t.Scale;
+            //absPosition = parent.CurrentState.Position + State.Position + t.Position;
+            //CurrentState.Position.X = (absPosition.X - State.Origin.X) * (1f/CurrentState.Scale.X);
+            //CurrentState.Position.Y = absPosition.Y - State.Origin.Y * (1f/CurrentState.Scale.Y);
+            
+            //curRot = State.Rotation + t.Rotation;
+            //CurrentState.Rotation = parent.CurrentState.Rotation + State.Rotation + t.Rotation;
+
+            //absPosition = (Origin) * (1f / CurrentState.Scale.X);
+            //CurrentState.Position.X += (float)(Math.Cos(curRot) * absPosition.X - Math.Sin(curRot) * absPosition.Y);            
+            //CurrentState.Position.Y += (float)(Math.Sin(curRot) * absPosition.X + Math.Cos(curRot) * absPosition.Y);
+            
+            //curRot = State.Rotation + t.Rotation;
+            //float parRot = parent.CurrentState.Rotation;
+            //CurrentState.Rotation = parent.CurrentState.Rotation + curRot;
+
+            //CurrentState.Position.X = parent.CurrentState.Position.X + (float)(Math.Cos(curRot) * curPos.X - Math.Sin(curRot) * curPos.Y);
+            //CurrentState.Position.Y = parent.CurrentState.Position.Y + (float)(Math.Sin(curRot) * curPos.X + Math.Cos(curRot) * curPos.Y);
+
+
+
+            /*
 			CurrentState.Scale = parent.CurrentState.Scale * State.Scale * t.Scale;
 			//CurrentState.Rotation = parent.CurrentState.Rotation + State.Rotation + t.Rotation;
 			//CurrentState.Position = parent.CurrentState.Position + State.Position + t.Position;
@@ -612,6 +670,7 @@ namespace DDW.Display
                 // CurrentState.Position.X = parent.CurrentState.Position.X + (float)(Math.Cos(curRot) * curPos.X - Math.Sin(curRot) * curPos.Y);
                 // CurrentState.Position.Y = parent.CurrentState.Position.Y + (float)(Math.Sin(curRot) * curPos.X + Math.Cos(curRot) * curPos.Y);
             }
+            */
            
 		}
 		protected Rectangle destRect;
@@ -650,7 +709,8 @@ namespace DDW.Display
             if (texture != null)
 			{
 				//batch.Draw(texture, destRect, sourceRectangle, color, CurrentState.Rotation, CurrentState.Origin, se, 1f / DepthCounter++);
-				batch.Draw(texture, destRect, sourceRectangle, color, CurrentState.Rotation, CurrentState.Origin, se, 1f / DepthCounter++);
+				//batch.Draw(texture, destRect, sourceRectangle, color, CurrentState.Rotation, Origin, se, 1f / DepthCounter++);
+                batch.Draw(texture, destRect, sourceRectangle, color, CurrentState.Rotation, Origin, se, 1f / DepthCounter++);
             }
 
 

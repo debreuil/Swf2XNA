@@ -421,7 +421,7 @@ namespace DDW.V2D
 		}
 		protected override void SetCurrentState()
 		{
-			if (body == null)
+            if (body == null)
 			{
 				base.SetCurrentState();
 			}
@@ -442,19 +442,25 @@ namespace DDW.V2D
 					UpdateTransform();
 				}
 
-				Vector2 bPosition = new Vector2((int)(body.GetPosition().X * V2DScreen.WorldScale), (int)(body.GetPosition().Y * V2DScreen.WorldScale));
+				Vector2 bPosition = body.GetPosition() * V2DScreen.WorldScale;//new Vector2((int)(body.GetPosition().X * V2DScreen.WorldScale), (int)(body.GetPosition().Y * V2DScreen.WorldScale));
 				float br = body.GetAngle();
+				Vector2 com = body.GetLocalCenter() * V2DScreen.WorldScale;
+				//Vector2 comOrg = Origin - com;
 
-				CurrentState.Position = bPosition;// -parent.CurrentState.Position;// +t.Position;
-				CurrentState.Scale = parent.CurrentState.Scale * State.Scale * t.Scale;
-				CurrentState.Rotation = br;// -parent.CurrentState.Rotation + t.Rotation;
-				CurrentState.Origin = State.Origin;
+                //float angle = (float)Math.Atan2(com.Y, com.X) + br;
+                //float length = (float)com.Length();
 
-				//State.Position = CurrentState.Position - parent.CurrentState.Position - t.Position;
-				State.Position = CurrentState.Position - parent.CurrentState.Position;
-				//State.Scale = CurrentState.Scale;
-				State.Rotation = CurrentState.Rotation - parent.CurrentState.Rotation;
-				State.Origin = CurrentState.Origin;
+				CurrentState.Scale = Vector2.One;// parent.CurrentState.Scale * State.Scale * t.Scale;
+                CurrentState.Rotation = br;// -parent.CurrentState.Rotation + t.Rotation;
+                CurrentState.Position = bPosition;// -new Vector2((float)Math.Cos(angle), (float)Math.Sin(angle)) * length;// -parent.CurrentState.Position;// +t.Position;
+                //Origin = new Vector2(0, -20);// origin;
+                //children[0].Origin = -Origin;
+                //((DisplayObjectContainer)children[0]).children[0].Origin = new Vector2(83, 47);// +Origin;
+                //CurrentState.Origin = Origin;
+
+                //State.Position = CurrentState.Position - parent.CurrentState.Position;
+                //State.Rotation = CurrentState.Rotation - parent.CurrentState.Rotation;
+                //State.Origin = CurrentState.Origin;
 			}
 		}
     }

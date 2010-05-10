@@ -12,7 +12,7 @@ using V2DRuntime.V2D;
 
 namespace V2DTests
 {
-	[V2DScreenAttribute(backgroundColor = 0xFFFF88, gravityX = 10, debugDraw = true)]
+	[V2DScreenAttribute(backgroundColor = 0x000001, gravityX = 10, debugDraw = true)]
     public class Demo : V2DScreen
 	{
 		private Sprite bkg;
@@ -21,7 +21,7 @@ namespace V2DTests
 		[V2DSpriteAttribute(isBullet=true)]
 		private V2DSprite hex;
 		private List<V2DSprite> flo;
-		private List<V2DSprite> boy;
+		private List<Sprite> tank;
 		private TextBox txTest;
 
 		[GearJointAttribute(ratio = 2)]
@@ -42,11 +42,6 @@ namespace V2DTests
 			base.Initialize();
 			//bkg.Visible = false;
 			//boy.Play();
-            foreach (V2DSprite b in boy)
-            {
-                b.Play();
-                b.PlayheadWrap += new AnimationEvent(b_PlayheadWrap);
-            }
 		}
 
         void b_PlayheadWrap(DisplayObjectContainer sender)

@@ -119,6 +119,7 @@ namespace DDW.V2D
 		//    //body.SetXForm(new Vector2(x / worldScale, y / worldScale), Rotation);
 		//}
 
+        /*
         public override void Play()
         {
             if (isWrappedB2DObject())
@@ -169,6 +170,7 @@ namespace DDW.V2D
                 CurChildFrame = frame < 0 ? 0 : frame > LastChildFrame ? LastChildFrame : frame;
             }
         }
+         * */
         private bool isWrappedB2DObject()
         {
             return polygons.Count > 0 && LastChildFrame == 0 && children.Count == 1 && children[0] is DisplayObjectContainer;
@@ -458,9 +460,9 @@ namespace DDW.V2D
                 //((DisplayObjectContainer)children[0]).children[0].Origin = new Vector2(83, 47);// +Origin;
                 //CurrentState.Origin = Origin;
 
-                //State.Position = CurrentState.Position - parent.CurrentState.Position;
-                //State.Rotation = CurrentState.Rotation - parent.CurrentState.Rotation;
-                //State.Origin = CurrentState.Origin;
+                State.Position = CurrentState.Position - parent.CurrentState.Position;
+                State.Rotation = CurrentState.Rotation - parent.CurrentState.Rotation;
+                State.Origin = CurrentState.Origin;
 			}
 		}
     }

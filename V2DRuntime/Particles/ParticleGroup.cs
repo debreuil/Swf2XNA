@@ -12,6 +12,7 @@ namespace V2DRuntime.Particles
 	public class ParticleGroup : DisplayObjectContainer
 	{
 		public bool isComplete = false;
+        public bool isContinous = false;
 		public TimeSpan duration = new TimeSpan(0, 0, 0, 5);
 		private bool isFirstUpdate = true;
 		private TimeSpan startTime;
@@ -54,7 +55,7 @@ namespace V2DRuntime.Particles
 				isFirstUpdate = false;
 			}
 
-			if (gameTime.TotalGameTime - startTime > duration)
+			if (!isContinous && gameTime.TotalGameTime - startTime > duration)
 			{
 				isComplete = true;
 			}

@@ -205,9 +205,31 @@ namespace DDW.Display
         {
             isPlaying = true;
         }
+        public virtual void PlayAll()
+        {
+            this.Play();
+            foreach (DisplayObject d in children)
+            {
+                if (d is DisplayObjectContainer)
+                {
+                    ((DisplayObjectContainer)d).PlayAll();
+                }
+            }
+        }
         public virtual void Stop()
         {
             isPlaying = false;
+        }
+        public virtual void StopAll()
+        {
+            this.Stop();
+            foreach (DisplayObject d in children)
+            {
+                if (d is DisplayObjectContainer)
+                {
+                    ((DisplayObjectContainer)d).StopAll();
+                }
+            }
         }
         public virtual void GotoAndPlay(uint frame)
         {

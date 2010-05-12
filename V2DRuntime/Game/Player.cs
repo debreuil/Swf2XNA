@@ -27,7 +27,8 @@ namespace V2DRuntime.Game
 		public Player(Texture2D texture, V2DInstance instance) : base(texture, instance)
 		{
 		}
-		public bool IsAlive { get { return isAlive; } set { isAlive = value; } }
+
+		public virtual bool IsAlive { get { return isAlive; } set { isAlive = value; } }
 		public void WriteNetworkPacket(PacketWriter packetWriter, GameTime gameTime)
 		{
 			// Send our current time.

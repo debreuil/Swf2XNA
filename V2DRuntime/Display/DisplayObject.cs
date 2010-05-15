@@ -533,10 +533,10 @@ namespace DDW.Display
         public virtual void CreateView()
         {
         }
-        public virtual void ReplaceView(string definitionName)
+        public virtual void ReplaceView(string newDefinitionName)
         {
             DestroyView();
-            this.DefinitionName = definitionName;
+            this.DefinitionName = newDefinitionName;
             CreateView();
         }
 

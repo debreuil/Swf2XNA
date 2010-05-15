@@ -14,6 +14,7 @@ using Microsoft.Xna.Framework.Content.Pipeline.Graphics;
 using DDW.V2D.Serialization;
 using System.Xml.Serialization;
 using DDW.Placeholder;
+using System.Diagnostics;
 
 namespace DDW.VexTo2DPhysics
 {
@@ -97,7 +98,9 @@ namespace DDW.VexTo2DPhysics
                 TextWriter tw = new StreamWriter(xmlPath);
                 tw.Write(sw.ToString());
                 tw.Close();
-                sw.Close();  
+                sw.Close();
+
+                Debug.WriteLine("********** Wrote file data to " + Directory.GetCurrentDirectory()+ "\\" + xmlPath + ".");
             }
         }
 		public V2DContentHolder GetV2DContent(ContentProcessorContext context)

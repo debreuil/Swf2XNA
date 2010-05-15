@@ -2,12 +2,12 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <StartWorkingDirectory>
     </StartWorkingDirectory>
-    <StartArguments>Library/Demo.swf</StartArguments>
+    <StartArguments>Library/screens.swf</StartArguments>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <StartWorkingDirectory>
     </StartWorkingDirectory>
-    <StartArguments>Library/Demo.swf</StartArguments>
+    <StartArguments>Library/screens.swf</StartArguments>
   </PropertyGroup>
   <PropertyGroup>
     <ProjectView>ProjectFiles</ProjectView>

@@ -72,7 +72,20 @@ namespace DDW.V2D
                     //body.SetMassFromShapes();
                 }
             }
-		}
+        }
+        public void SetFriction(float newFriction)
+        {
+            this.friction = newFriction;
+			if (body != null)
+			{
+				Fixture fl = body.GetFixtureList();
+				while (fl != null)
+				{
+                    fl.SetFriction(newFriction);
+					fl = fl.GetNext();
+				}
+			}
+        }
 		public void SetMaskAndCategoryBits(ushort mask, ushort category)
 		{
 			if (body != null)

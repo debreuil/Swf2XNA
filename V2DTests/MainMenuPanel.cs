@@ -25,7 +25,7 @@ namespace V2DTests
         {
             base.Initialize();
             mainMenu.SetFocus(1);
-            mainMenu.OnClick += new ButtonTabGroup.ButtonEventHandler(mainMenu_OnClick);
+            mainMenu.OnClick += new ButtonEventHandler(mainMenu_OnClick);
         }
 
     }

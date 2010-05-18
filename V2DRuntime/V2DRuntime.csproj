@@ -80,10 +80,6 @@
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
       <Private>False</Private>
     </Reference>
-    <Reference Include="VexPipelineReader, Version=1.0.0.0, Culture=neutral, processorArchitecture=x86">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\VexPipelineReader\bin\x86\Debug\VexPipelineReader.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Attributes\DistanceJointAttribute.cs" />
@@ -101,6 +97,7 @@
     <Compile Include="Components\Group.cs" />
     <Compile Include="Components\TextBox.cs" />
     <Compile Include="Debug\Render.cs" />
+    <Compile Include="Display\Delegates.cs" />
     <Compile Include="Display\DisplayObject.cs" />
     <Compile Include="Display\DisplayObjectContainer.cs" />
     <Compile Include="Display\FontManager.cs" />
@@ -121,7 +118,7 @@
     <Compile Include="Input\Move.cs" />
     <Compile Include="Input\MoveList.cs" />
     <Compile Include="Network\NetworkManager.cs" />
-    <Compile Include="Particles\Easing.cs" />
+    <Compile Include="Tween\Easing.cs" />
     <Compile Include="Particles\FastRandom.cs" />
     <Compile Include="Particles\Particle.cs" />
     <Compile Include="Particles\ParticleEffect.cs" />
@@ -133,6 +130,8 @@
     <Compile Include="Shaders\V2DShaderAttribute.cs" />
     <Compile Include="State\StateManager.cs" />
     <Compile Include="Attributes\SpriteAttribute.cs" />
+    <Compile Include="Tween\TweenState.cs" />
+    <Compile Include="Tween\TweenWorker.cs" />
     <Compile Include="V2D\IJointable.cs" />
     <Compile Include="V2D\V2DExtensions.cs" />
     <Compile Include="V2D\V2DGame.cs" />
@@ -193,6 +192,10 @@
     <ProjectReference Include="..\Box2dXNA\Box2dXNA.csproj">
       <Project>{DCD006FD-D158-4C80-8E16-393EE5CA8AC1}</Project>
       <Name>Box2dXNA</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\VexPipelineReader\VexPipelineReader.csproj">
+      <Project>{D5D6310E-2D9D-4931-8D3B-4574F6625C6A}</Project>
+      <Name>VexPipelineReader</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

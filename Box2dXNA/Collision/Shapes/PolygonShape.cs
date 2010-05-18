@@ -53,7 +53,7 @@ namespace Box2D.XNA
 	    /// It is assumed that the exterior is the the right of each edge.
         public void Set(Vector2[] vertices, int count)
         {
-            Debug.Assert(2 <= count && count <= Settings.b2_maxPolygonVertices);
+            Debug.Assert(2 <= count && count <= Settings.b2_maxPolygonVertices, "Polygon count: " + count, "Expected 2<count<8. Actual polygon count: " + count);
             _vertexCount = count;
 
             // Copy vertices.

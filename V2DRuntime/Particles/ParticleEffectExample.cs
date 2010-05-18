@@ -9,6 +9,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using DDW.V2D;
 using SharpNeatLib.Maths;
+using V2DRuntime.Tween;
 
 
 namespace V2DRuntime.Particles

@@ -7,6 +7,7 @@ using Microsoft.Xna.Framework.Graphics;
 using DDW.V2D;
 using DDW.Input;
 using Microsoft.Xna.Framework.GamerServices;
+using V2DRuntime.Display;
 
 namespace V2DRuntime.Components
 {
@@ -103,9 +104,8 @@ namespace V2DRuntime.Components
 			}
 			return result;
         }
-        public delegate void ButtonEventHandler(Button sender, int playerIndex, TimeSpan time);
+
         public event ButtonEventHandler OnClick;
-        public delegate void FocusChangedEventHandler(Button sender);
         public event FocusChangedEventHandler OnFocusChanged;
 
 		public override void Draw(SpriteBatch batch)

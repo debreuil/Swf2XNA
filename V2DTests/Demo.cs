@@ -43,6 +43,7 @@ namespace V2DTests
 		public override void Initialize()
 		{
 			base.Initialize();
+            flo[1].Alpha = .5f;
 			//bkg.Visible = false;
 			//boy.Play();
 		}

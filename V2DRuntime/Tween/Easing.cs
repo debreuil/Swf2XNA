@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace V2DRuntime.Particles
+namespace V2DRuntime.Tween
 {
 	// easing equations from the ever brilliant Robert Penner
 	public class Easing
@@ -11,7 +11,6 @@ namespace V2DRuntime.Particles
 		public const float pi = (float)Math.PI;
 		public const float twoPi = (float)Math.PI * 2f;
 		public const float halfPi = (float)Math.PI / 2f;
-		public delegate float EasingFormula(float t, float start, float length);
 
 		// simple linear tweening - no easing
 		public static float Linear(float t, float start, float length)
@@ -25,7 +24,7 @@ namespace V2DRuntime.Particles
 		// quadratic easing in - accelerating from zero velocity
 		public static float EaseInQuad(float t, float start, float length)
 		{
-			return length * (t) * t + start;
+			return length * t * t + start;
 		}
 
 		// quadratic easing out - decelerating to zero velocity

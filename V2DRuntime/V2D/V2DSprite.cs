@@ -476,6 +476,12 @@ namespace DDW.V2D
                 State.Position = CurrentState.Position - parent.CurrentState.Position;
                 State.Rotation = CurrentState.Rotation - parent.CurrentState.Rotation;
                 State.Origin = CurrentState.Origin;
+
+                CurrentState.Alpha = parent.CurrentState.Alpha * State.Alpha * t.Alpha;
+                if (color.A != (byte)(CurrentState.Alpha * 255))
+                {
+                    color.A = (byte)(State.Alpha * 255);
+                }
 			}
 		}
     }

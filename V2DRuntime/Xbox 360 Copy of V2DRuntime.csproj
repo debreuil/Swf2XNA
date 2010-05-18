@@ -54,6 +54,9 @@
     <XnaCompressContent>true</XnaCompressContent>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Display\Delegates.cs" />
+    <Compile Include="Tween\Easing.cs" />
+    <Compile Include="Tween\TweenState.cs" />
     <Compile Include="Attributes\DistanceJointAttribute.cs" />
     <Compile Include="Attributes\GearJointAttribute.cs" />
     <Compile Include="Attributes\JointAttribute.cs" />
@@ -89,7 +92,6 @@
     <Compile Include="Input\Move.cs" />
     <Compile Include="Input\MoveList.cs" />
     <Compile Include="Network\NetworkManager.cs" />
-    <Compile Include="Particles\Easing.cs" />
     <Compile Include="Particles\FastRandom.cs" />
     <Compile Include="Particles\Particle.cs" />
     <Compile Include="Particles\ParticleEffect.cs" />
@@ -101,6 +103,7 @@
     <Compile Include="Shaders\V2DShaderAttribute.cs" />
     <Compile Include="State\StateManager.cs" />
     <Compile Include="Attributes\SpriteAttribute.cs" />
+    <Compile Include="Tween\TweenWorker.cs" />
     <Compile Include="V2D\IJointable.cs" />
     <Compile Include="V2D\V2DExtensions.cs" />
     <Compile Include="V2D\V2DGame.cs" />

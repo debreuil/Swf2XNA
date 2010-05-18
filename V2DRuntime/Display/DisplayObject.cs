@@ -7,6 +7,8 @@ using Microsoft.Xna.Framework;
 using V2DRuntime.V2D;
 using DDW.V2D;
 using DDW.Input;
+using V2DRuntime.Tween;
+using V2DRuntime.Display;
 
 namespace DDW.Display
 {
@@ -253,7 +255,6 @@ namespace DDW.Display
             set
             {
 				State.Alpha = value;
-				color.A = (byte)(State.Alpha * 255);
             }
         }
         public virtual bool Visible
@@ -540,6 +541,17 @@ namespace DDW.Display
             CreateView();
         }
 
+        public TweenWorker tweenWorker;
+        public TweenWorker AnimateTo(TweenState destination, int milliseconds)
+        {
+            if (tweenWorker != null)
+            {
+                tweenWorker.End();
+            }
+            tweenWorker = new TweenWorker(this, destination, milliseconds);
+            return tweenWorker;
+        }
+
 		protected virtual void ResetInstanceProperties()
 		{
 			if (instanceDefinition != null)
@@ -578,8 +590,8 @@ namespace DDW.Display
 			return true;
         }
         protected int transformIndex = 0;
-        Vector2 absPosition;
-        float curRot;
+        //Vector2 absPosition;
+        //float curRot;
         //protected Matrix m = Matrix.Identity;
 		protected virtual void SetCurrentState()
 		{
@@ -623,7 +635,11 @@ namespace DDW.Display
 
             CurrentState.Position = parent.CurrentState.Position + relativePosition;
 
-
+            CurrentState.Alpha = parent.CurrentState.Alpha * State.Alpha * t.Alpha;
+            if (color.A != (byte)(CurrentState.Alpha * 255))
+            {
+                color.A = (byte)(CurrentState.Alpha * 255);
+            }
             //absPosition = parent.CurrentState.Position + State.Position + t.Position;
             //CurrentState.Position.X = (absPosition.X - State.Origin.X) * (1f/CurrentState.Scale.X);
             //CurrentState.Position.Y = absPosition.Y - State.Origin.Y * (1f/CurrentState.Scale.Y);
@@ -677,6 +693,11 @@ namespace DDW.Display
 		protected SpriteEffects se = SpriteEffects.None;
         public virtual void Update(GameTime gameTime)
 		{
+            if (tweenWorker != null)
+            {
+                tweenWorker.Update(gameTime);
+            }
+
 			SetCurrentState();
 			se = SpriteEffects.None;
 

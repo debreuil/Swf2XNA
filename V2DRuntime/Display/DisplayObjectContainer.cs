@@ -10,10 +10,10 @@ using System.Reflection;
 using DDW.V2D;
 using V2DRuntime.Shaders;
 using V2DRuntime.Attributes;
+using V2DRuntime.Display;
 
 namespace DDW.Display
-{
-    public delegate void AnimationEvent(DisplayObjectContainer sender);   
+{  
     public class DisplayObjectContainer : DisplayObject
     {
         public event AnimationEvent PlayheadWrap;

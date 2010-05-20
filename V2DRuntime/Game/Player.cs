@@ -7,34 +7,43 @@ using DDW.V2D;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using V2DRuntime.Enums;
 
 namespace V2DRuntime.Game
 {
 	public class Player : V2DSprite
 	{
 		public bool isLocal;
-		private bool isAlive = true;
 		public PlayerIndex gamePadIndex;
 		public NetworkGamer NetworkGamer;
 		public byte NetworkId;
 
-		protected struct PlayerState
-		{
-			public Vector2 Position;
-			public Vector2 LinearVelocity;
-		}
 
 		public Player(Texture2D texture, V2DInstance instance) : base(texture, instance)
 		{
 		}
 
-		public virtual bool IsAlive { get { return isAlive; } set { isAlive = value; } }
+        private LivingState livingState;
+        public virtual LivingState LivingState
+        {
+            get
+            {
+                return livingState;
+            }
+            set
+            {
+                livingState = value;
+            }
+        }
+        //private bool isAlive = true;
+        //public virtual bool IsAlive { get { return isAlive; } set { isAlive = value; } }
+
 		public void WriteNetworkPacket(PacketWriter packetWriter, GameTime gameTime)
 		{
 			// Send our current time.
 			packetWriter.Write((float)gameTime.TotalGameTime.TotalSeconds);
-			packetWriter.Write(isAlive);
-			if (isAlive)
+            packetWriter.Write(livingState == LivingState.Alive);
+            if (livingState == LivingState.Alive)
 			{
 				// Send the current state of the tank.
 				packetWriter.Write(body.GetPosition().X);
@@ -107,5 +116,11 @@ namespace V2DRuntime.Game
 		{
 			base.Initialize();
 		}
-	}
+    }
+
+    public struct PlayerState
+    {
+        public Vector2 Position;
+        public Vector2 LinearVelocity;
+    }
 }

@@ -110,6 +110,7 @@
     <Compile Include="Display\TextAtom.cs" />
     <Compile Include="Enums\DeadIconType.cs" />
     <Compile Include="Enums\EdgeName.cs" />
+    <Compile Include="Enums\LivingState.cs" />
     <Compile Include="Enums\TransitionKind.cs" />
     <Compile Include="Game\Player.cs" />
     <Compile Include="Input\Cursor.cs" />

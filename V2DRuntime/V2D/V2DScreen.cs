@@ -193,7 +193,7 @@ namespace DDW.V2D
 		}
 		public void DestroyBody(Body b, string name)
 		{
-			if (b != null && b.GetWorld() != null)
+			if (b != null && b.GetWorld() != null && world.BodyCount > 0)
 			{				
 				world.DestroyBody(b);
 			}

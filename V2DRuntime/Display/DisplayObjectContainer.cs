@@ -207,7 +207,7 @@ namespace DDW.Display
         }
         public virtual void PlayAll()
         {
-            this.Play();
+            this.GotoAndPlay(0);
             foreach (DisplayObject d in children)
             {
                 if (d is DisplayObjectContainer)
@@ -234,11 +234,13 @@ namespace DDW.Display
         public virtual void GotoAndPlay(uint frame)
         {
             CurChildFrame = frame < 0 ? 0 : frame > LastChildFrame ? LastChildFrame : frame;
+            CurFrameTime = mspf * CurChildFrame;
             isPlaying = true;
         }
         public virtual void GotoAndStop(uint frame)
         {
             CurChildFrame = frame < 0 ? 0 : frame > LastChildFrame ? LastChildFrame : frame;
+            CurFrameTime = mspf * CurChildFrame;
             isPlaying = false;
         }
 
@@ -664,7 +666,6 @@ namespace DDW.Display
         }
         public override void Update(GameTime gameTime)
         {
-
             if (isPlaying && LastChildFrame > 0)
             {
                 CurFrameTime += (float)gameTime.ElapsedGameTime.TotalMilliseconds;

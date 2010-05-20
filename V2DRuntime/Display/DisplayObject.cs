@@ -640,6 +640,7 @@ namespace DDW.Display
             {
                 color.A = (byte)(CurrentState.Alpha * 255);
             }
+
             //absPosition = parent.CurrentState.Position + State.Position + t.Position;
             //CurrentState.Position.X = (absPosition.X - State.Origin.X) * (1f/CurrentState.Scale.X);
             //CurrentState.Position.Y = absPosition.Y - State.Origin.Y * (1f/CurrentState.Scale.Y);

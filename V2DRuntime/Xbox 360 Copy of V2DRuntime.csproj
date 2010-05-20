@@ -55,6 +55,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Display\Delegates.cs" />
+    <Compile Include="Enums\LivingState.cs" />
     <Compile Include="Tween\Easing.cs" />
     <Compile Include="Tween\TweenState.cs" />
     <Compile Include="Attributes\DistanceJointAttribute.cs" />

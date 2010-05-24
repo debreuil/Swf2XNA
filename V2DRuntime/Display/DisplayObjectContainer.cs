@@ -22,7 +22,7 @@ namespace DDW.Display
 		public uint FrameCount = 1;
 		public uint CurFrame = 0;
 		public float CurFrameTime = 0;
-		public bool isPlaying = false;//true;//
+        public bool isPlaying = false;//true;//
 
 		public DisplayObjectContainer()
         {
@@ -201,6 +201,14 @@ namespace DDW.Display
             }
         }
 
+        public virtual void Activate()
+        {
+            this.isActive = true;
+        }
+        public virtual void Deactivate()
+        {
+            this.isActive = false;
+        }
         public virtual void Play()
         {
             isPlaying = true;
@@ -666,14 +674,14 @@ namespace DDW.Display
         }
         public override void Update(GameTime gameTime)
         {
-            if (isPlaying && LastChildFrame > 0)
+            if (isActive && isPlaying && LastChildFrame > 0)
             {
                 CurFrameTime += (float)gameTime.ElapsedGameTime.TotalMilliseconds;
                 CurChildFrame = ((uint)(CurFrameTime / mspf));
                 if (CurChildFrame > LastChildFrame)
                 {
                     CurChildFrame = 0;
-                    CurFrameTime %= (mspf * LastChildFrame);
+                    CurFrameTime %= (mspf * (LastChildFrame + 1));
                     if (PlayheadWrap != null)
                     {
                         PlayheadWrap(this);
@@ -685,7 +693,7 @@ namespace DDW.Display
 
             foreach (DisplayObject d in children)
             {
-				if (d.Visible && d.Alpha > 0)
+				if (isActive && d.Visible && d.Alpha > 0)
 				{
 					if (CurChildFrame >= d.State.StartFrame && CurChildFrame <= d.State.EndFrame)
 					{
@@ -695,28 +703,31 @@ namespace DDW.Display
             }
 		}
         public override void Draw(SpriteBatch batch)
-		{			
-			foreach (DisplayObject d in children)
-			{
-				if (d.Visible && d.Alpha > 0 && d.DepthGroup < 0)
-				{
-					if (CurChildFrame >= d.State.StartFrame && CurChildFrame <= d.State.EndFrame)
-					{
-						DrawChild(d, batch);						
-					}
-				}
-			}
-			base.Draw(batch);
-			foreach (DisplayObject d in children)
-			{
-				if (d.Visible && d.Alpha > 0 && d.DepthGroup >= 0)
-				{
-					if (CurChildFrame >= d.State.StartFrame && CurChildFrame <= d.State.EndFrame)
-					{
-						DrawChild(d, batch);						
-					}
-				}
-			}
+		{
+            if (Visible && Alpha > 0)
+            {
+                foreach (DisplayObject d in children)
+                {
+                    if (d.Visible && d.Alpha > 0 && d.DepthGroup < 0)
+                    {
+                        if (CurChildFrame >= d.State.StartFrame && CurChildFrame <= d.State.EndFrame)
+                        {
+                            DrawChild(d, batch);
+                        }
+                    }
+                }
+                base.Draw(batch);
+                foreach (DisplayObject d in children)
+                {
+                    if (d.Visible && d.Alpha > 0 && d.DepthGroup >= 0)
+                    {
+                        if (CurChildFrame >= d.State.StartFrame && CurChildFrame <= d.State.EndFrame)
+                        {
+                            DrawChild(d, batch);
+                        }
+                    }
+                }
+            }
         }
 		protected virtual void DrawChild(DisplayObject d, SpriteBatch batch)
 		{

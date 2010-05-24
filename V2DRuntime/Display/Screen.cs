@@ -31,7 +31,6 @@ namespace DDW.Display
         public float MillisecondsPerFrame = 1000f / 12f;
         public Dictionary<string, Texture2D> textures = new Dictionary<string,Texture2D>();
         private SymbolImport symbolImport;
-        public bool isActive = false;
 
 		public Vector2 ClientSize = new Vector2(400, 300);
 
@@ -85,26 +84,11 @@ namespace DDW.Display
 			destructionList.Add(obj);
 		}
 
-		public virtual void Activate()
+		public override void Activate()
 		{
 			V2DGame.currentRootName = instanceDefinition.InstanceName == null ? V2DGame.ROOT_NAME : instanceDefinition.InstanceName;
-
-			//ClearChildren();
-			//this.destinationRectangle.Width = v2dWorld.Width;
-			//this.destinationRectangle.Height = v2dWorld.Height;
-
-			//AddInstance(instanceDefinition, this);
-
-			//Initialize();
-			isActive = true;
-			Visible = true;
+            base.Activate();
 		}
-
-		public virtual void Deactivate()
-		{
-			isActive = false;
-			Visible = false;
-		} 
 
         public override void Initialize()
         {

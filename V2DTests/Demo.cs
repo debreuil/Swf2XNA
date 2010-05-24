@@ -15,25 +15,25 @@ namespace V2DTests
 	[V2DScreenAttribute(backgroundColor = 0x000001, gravityX = 10, debugDraw = false)]
     public class Demo : V2DScreen
 	{
-		private Sprite bkg;
-		private V2DSprite ball;
+		public Sprite bkg;
+        public V2DSprite ball;
 
 		[V2DSpriteAttribute(isBullet=true)]
-		private List<V2DSprite> flo;
-		private List<Sprite> tank;
-		private TextBox txTest;
+        public List<V2DSprite> flo;
+        public List<Sprite> tank;
+        public TextBox txTest;
 
 		[GearJointAttribute(ratio = 2)]
-		private GearJoint g1;
+        public GearJoint g1;
 
 		[RevoluteJointAttribute(motorSpeed = 50, maxMotorTorque = 500)]
-		private RevoluteJoint r2;
-		private V2DSprite ghost;
+        public RevoluteJoint r2;
+        public V2DSprite ghost;
 
         [V2DSpriteAttribute(maskBits = 1, categoryBits = 1, density=4000, mass=4000,restitution=9999)]
-		private List<V2DSprite> hex;
+        public List<V2DSprite> hex;
 
-		private List<V2DSprite> arch;
+        public List<V2DSprite> arch;
 		[V2DSpriteAttribute(depthGroup = 40)]
 		public TurretMachine turretMachine;
 

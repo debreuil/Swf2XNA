@@ -41,8 +41,6 @@ namespace V2DRuntime.Particles
 		protected float r2;
 		protected float r3;
 
-		protected bool isActive = true;
-
 		protected TimeSpan StartTime = TimeSpan.Zero;
 		protected TimeSpan Duration = new TimeSpan(0, 0, 1); // default 1 second
 
@@ -58,6 +56,8 @@ namespace V2DRuntime.Particles
 		public override void Initialize()
 		{
 			base.Initialize();
+            isActive = true;
+
 			seed = (int)DateTime.Now.Ticks;
 
 			if (texture == null)

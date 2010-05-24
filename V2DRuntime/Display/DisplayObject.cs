@@ -66,7 +66,8 @@ namespace DDW.Display
         protected bool visible = true;
         protected DisplayObjectContainer parent;
 		protected Stage stage;
-		protected Screen screen;
+        protected Screen screen;
+        public bool isActive = true;
 
 		public bool IsOnStage { get { return isOnStage; } }
         public Texture2D Texture
@@ -694,36 +695,39 @@ namespace DDW.Display
 		protected SpriteEffects se = SpriteEffects.None;
         public virtual void Update(GameTime gameTime)
 		{
-            if (tweenWorker != null)
+            if (isActive)
             {
-                tweenWorker.Update(gameTime);
+                if (tweenWorker != null)
+                {
+                    tweenWorker.Update(gameTime);
+                }
+
+                SetCurrentState();
+                se = SpriteEffects.None;
+
+                float xdif = 0;
+                float ydif = 0;
+                if (CurrentState.Scale.X < 0)
+                {
+                    se |= SpriteEffects.FlipHorizontally;
+                    CurrentState.Scale.X = Math.Abs(CurrentState.Scale.X);
+                    xdif = Width - (Width - State.Origin.X) * 2;
+                    CurrentState.Origin.X += xdif;
+                }
+                if (CurrentState.Scale.Y < 0)
+                {
+                    se |= SpriteEffects.FlipVertically;
+                    CurrentState.Scale.Y = Math.Abs(CurrentState.Scale.Y);
+                    ydif = Height - (Height - State.Origin.Y) * 2;
+                    CurrentState.Origin.Y -= ydif;
+                }
+
+                destRect = new Rectangle(
+                    (int)CurrentState.Position.X,
+                    (int)CurrentState.Position.Y,
+                    (int)Math.Round(CurrentState.Scale.X * Width),
+                    (int)Math.Round(CurrentState.Scale.Y * Height));
             }
-
-			SetCurrentState();
-			se = SpriteEffects.None;
-
-			float xdif = 0;
-			float ydif = 0;
-			if (CurrentState.Scale.X < 0)
-			{
-				se |= SpriteEffects.FlipHorizontally;
-				CurrentState.Scale.X = Math.Abs(CurrentState.Scale.X);
-				xdif = Width - (Width - State.Origin.X) * 2;
-				CurrentState.Origin.X += xdif;
-			}
-			if (CurrentState.Scale.Y < 0)
-			{
-				se |= SpriteEffects.FlipVertically;
-				CurrentState.Scale.Y = Math.Abs(CurrentState.Scale.Y);
-				ydif = Height - (Height - State.Origin.Y) * 2;
-				CurrentState.Origin.Y -= ydif;
-			}
-
-			destRect = new Rectangle(
-				(int)CurrentState.Position.X,
-                (int)CurrentState.Position.Y,
-				(int)Math.Round(CurrentState.Scale.X * Width),
-                (int)Math.Round(CurrentState.Scale.Y * Height));
 
         }
         public virtual void Draw(SpriteBatch batch)

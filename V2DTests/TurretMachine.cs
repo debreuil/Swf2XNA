@@ -27,13 +27,13 @@ namespace V2DTests
 		public V2DSprite gaugeDialA;
 
 		[RevoluteJointAttribute(enableMotor=true, motorSpeed=500)]
-		private RevoluteJoint rev;
+        public RevoluteJoint rev;
 		[GearJointAttribute(ratio = .2f, collideConnected = false)]
-		private GearJoint rollerGear;
+        public GearJoint rollerGear;
 		[GearJointAttribute(ratio = .45f, collideConnected = false)]
-		private GearJoint wedgeGear;
+        public GearJoint wedgeGear;
 		[GearJointAttribute(ratio = -1.4f, collideConnected = false)]
-		private GearJoint turretGear;
+        public GearJoint turretGear;
 
 		public TurretMachine(Texture2D texture, V2DInstance instance)
 			: base(texture, instance)

@@ -194,7 +194,7 @@ namespace DDW.V2D
 			base.DestroyElement(obj);
 			if (obj is V2DSprite)
 			{
-				v2dScreen.DestroyBody(((V2DSprite)obj).body, obj.InstanceName);
+				v2dScreen.DestroyBody(((V2DSprite)obj).body);
 			}
 		}
         public override void CreateView()
@@ -342,9 +342,18 @@ namespace DDW.V2D
             }
         }
 
-		public override void RemoveChild(DisplayObject o)
+		public override void RemoveChild(DisplayObject obj)
 		{
-			base.RemoveChild(o);
+            base.RemoveChild(obj);
+            if (obj is V2DSprite)
+            {
+                V2DSprite sp = (V2DSprite)obj;
+                if (sp.body != null && screen is V2DScreen)
+                {
+                    ((V2DScreen)screen).DestroyBody(sp.body);
+                    sp.body.SetUserData(null);
+                }
+            }
 		}
 		public override float X
 		{

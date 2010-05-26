@@ -152,11 +152,19 @@ namespace DDW.V2D
 				V2DSprite sp = (V2DSprite)obj;
 				if(sp.body != null)
 				{
-					DestroyBody(sp.body, obj.InstanceName);
+					DestroyBody(sp.body);
 					sp.body.SetUserData(null);
 				}
 			}
 		}
+        //public override void DestroyElement(DisplayObject obj)
+        //{
+        //    base.DestroyElement(obj);
+        //    if (obj is V2DSprite)
+        //    {
+        //        DestroyBody(((V2DSprite)obj).body);                
+        //    }
+        //}
 		#endregion
 		#region world
 		private void CreateWorld()
@@ -180,7 +188,7 @@ namespace DDW.V2D
 			Body b = world.GetBodyList();
 			while (b != null)
 			{
-				DestroyBody(b, "");
+				DestroyBody(b);
 				b = b.GetNext();
 			}
 			world = null;
@@ -191,11 +199,15 @@ namespace DDW.V2D
 		{
 			return world.CreateBody(bodyDef);
 		}
-		public void DestroyBody(Body b, string name)
+		public void DestroyBody(Body b)
 		{
 			if (b != null && b.GetWorld() != null && world.BodyCount > 0)
-			{				
-				world.DestroyBody(b);
+			{
+                // avoid bodies getting removed twice by accident
+                if (b.GetFixtureList() != null)
+                {
+                    world.DestroyBody(b);
+                }
 			}
 		}
 		#endregion

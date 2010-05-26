@@ -251,27 +251,15 @@ namespace DDW.Gdi
                 }
             }
         }
-        public DDW.Vex.Color filterColor;
-        public float filterWidth;
+
         private void DrawFilteredSymbol(Symbol sy)
         {
-            bool ignore = false;
             foreach (Shape sh in sy.Shapes)
             {
-                if (sh.Fill == null || sh.Stroke is SolidStroke)
+                if (!sh.IsV2DShape())
                 {
-                    SolidStroke sf = (SolidStroke)sh.Stroke;
-                    if ((sf.Color == filterColor) && (sf.LineWidth <= filterWidth))
-                    {
-                        ignore = true;
-                        break;
-                    }
+                    DrawShape(sh);
                 }
-            }
-
-            if (!ignore)
-            {
-                DrawSymbol(sy);
             }
         }
         private void DrawFilteredTimeline(VexObject v, Timeline tl)

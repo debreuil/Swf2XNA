@@ -130,7 +130,6 @@ namespace Box2D.XNA
 	        {
 		        return;
 	        }
-
 	        // Delete the attached joints.
 	        JointEdge je = b._jointList;
 	        while (je != null)

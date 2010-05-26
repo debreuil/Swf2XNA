@@ -81,8 +81,9 @@ namespace DDW.Placeholder
 				foreach (Instance inst in ((Timeline)def).Instances)
 				{
 					IDefinition def2 = vo.Definitions[inst.DefinitionId];
-					if (def2 is Symbol && def2.UserData == (int)DefinitionKind.OutlineStroke)
+					if (def2 is Symbol && (def2.UserData & (int)DefinitionKind.OutlineStroke) != 0)
 					{
+                        //todo: Symbol may have multiple Shapes, and only one/some are red outlines
 						//Matrix m = inst.Transformations[0].Matrix;
 						AddShape(def.Name, (Symbol)def2, inst.Transformations[0].Matrix);
 					}
@@ -91,13 +92,14 @@ namespace DDW.Placeholder
         }
         public void AddShape(string name, Symbol sy, Matrix m)
         {
-            for (int i = 0; i < sy.Shapes.Count; i++)
+            foreach (Shape sh in sy.Shapes)
             {
-                if (sy.Shapes[i].ShapeData.Count > 2) // must have 3 point for triangle
+                if (sh.IsV2DShape())
                 {
-                    Shapes.Add(new PolygonShape2D(name, sy.Shapes[i], m));
+                    Shapes.Add(new PolygonShape2D(name, sh, m));
                 }
-            }             
+                
+            }           
         }
 
         //public void DumpInstance(StringWriter sw, Dictionary<string, string> dict)

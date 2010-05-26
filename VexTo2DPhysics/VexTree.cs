@@ -46,8 +46,6 @@ namespace DDW.VexTo2DPhysics
         public static string OutputDirectory = Directory.GetCurrentDirectory();
         public static uint instAutoNumber = 0;
 
-        private DDW.Vex.Color outlineColor = new DDW.Vex.Color(0xFF, 0x00, 0x00, 0xFF);
-        private float outlineWidth = 1F;
         private VexObject curVo;
         private string resourceFolder = "exports";
 
@@ -77,8 +75,6 @@ namespace DDW.VexTo2DPhysics
             GenerateWorldActionData();
 
             Gdi.GdiRenderer gr = new Gdi.GdiRenderer();
-            gr.filterColor = outlineColor;
-            gr.filterWidth = outlineWidth;
             Dictionary<string, List<Bitmap>> bmps = new Dictionary<string, List<Bitmap>>();
             gr.GenerateFilteredBitmaps(vo, usedImages, bmps);
             gr.ExportBitmaps(bmps);
@@ -879,15 +875,11 @@ namespace DDW.VexTo2DPhysics
                 List<Shape> shapes = ((Symbol)def).Shapes;
                 foreach (Shape sh in shapes)
                 {
-                    if (sh.Fill == null || sh.Stroke is SolidStroke)
+                    if (sh.IsV2DShape())
                     {
-                        SolidStroke sf = (SolidStroke)sh.Stroke;
-                        if ((sf.Color == outlineColor) && (sf.LineWidth <= outlineWidth))
-                        {
-                            result = true;
-                            def.UserData = (int)DefinitionKind.OutlineStroke;
-                            break;
-                        }
+                        result = true;
+                        def.UserData |= (int)DefinitionKind.OutlineStroke;
+                        break;
                     }
                 }
             }
@@ -904,10 +896,7 @@ namespace DDW.VexTo2DPhysics
                     }
                 }
             }
-            else
-            {
-                result = false;
-            }
+
             return result;
         }
     }

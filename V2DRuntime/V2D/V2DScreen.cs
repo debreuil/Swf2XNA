@@ -39,14 +39,13 @@ namespace DDW.V2D
 		public int enableTOI = 1;
 		public Vector2 Gravity = new Vector2(0.0f, 10.0f);
 
-#if DEBUG
-		internal MouseJoint _mouseJoint;
-
 		public bool useDebugDraw = false;
+		private bool firstTime = true;
+//#if !XBOX
+		internal MouseJoint _mouseJoint;
 		private Box2D.XNA.TestBed.Framework.DebugDraw _debugDraw;
 		private BasicEffect simpleColorEffect;
-		private bool firstTime = true;
-#endif
+//#endif
      
         public V2DScreen()
         {
@@ -67,7 +66,7 @@ namespace DDW.V2D
 		public override Sprite CreateDefaultObject(Texture2D texture, V2DInstance inst)
 		{
 			Sprite result;
-			if (parent is V2DSprite || parent is V2DScreen)
+			if (inst.Definition.V2DShapes.Count > 0)
 			{
 				result = new V2DSprite(texture, inst);
 			}
@@ -115,12 +114,12 @@ namespace DDW.V2D
 			if (V2DGame.instance.HasCursor)
 			{
 				cursor = V2DGame.instance.GetCursor();
-#if WINDOWS
+#if !XBOX
 				cursor.MouseDown += MouseDown;
 				cursor.MouseMove += MouseMove;
 				cursor.MouseUp += MouseUp;
 #endif
-			}
+            }
 		}
         public override void Removed(EventArgs e)
         {
@@ -128,12 +127,12 @@ namespace DDW.V2D
 			if (V2DGame.instance.HasCursor)
 			{
 				cursor = V2DGame.instance.GetCursor();
-#if WINDOWS
+#if !XBOX
 				cursor.MouseDown -= MouseDown;
 				cursor.MouseMove -= MouseMove;
                 cursor.MouseUp -= MouseUp;
 #endif
-			}
+            }
         }
 		public override void SetStageAndScreen()
 		{
@@ -241,8 +240,7 @@ namespace DDW.V2D
 		#endregion
 
 		#region Mouse
-#if WINDOWS
-        //#if DEBUG
+#if !XBOX
 		public virtual void MouseDown(Vector2 p)
 		{
 			if (_mouseJoint != null)
@@ -309,19 +307,35 @@ namespace DDW.V2D
 			}
 		}
 #endif
-		#endregion
-		#region Bounds
-		Body[] boundsBodies = new Body[4];
+        #endregion
+        #region Bounds
+        Body[] boundsBodies = new Body[4];
 		protected void ClearBoundsBodies()
 		{
-			foreach (Body b in boundsBodies)
-			{
-				if (b != null)// && world.Contains(b))
+            for (int i = 0; i < boundsBodies.Length; i++)
+            {
+				if (boundsBodies[i] != null)// && world.Contains(b))
 				{
-					world.DestroyBody(b);
+					world.DestroyBody(boundsBodies[i]);
+                    boundsBodies[i] = null;
 				}
-			}
+                
+            }
 		}
+
+        protected void ClearBoundsBody(EdgeName edge)
+        {
+            for (int i = 0; i < boundsBodies.Length; i++)
+            {
+                if (boundsBodies[i] != null && (EdgeName)boundsBodies[i].GetUserData() == edge)
+                {
+                    world.DestroyBody(boundsBodies[i]);
+                    boundsBodies[i] = null;
+                    break;
+                }
+
+            }
+        }
 		public override void SetBounds(float x, float y, float w, float h)
 		{
 			ClearBoundsBodies();
@@ -418,7 +432,7 @@ namespace DDW.V2D
 		}
 		#endregion
 
-#if DEBUG
+//#if !XBOX
 		public override void DrawDebugData(SpriteBatch batch)
 		{
 			base.DrawDebugData(batch);
@@ -446,8 +460,8 @@ namespace DDW.V2D
 				simpleColorEffect.End();
 			}
 		}
-#endif
-		public override void Update(GameTime gameTime)
+//#endif
+        public override void Update(GameTime gameTime)
 		{
 			base.Update(gameTime);
 			if (isActive)
@@ -479,12 +493,12 @@ namespace DDW.V2D
 		public override void Draw(SpriteBatch batch)
 		{
 			base.Draw(batch);
-#if DEBUG
+//#if !XBOX
 			if(useDebugDraw)
 			{
 				world.DrawDebugData();
 			}
-#endif
-		}
+//#endif
+        }
     }
 }

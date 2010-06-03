@@ -99,9 +99,9 @@ namespace DDW.Input // these are ms supplied classes (and they are obtuse), name
             // Get latest input state.
             GamePadState lastGamePadState = GamePadState;
             GamePadState = GamePad.GetState(PlayerIndex);
-#if DEBUG
-			// keyboard only happens from one player	
-			KeyboardState lastKeyboardState;		
+            KeyboardState lastKeyboardState = EmptyKeyboardState;
+#if !XBOX
+            // keyboard only happens from one player		
 			if (this.IsActiveController)//PlayerIndex == PlayerIndex.One)
 			{
 				lastKeyboardState = currentKeyboardState;
@@ -134,20 +134,23 @@ namespace DDW.Input // these are ms supplied classes (and they are obtuse), name
 				if ( lastGamePadState.IsButtonUp(button) && GamePadState.IsButtonDown(button) )
 				{
 					buttons |= button;
-				}
-				else if( IsActiveController && (lastKeyboardState.IsKeyUp(key) && currentKeyboardState.IsKeyDown(key)) )
+                }
+#if !XBOX
+                else if( IsActiveController && (lastKeyboardState.IsKeyUp(key) && currentKeyboardState.IsKeyDown(key)) )
 				{
 					buttons |= button;
 				}
-
+#endif
 				if ( lastGamePadState.IsButtonDown(button) && GamePadState.IsButtonUp(button) )
 				{
 					Releases |= button;
-				}
-				else if( IsActiveController && (lastKeyboardState.IsKeyDown(key) && currentKeyboardState.IsKeyUp(key)) )
+                }
+#if !XBOX
+                else if( IsActiveController && (lastKeyboardState.IsKeyDown(key) && currentKeyboardState.IsKeyUp(key)) )
 				{
 					Releases |= button;
 				}
+#endif
             }
 
             // It is very hard to press two buttons on exactly the same frame.

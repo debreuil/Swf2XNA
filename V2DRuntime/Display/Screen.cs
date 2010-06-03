@@ -192,13 +192,17 @@ namespace DDW.Display
             return result;
         }
 
+        V2DContent content;
 		private void EnsureV2DWorld()
 		{
 			if (SymbolImport != null && v2dWorld == null)
 			{
-				V2DContent c = V2DGame.instance.Content.Load<V2DContent>(SymbolImport.assetName);
-				v2dWorld = c.v2dWorld;
-				textures = c.textures;
+                // ** note: unnamed elements may actually fall out of scope and get gc/disposed, so need a ref
+                // todo: use multiple content loaders per screen and unload where needed.
+                //V2DContent content = V2DGame.instance.Content.Load<V2DContent>(SymbolImport.assetName);
+                content = V2DGame.instance.Content.Load<V2DContent>(SymbolImport.assetName);
+                v2dWorld = content.v2dWorld;
+                textures = content.textures;
 				v2dWorld.RootInstance.Definition = v2dWorld.GetDefinitionByName(V2DGame.ROOT_NAME);
 			}
 		}
@@ -478,9 +482,10 @@ namespace DDW.Display
 		public V2DShader lastShader;
 		public V2DShader defaultShader;
 		public V2DShader currentShader;
+        V2DShader shaderEffect;
 		protected override void DrawChild(DisplayObject d, SpriteBatch batch)
 		{
-            V2DShader shaderEffect = shaderMap.ContainsKey(d.DepthGroup) ? shaderMap[d.DepthGroup] : defaultShader;
+            shaderEffect = shaderMap.ContainsKey(d.DepthGroup) ? shaderMap[d.DepthGroup] : defaultShader;
 
             if (shaderEffect != lastShader)
             {
@@ -491,7 +496,8 @@ namespace DDW.Display
 
                 lastShader = shaderEffect;
                 batch.End();
-                batch.Begin(SpriteBlendMode.AlphaBlend, SpriteSortMode.Immediate, SaveStateMode.None);
+                //batch.Begin(SpriteBlendMode.AlphaBlend, SpriteSortMode.Immediate, SaveStateMode.SaveState);
+                batch.Begin(SpriteBlendMode.AlphaBlend, SpriteSortMode.Immediate, SaveStateMode.None, Stage.SpriteBatchMatrix);
 
                 if (shaderEffect != null)
                 {

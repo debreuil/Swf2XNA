@@ -118,7 +118,7 @@ namespace DDW.Display
         public virtual DisplayObject GetChildAt(int index)
         {
             DisplayObject result = null;
-            if(index > 0 && index < children.Count)
+            if(index >= 0 && index < children.Count)
             {
 		        result = children[index];
             }
@@ -155,7 +155,7 @@ namespace DDW.Display
         }
         public virtual void RemoveChildAt(int index)
         {
-            if (index > 0 && index < children.Count)
+            if (index >= 0 && index < children.Count)
             {
                 RemoveChild(children[index]); // todo: display objects may need to compare on depth
             }
@@ -374,7 +374,7 @@ namespace DDW.Display
 				V2DDefinition def = screen.v2dWorld.GetDefinitionByName(inst.DefinitionName);
 				if (def != null)
 				{
-					Texture2D texture = screen.GetTexture(def.LinkageName);
+					Texture2D namedTexture = screen.GetTexture(def.LinkageName);
 					inst.Definition = def;
 
 					if (inst.InstanceName == V2DGame.currentRootName)
@@ -383,11 +383,11 @@ namespace DDW.Display
 					}
 					else
 					{
-						result = parent.SetFieldWithReflection(texture, inst);
+						result = parent.SetFieldWithReflection(namedTexture, inst);
 
 						if (result == null)
 						{
-							result = screen.CreateDefaultObject(texture, inst);
+							result = screen.CreateDefaultObject(namedTexture, inst);
 						}
 						parent.AddChild(result);
 					}
@@ -467,7 +467,7 @@ namespace DDW.Display
 		}
 		#endregion
 
-		protected Regex lastDigits = new Regex(@"^([a-zA-Z$_]*)([0-9]+)$", RegexOptions.Compiled);
+		private static Regex lastDigits = new Regex(@"^([a-zA-Z$_]*)([0-9]+)$", RegexOptions.Compiled);
 		public virtual DisplayObject SetFieldWithReflection( Texture2D texture, V2DInstance inst)
 		{
 			DisplayObject result = null;

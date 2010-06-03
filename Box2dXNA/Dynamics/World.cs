@@ -452,10 +452,10 @@ namespace Box2D.XNA
         {
             return (_flags & WorldFlags.ClearForces) == WorldFlags.ClearForces;
         }
-
 	    /// Call this to draw shapes and other debug draw data.
 	    public void DrawDebugData()
         {
+  
 	        if (DebugDraw == null)
 	        {
 		        return;
@@ -560,8 +560,8 @@ namespace Box2D.XNA
 			        DebugDraw.DrawTransform(ref xf);
 		        }
 	        }
-        }
 
+        }
 	    /// Query the world for all fixtures that potentially overlap the
 	    /// provided AABB.
 	    /// @param callback a user implemented callback class.
@@ -1202,6 +1202,7 @@ namespace Box2D.XNA
 		        break;
 	        }
         }
+
 
         TOISolver _toiSolver = new TOISolver();
         Contact[] _toiContacts = new Contact[Settings.b2_maxTOIContactsPerIsland];

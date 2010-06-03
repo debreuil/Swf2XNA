@@ -77,7 +77,7 @@ namespace V2DRuntime.Components
         {
             bool result = base.OnPlayerInput(playerIndex, move, time);
 
-			if (result && !Guide.IsVisible)
+			if (result && isActive)// && !Guide.IsVisible)
 			{
 				if (move == Move.Up)
 				{

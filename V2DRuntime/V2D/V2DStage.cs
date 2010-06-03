@@ -12,7 +12,6 @@ namespace DDW.V2D
         {
         }
 
-
 		public override void AddChild(DisplayObject o)
 		{
 			base.AddChild(o);

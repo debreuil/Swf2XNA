@@ -20,7 +20,7 @@ namespace DDW.V2D
 		public static string currentRootName = V2DWorld.ROOT_NAME;
 
         protected GraphicsDeviceManager graphics;
-        protected SpriteBatch spriteBatch;
+        public SpriteBatch spriteBatch;
         protected bool keyDown = false;
         protected bool isFullScreen = false;
 

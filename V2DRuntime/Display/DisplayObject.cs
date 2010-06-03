@@ -735,11 +735,8 @@ namespace DDW.Display
             if (texture != null)
 			{
 				//batch.Draw(texture, destRect, sourceRectangle, color, CurrentState.Rotation, CurrentState.Origin, se, 1f / DepthCounter++);
-				//batch.Draw(texture, destRect, sourceRectangle, color, CurrentState.Rotation, Origin, se, 1f / DepthCounter++);
                 batch.Draw(texture, destRect, sourceRectangle, color, CurrentState.Rotation, Origin, se, 1f / DepthCounter++);
-            }
-
-
+            }            
         }
 
 		public static int CompareTo(DisplayObject a, DisplayObject b)

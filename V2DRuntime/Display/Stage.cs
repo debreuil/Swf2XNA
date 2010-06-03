@@ -11,6 +11,8 @@ namespace DDW.Display
 {
     public class Stage : DisplayObjectContainer
     {
+        public static Matrix SpriteBatchMatrix = Matrix.Identity;
+
         protected List<Screen> screens = new List<Screen>();
         protected int curScreenIndex = 0;
         protected Screen curScreen;
@@ -19,6 +21,8 @@ namespace DDW.Display
         public V2DShader defaultEffect;
 
         public float MillisecondsPerFrame = 1000f / 12f;
+
+        private Color clearColor;
 		
         protected Stage()
         {
@@ -110,7 +114,9 @@ namespace DDW.Display
 
 				if (!children.Contains(curScreen))
 				{
-					this.AddChild(curScreen);
+                    this.AddChild(curScreen);
+                    clearColor = curScreen.Color;
+                    clearColor.A = 0;
 				}
 			}
 		}
@@ -118,9 +124,11 @@ namespace DDW.Display
         {
             //if (V2DGame.instance.IsActive)
             //{
+
 				DepthCounter = 1;
-				batch.GraphicsDevice.Clear(curScreen.Color);
-				batch.Begin(SpriteBlendMode.AlphaBlend, SpriteSortMode.Immediate, SaveStateMode.None);
+                batch.GraphicsDevice.Clear(clearColor);
+				//batch.Begin(SpriteBlendMode.AlphaBlend, SpriteSortMode.Immediate, SaveStateMode.None);
+				batch.Begin(SpriteBlendMode.AlphaBlend, SpriteSortMode.Immediate, SaveStateMode.None, Stage.SpriteBatchMatrix);
 				base.Draw(batch);
 				batch.End();
 

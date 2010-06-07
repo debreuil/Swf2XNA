@@ -6,6 +6,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
 using DDW.V2D;
 using V2DRuntime.Shaders;
+using V2DRuntime.Audio;
 
 namespace DDW.Display
 {
@@ -20,6 +21,8 @@ namespace DDW.Display
 		public bool pause = false;
         public V2DShader defaultEffect;
 
+        public AudioManager audio;
+
         public float MillisecondsPerFrame = 1000f / 12f;
 
         private Color clearColor;
@@ -27,6 +30,11 @@ namespace DDW.Display
         protected Stage()
         {
             stage = this;
+        }
+
+        public void InitializeAudio(string audioEnginePath, string waveBankPath, string soundBankPath)
+        {
+            audio = new AudioManager(audioEnginePath, waveBankPath, soundBankPath);
         }
 
         public void AddScreen(Screen scr)

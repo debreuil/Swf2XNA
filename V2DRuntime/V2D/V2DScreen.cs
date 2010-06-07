@@ -53,7 +53,6 @@ namespace DDW.V2D
         }
         public V2DScreen(SymbolImport symbolImport) : base(symbolImport)
         {
-			this.SymbolImport = symbolImport;
 			CreateWorld();
         }
         public V2DScreen(V2DContent v2dContent) : base(v2dContent)

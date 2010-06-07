@@ -54,6 +54,7 @@
     <XnaCompressContent>true</XnaCompressContent>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Audio\AudioManager.cs" />
     <Compile Include="Display\Delegates.cs" />
     <Compile Include="Enums\LivingState.cs" />
     <Compile Include="Tween\Easing.cs" />

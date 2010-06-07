@@ -239,6 +239,11 @@ namespace DDW.Display
 					}
 				}
 			}
+
+            if (result == null)
+            {
+                throw new Exception("Could not find root instance: " + rootName + " in " + inst.InstanceName + ".");
+            }
 			return result;
 		}
 

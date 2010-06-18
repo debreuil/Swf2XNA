@@ -8,6 +8,7 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Net;
 using V2DRuntime.Network;
+using Microsoft.Xna.Framework.GamerServices;
 
 namespace DDW.V2D 
 {
@@ -17,7 +18,10 @@ namespace DDW.V2D
         public static Stage stage;
         public static ContentManager contentManager;
         public const string ROOT_NAME = V2DWorld.ROOT_NAME;
-		public static string currentRootName = V2DWorld.ROOT_NAME;
+        public static string currentRootName = V2DWorld.ROOT_NAME;
+
+        public static PlayerIndex activeController = PlayerIndex.One;
+        private bool wasTrialMode;
 
         protected GraphicsDeviceManager graphics;
         public SpriteBatch spriteBatch;
@@ -58,6 +62,8 @@ namespace DDW.V2D
         {
             //screenPaths.Add(symbolImports[i]);
         }
+        public virtual void AddingScreen(Screen screen) { }
+        public virtual void RemovingScreen(Screen screen) { }
         protected override void Initialize()
         {
             base.Initialize();
@@ -91,9 +97,48 @@ namespace DDW.V2D
         {
 			NetworkManager.Instance.LeaveSession();
         }
+        public virtual void UnlockTrial()
+        {
+            SignedInGamer gamer = Gamer.SignedInGamers[V2DGame.activeController];
+            if (gamer != null)
+            {
+                if (gamer.Privileges.AllowPurchaseContent)
+                {
+                    Guide.ShowMarketplace(V2DGame.activeController);
+                }
+                else
+                {
+                    if (gamer != null)
+                    {
+                    }
+                    else
+                    {
+                        Guide.ShowSignIn(1, true);
+                    }
+                }
+            }
+            else
+            {
+                Guide.ShowSignIn(1, true);
+            }
+        }
+        public virtual void FullGameUnlocked()
+        {
+        }
         public virtual void ExitGame()
         {
 			this.Exit();
+        }
+
+        public static bool CanPlayerBuyGame(PlayerIndex player)
+        {
+            bool result = false;
+            SignedInGamer gamer = Gamer.SignedInGamers[player];
+            if (gamer != null)
+            {
+                result = gamer.Privileges.AllowPurchaseContent;
+            }
+            return result;
         }
 
 		public virtual void AddGamer(NetworkGamer gamer, int gamerIndex)
@@ -114,8 +159,15 @@ namespace DDW.V2D
         protected override void Update(GameTime gameTime)
         {
 			stage.Update(gameTime);
-			base.Update(gameTime);
+            base.Update(gameTime);
+
+            if (!Guide.IsTrialMode && wasTrialMode)
+            {
+                FullGameUnlocked();
+            }
+            wasTrialMode = Guide.IsTrialMode;
         }
+
         protected override void Draw(GameTime gameTime)
 		{
             stage.Draw(spriteBatch);

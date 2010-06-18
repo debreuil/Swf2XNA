@@ -47,7 +47,9 @@ namespace DDW.Display
 		protected bool enablePrediction = true;
 		protected bool enableSmoothing = true;
 		private List<DisplayObject> destructionList = new List<DisplayObject>();
-		public Dictionary<int, V2DShader> shaderMap = new Dictionary<int, V2DShader>();
+        public Dictionary<int, V2DShader> shaderMap = new Dictionary<int, V2DShader>();
+
+        public bool isFinalLevel = false;
 
         public Screen()
         {

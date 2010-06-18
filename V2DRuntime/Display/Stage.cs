@@ -22,6 +22,7 @@ namespace DDW.Display
         public V2DShader defaultEffect;
 
         public AudioManager audio;
+        public AudioManager music;
 
         public float MillisecondsPerFrame = 1000f / 12f;
 
@@ -37,6 +38,11 @@ namespace DDW.Display
             audio = new AudioManager(audioEnginePath, waveBankPath, soundBankPath);
         }
 
+        public void InitializeMusic(string musicEnginePath, string waveBankPath, string soundBankPath)
+        {
+            music = new AudioManager(musicEnginePath, waveBankPath, soundBankPath);
+        }
+
         public void AddScreen(Screen scr)
         {
             screens.Add(scr);
@@ -50,12 +56,28 @@ namespace DDW.Display
 		{
 			return curScreen;
 		}
+		public Screen GetNextScreen()
+        {
+            int indx = curScreenIndex + 1 >= screens.Count ? 0 : curScreenIndex + 1;
+            return screens[indx];
+        }
+        public Screen GetScreenByIndex(int indx)
+        {
+            Screen result = null;
+            if (indx >= 0 && indx < screens.Count)
+            {
+                result = screens[indx];
+            }
+            return result;
+        }
+        private bool screenChanged = true;
         public void SetScreen(Screen scr)
         {
             if (scr != null)
             {
                 if (curScreen != null)
                 {
+                    screenChanged = true;
                     prevScreen = curScreen;
                     // can remove on fade etc here
                     curScreen.isActive = false;
@@ -116,12 +138,18 @@ namespace DDW.Display
 
 				if (prevScreen != null && children.Contains(prevScreen) && !prevScreen.isActive)
 				{
+                    Console.WriteLine("removed screen: " + prevScreen.InstanceName);
+                    prevScreen.DestroyView();
+                    V2DGame.instance.RemovingScreen(prevScreen);
 					this.RemoveChild(prevScreen);
 					prevScreen = null;
 				}
 
-				if (!children.Contains(curScreen))
+				if (screenChanged)// && !children.Contains(curScreen))
 				{
+                    Console.WriteLine("change screen to: " + curScreen.InstanceName);
+                    screenChanged = false;
+                    V2DGame.instance.AddingScreen(curScreen);
                     this.AddChild(curScreen);
                     clearColor = curScreen.Color;
                     clearColor.A = 0;

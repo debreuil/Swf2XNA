@@ -626,8 +626,9 @@ namespace DDW.Display
             Vector2 relativePosition = State.Position + t.Position;
             relativePosition *= parent.CurrentState.Scale;
 
-			CurrentState.Scale = parent.CurrentState.Scale * State.Scale * t.Scale;
+            CurrentState.Scale = parent.CurrentState.Scale * State.Scale * t.Scale;
             CurrentState.Rotation = parent.CurrentState.Rotation + State.Rotation + t.Rotation;
+            CurrentState.Origin = Origin;// *(Vector2.One / parent.CurrentState.Scale);
             float tempX = relativePosition.X;
             float cosRot = (float)Math.Cos(parent.CurrentState.Rotation);
             float sinRot = (float)Math.Sin(parent.CurrentState.Rotation);
@@ -735,7 +736,7 @@ namespace DDW.Display
             if (texture != null)
 			{
 				//batch.Draw(texture, destRect, sourceRectangle, color, CurrentState.Rotation, CurrentState.Origin, se, 1f / DepthCounter++);
-                batch.Draw(texture, destRect, sourceRectangle, color, CurrentState.Rotation, Origin, se, 1f / DepthCounter++);
+                batch.Draw(texture, destRect, sourceRectangle, color, CurrentState.Rotation, CurrentState.Origin, se, .5f / DepthCounter++);
             }            
         }
 

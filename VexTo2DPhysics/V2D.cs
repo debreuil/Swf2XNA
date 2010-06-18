@@ -81,7 +81,7 @@ namespace DDW.VexTo2DPhysics
                 VexObject vo = s2v.Convert(scu);
                 VexTree vt = new VexTree();
                 vt.Convert(vo, scu);
-                vt.WriteToXml();
+                //vt.WriteToXml();
 
                 result = vt.GetV2DContent(context);
             }

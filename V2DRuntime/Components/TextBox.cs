@@ -122,15 +122,20 @@ namespace V2DRuntime.Components
 		public override void Draw(Microsoft.Xna.Framework.Graphics.SpriteBatch batch)
 		{
 			//base.Draw(batch);
-			Vector2 gOffset = GetGlobalOffset(Vector2.Zero);
-			float gRotation = GetGlobalRotation(0);
-			Vector2 gScale = GetGlobalScale(new Vector2(1, 1));
-			Vector2 gOrigin = State.Origin;
 
 			for (int i = 0; i < textAtoms.Count; i++)
 			{
-				batch.DrawString(textAtoms[i].Font, textAtoms[i].Text, textAtoms[i].Origin + textAtoms[i].TopLeft + gOffset, textAtoms[i].Color,
-					gRotation, gOrigin, gScale, SpriteEffects.None, 1f / DepthCounter++);
+				batch.DrawString(
+                    textAtoms[i].Font,
+                    textAtoms[i].Text,
+                    textAtoms[i].Origin + textAtoms[i].TopLeft + CurrentState.Position, 
+                    textAtoms[i].Color,
+					CurrentState.Rotation, 
+                    CurrentState.Origin,
+                    CurrentState.Scale, 
+                    se, 
+                    .5f / DepthCounter++
+                    );
 			}
 		}
 	}

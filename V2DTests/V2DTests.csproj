@@ -85,13 +85,16 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Demo.cs" />
-    <Compile Include="DistanceJointDemo.cs" />
-    <Compile Include="MainMenuPanel.cs" />
+    <Compile Include="Demo\DistanceJointDemo.cs" />
+    <Compile Include="Demo\GearJointDemo.cs" />
+    <Compile Include="Demo\AnimationDemo.cs" />
+    <Compile Include="Demo\PulleyJointDemo.cs" />
+    <Compile Include="Demo\RevoluteJointDemo.cs" />
+    <Compile Include="Demo\Scene2Data.cs" />
+    <Compile Include="Demo\SpinnerDemo.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TestGame.cs" />
-    <Compile Include="TurretMachine.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="cursor.png" />
@@ -147,18 +150,15 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Tests\Demo.fla" />
     <None Include="Tests\DistanceJoint.fla" />
     <None Include="Tests\GearJoint.fla" />
-    <None Include="Tests\Movieclip1.fla" />
+    <None Include="Tests\germs.fla" />
     <None Include="Tests\PrismaticJoint.fla" />
-    <None Include="Tests\PullyJoint.fla" />
+    <None Include="Tests\PulleyJoint.fla" />
     <None Include="Tests\RevoluteJoint.fla" />
     <None Include="Tests\Scene1Data.fla" />
     <None Include="Tests\Scene2Data.fla" />
     <None Include="Tests\Scene3Data.fla" />
-    <None Include="Tests\Scene4Data.fla" />
-    <None Include="Tests\SmuckLib.fla" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\Microsoft.Xna.GameStudio.targets" />

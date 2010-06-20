@@ -49,6 +49,70 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\VexPipelineReader\VexPipelineReader.csproj">
+      <Project>{D5D6310E-2D9D-4931-8D3B-4574F6625C6A}</Project>
+      <Name>VexPipelineReader</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Arial.spritefont">
+      <Name>Arial</Name>
+      <Importer>FontDescriptionImporter</Importer>
+      <Processor>FontDescriptionProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="DistanceJoint.swf">
+      <Name>DistanceJoint</Name>
+      <Importer>SwfImporter</Importer>
+      <Processor>SwfProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="GearJoint.swf">
+      <Name>GearJoint</Name>
+      <Importer>SwfImporter</Importer>
+      <Processor>SwfProcessor</Processor>
+    </Compile>
+    <Compile Include="PrismaticJoint.swf">
+      <Name>PrismaticJoint</Name>
+      <Importer>SwfImporter</Importer>
+      <Processor>SwfProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="germs.swf">
+      <Name>germs</Name>
+      <Importer>SwfImporter</Importer>
+      <Processor>SwfProcessor</Processor>
+    </Compile>
+    <Compile Include="PulleyJoint.swf">
+      <Name>PulleyJoint</Name>
+      <Importer>SwfImporter</Importer>
+      <Processor>SwfProcessor</Processor>
+    </Compile>
+    <Compile Include="RevoluteJoint.swf">
+      <Name>RevoluteJoint</Name>
+      <Importer>SwfImporter</Importer>
+      <Processor>SwfProcessor</Processor>
+    </Compile>
+    <Compile Include="Scene1Data.swf">
+      <Name>Scene1Data</Name>
+      <Importer>SwfImporter</Importer>
+      <Processor>SwfProcessor</Processor>
+    </Compile>
+    <Compile Include="Scene2Data.swf">
+      <Name>Scene2Data</Name>
+      <Importer>SwfImporter</Importer>
+      <Processor>SwfProcessor</Processor>
+    </Compile>
+    <Compile Include="Scene3Data.swf">
+      <Name>Scene3Data</Name>
+      <Importer>SwfImporter</Importer>
+      <Processor>SwfProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
     <Compile Include="ss0.X">
       <Name>ss0</Name>
       <Importer>XImporter</Importer>
@@ -73,26 +137,6 @@
       <Name>ss4</Name>
       <Importer>XImporter</Importer>
       <Processor>ModelProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\VexPipelineReader\VexPipelineReader.csproj">
-      <Project>{D5D6310E-2D9D-4931-8D3B-4574F6625C6A}</Project>
-      <Name>VexPipelineReader</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Arial.spritefont">
-      <Name>Arial</Name>
-      <Importer>FontDescriptionImporter</Importer>
-      <Processor>FontDescriptionProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Demo.swf">
-      <Name>Demo</Name>
-      <Importer>SwfImporter</Importer>
-      <Processor>SwfProcessor</Processor>
     </Compile>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\$(XnaFrameworkVersion)\Microsoft.Xna.GameStudio.ContentPipeline.targets" />

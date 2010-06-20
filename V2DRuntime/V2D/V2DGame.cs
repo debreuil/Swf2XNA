@@ -77,6 +77,7 @@ namespace DDW.V2D
         {
             if (width > 0 && height > 0)
             {
+                graphics.SynchronizeWithVerticalRetrace = true;
                 graphics.PreferredBackBufferWidth = width;
                 graphics.PreferredBackBufferHeight = height;
                 graphics.IsFullScreen = this.isFullScreen;

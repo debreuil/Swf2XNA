@@ -7,7 +7,6 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
 using DDW.Display;
 using Microsoft.Xna.Framework.Input;
-using V2DTests;
 
 namespace V2DTest
 {
@@ -19,23 +18,17 @@ namespace V2DTest
 
 		protected override void CreateScreens()
         {
+			stage.AddScreen(new DistanceJointDemo(new SymbolImport("DistanceJoint")));
+            stage.AddScreen(new RevoluteJointDemo(new SymbolImport("RevoluteJoint")));
+            stage.AddScreen(new GearJointDemo(new SymbolImport("GearJoint")));
+            stage.AddScreen(new V2DScreen(new SymbolImport("PrismaticJoint")));
+            stage.AddScreen(new PulleyJointDemo(new SymbolImport("PulleyJoint")));
 
-			stage.AddScreen(new Demo(new SymbolImport("Demo", "demoScreen")));
-			//stage.AddScreen(new DistanceJointDemo(new SymbolImport("DistanceJoint", "djBkg")));
-			//stage.AddScreen(new V2DScreen(new SymbolImport("GearJoint")));
-			//stage.AddScreen(new V2DScreen(new SymbolImport("SmuckLib")));
-			//stage.AddScreen(new V2DScreen(new SymbolImport("Movieclip1")));
-			//stage.AddScreen(new V2DScreen(new SymbolImport("PrismaticJoint")));
-			//stage.AddScreen(new V2DScreen(new SymbolImport("RevoluteJoint")));
-			//stage.AddScreen(new V2DScreen(new SymbolImport("PullyJoint")));
-			//stage.AddScreen(new V2DScreen(new SymbolImport("Scene1Data")));
-			//stage.AddScreen(new V2DScreen(new SymbolImport("Scene2Data")));
-			//stage.AddScreen(new V2DScreen(new SymbolImport("Scene3Data")));
-			//stage.AddScreen(new V2DScreen(new SymbolImport("Scene4Data")));
+            stage.AddScreen(new AnimationDemo(new SymbolImport("germs")));
+            stage.AddScreen(new SpinnerDemo(new SymbolImport("Scene3Data")));
+            stage.AddScreen(new V2DScreen(new SymbolImport("Scene1Data")));
+            stage.AddScreen(new V2DScreen(new SymbolImport("Scene2Data")));
 
-
-			//si = new SymbolImport("DistanceJoint", "scr2");
-			//stage.AddScreen(new DistanceJointDemo(si));
         }
         protected override void Initialize()
         {
@@ -89,7 +82,15 @@ namespace V2DTest
 				keyDown = true;
 				stage.NextScreen();
 			}
-			else if (keyDown && (ks.IsKeyUp(Keys.Left) && ks.IsKeyUp(Keys.Right)))
+			else if (!keyDown && ks.IsKeyDown(Keys.Space))
+			{
+				keyDown = true;
+                show3D = !show3D;
+			}
+			else if (   keyDown && 
+                        ks.IsKeyUp(Keys.Left) && 
+                        ks.IsKeyUp(Keys.Right) && 
+                        ks.IsKeyUp(Keys.Space) )
 			{
 				keyDown = false;
 			}

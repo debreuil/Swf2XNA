@@ -129,24 +129,29 @@ namespace DDW.Gdi
                 else if (def is Text)
                 {
                     Text tx = (Text)def;
-                    List<Bitmap> bmpFrames = new List<Bitmap>();
 
-                    Bitmap myBitmap = new Bitmap(
-                        (int)tx.StrokeBounds.Size.Width + 1,
-                        (int)tx.StrokeBounds.Size.Height + 1);
+                    if (tx.TextRuns.Count > 0 && !tx.TextRuns[0].isEditable)
+                    {
+                        List<Bitmap> bmpFrames = new List<Bitmap>();
 
-                    //translateMatrix = new System.Drawing.Drawing2D.Matrix(
-                    //    1, 0, 0, 1, -tx.StrokeBounds.Point.X, -tx.StrokeBounds.Point.Y);
+                        Bitmap myBitmap = new Bitmap(
+                            (int)tx.StrokeBounds.Size.Width + 1,
+                            (int)tx.StrokeBounds.Size.Height + 1);
 
-                    myBitmap.SetResolution(96, 96);
-                    g = Graphics.FromImage(myBitmap);
+                        //translateMatrix = new System.Drawing.Drawing2D.Matrix(
+                        //    1, 0, 0, 1, -tx.StrokeBounds.Point.X, -tx.StrokeBounds.Point.Y);
 
-                    DrawText(tx, new DDW.Vex.Matrix(1, 0, 0, 1, -tx.StrokeBounds.Point.X, -tx.StrokeBounds.Point.Y));
-                    //translateMatrix.Dispose();
-                    bmpFrames.Add(myBitmap);
+                        //myBitmap.SetResolution(72, 72);
+                        myBitmap.SetResolution(96, 96);
+                        g = Graphics.FromImage(myBitmap);
 
-                    string name = s + "#" + tx.Id;
-                    genImages.Add(name, bmpFrames);
+                        DrawText(tx, new DDW.Vex.Matrix(1, 0, 0, 1, -tx.StrokeBounds.Point.X, -tx.StrokeBounds.Point.Y));
+                        //translateMatrix.Dispose();
+                        bmpFrames.Add(myBitmap);
+
+                        string name = s + "#" + tx.Id;
+                        genImages.Add(name, bmpFrames);
+                    }
                 } 
             }
         }
@@ -301,7 +306,7 @@ namespace DDW.Gdi
                 {
                     style |= FontStyle.Italic;
                 }
-				style = FontStyle.Bold;// temp
+
                 Font font = new Font(tr.FontName, tr.FontSize, style, GraphicsUnit.Pixel);
 
                 System.Drawing.Color col = System.Drawing.Color.FromArgb(tr.Color.A, tr.Color.R, tr.Color.G, tr.Color.B);

@@ -138,7 +138,6 @@ namespace DDW.Display
 
 				if (prevScreen != null && children.Contains(prevScreen) && !prevScreen.isActive)
 				{
-                    Console.WriteLine("removed screen: " + prevScreen.InstanceName);
                     prevScreen.DestroyView();
                     V2DGame.instance.RemovingScreen(prevScreen);
 					this.RemoveChild(prevScreen);
@@ -147,7 +146,6 @@ namespace DDW.Display
 
 				if (screenChanged)// && !children.Contains(curScreen))
 				{
-                    Console.WriteLine("change screen to: " + curScreen.InstanceName);
                     screenChanged = false;
                     V2DGame.instance.AddingScreen(curScreen);
                     this.AddChild(curScreen);

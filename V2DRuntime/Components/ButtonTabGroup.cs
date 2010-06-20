@@ -25,6 +25,7 @@ namespace V2DRuntime.Components
         {
             int orgIndex = focusIndex;
             focusIndex = index;
+
             if (focusIndex > element.Count - 1)
             {
                 if (wrapAround)
@@ -65,14 +66,27 @@ namespace V2DRuntime.Components
                 OnFocusChanged(element[focusIndex]);
             }
         }
+
         public void NextFocus()
         {
-            SetFocus(focusIndex + 1);
+            int sanityCount = 0;
+            do
+            {
+                SetFocus(focusIndex + 1);
+            }
+            while (!element[focusIndex].Visible && sanityCount++ < element.Count); // allow for non visible buttons to be skipped
         }
+
         public void PreviousFocus()
         {
-            SetFocus(focusIndex - 1);
+            int sanityCount = 0;
+            do
+            {
+                SetFocus(focusIndex - 1);
+            }
+            while (!element[focusIndex].Visible && sanityCount++ < element.Count); // allow for non visible buttons to be skipped
         }
+
         public override bool OnPlayerInput(int playerIndex, DDW.Input.Move move, TimeSpan time)
         {
             bool result = base.OnPlayerInput(playerIndex, move, time);
@@ -108,9 +122,5 @@ namespace V2DRuntime.Components
         public event ButtonEventHandler OnClick;
         public event FocusChangedEventHandler OnFocusChanged;
 
-		public override void Draw(SpriteBatch batch)
-		{
-			base.Draw(batch);
-		}
     }
 }

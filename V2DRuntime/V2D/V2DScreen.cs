@@ -65,7 +65,7 @@ namespace DDW.V2D
 		public override Sprite CreateDefaultObject(Texture2D texture, V2DInstance inst)
 		{
 			Sprite result;
-			if (inst.Definition.V2DShapes.Count > 0)
+			if (inst.Definition.V2DShapes.Count > 0 || inst.Definition.Instances.Count > 0)
 			{
 				result = new V2DSprite(texture, inst);
 			}

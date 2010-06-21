@@ -3,6 +3,7 @@ using DDW.Display;
 using DDW.V2D;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using V2DRuntime.Components;
 
 namespace V2DTest
 {
@@ -10,6 +11,7 @@ namespace V2DTest
 	{
         public Sprite bkg;
         public List<V2DSprite> hex;
+        public TextBox txTest;
         
         public DistanceJointDemo(V2DContent v2dContent)  : base(v2dContent)
         {     
@@ -21,7 +23,7 @@ namespace V2DTest
 		public override void Initialize()
 		{
 			base.Initialize();
-			this.Play();
+            txTest.Text = "Hello";
 		}
         public override void SetValidInput()
         {

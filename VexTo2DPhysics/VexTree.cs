@@ -214,7 +214,10 @@ namespace DDW.VexTo2DPhysics
 						def.Name = "$tx_" + def.Id;
 					}
 					Definition2D d2d = GetTextDefinition(m, txt);
-					AddSymbolImage(def);
+                    if (txt.TextRuns.Count > 0 && !txt.TextRuns[0].isEditable)
+                    {
+                        AddSymbolImage(def);
+                    }
 
 					if (addInst)
 					{

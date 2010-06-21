@@ -36,10 +36,6 @@
     <Reference Include="Microsoft.Xna.Framework.Content.Pipeline.VideoImporters, Version=3.1.0.0, Culture=neutral, PublicKeyToken=6d5c3888ef60e27d, processorArchitecture=MSIL">
       <Private>False</Private>
     </Reference>
-    <Reference Include="VexPipeline, Version=1.0.0.0, Culture=neutral, processorArchitecture=x86">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\VexPipeline\bin\x86\Debug\VexPipeline.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="cursor.png">
@@ -47,12 +43,6 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\VexPipelineReader\VexPipelineReader.csproj">
-      <Project>{D5D6310E-2D9D-4931-8D3B-4574F6625C6A}</Project>
-      <Name>VexPipelineReader</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Arial.spritefont">
@@ -138,6 +128,16 @@
       <Importer>XImporter</Importer>
       <Processor>ModelProcessor</Processor>
     </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\VexPipelineReader\VexPipelineReader.csproj">
+      <Project>{D5D6310E-2D9D-4931-8D3B-4574F6625C6A}</Project>
+      <Name>VexPipelineReader</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\VexPipeline\VexPipeline.csproj">
+      <Project>{7118D9A5-616B-4329-831B-C42624D711CE}</Project>
+      <Name>VexPipeline</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\$(XnaFrameworkVersion)\Microsoft.Xna.GameStudio.ContentPipeline.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

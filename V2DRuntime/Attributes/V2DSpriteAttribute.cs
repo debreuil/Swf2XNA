@@ -86,10 +86,9 @@ namespace V2DRuntime.Attributes
 			//{
 			//    def.MassData.Center = new Vector2(centerOfMassX, centerOfMassY);
 			//}
-			//if (mass != 0.0f)
-			//{
-			//    def.MassData.Mass = mass;
-			//}
+			if (mass != 0.0f)
+			{
+			}
 			if (linearDamping != 0.0f)
 			{
 				def.linearDamping = linearDamping;

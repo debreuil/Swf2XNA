@@ -11,7 +11,6 @@ namespace V2DTest
 	{
         public Sprite bkg;
         public List<V2DSprite> hex;
-        public TextBox txTest;
         
         public DistanceJointDemo(V2DContent v2dContent)  : base(v2dContent)
         {     
@@ -23,7 +22,6 @@ namespace V2DTest
 		public override void Initialize()
 		{
 			base.Initialize();
-            txTest.Text = "Hello";
 		}
         public override void SetValidInput()
         {

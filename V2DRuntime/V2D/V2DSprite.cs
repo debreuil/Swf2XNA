@@ -252,6 +252,25 @@ namespace DDW.V2D
                 {
                     AddPoly(body, this.polygons[i]);
 				}
+
+                if (attributeProperties != null)
+                {
+                    if (attributeProperties.mass != 0f)
+                    {
+                        MassData md;
+                        body.GetMassData(out md);
+                        md.mass = attributeProperties.mass;
+                        body.SetMassData(ref md);
+                    }
+
+                    if (attributeProperties.centerOfMassX != 0 || attributeProperties.centerOfMassY != 0)
+                    {
+                        MassData md;
+                        body.GetMassData(out md);
+                        md.center = new Vector2(attributeProperties.centerOfMassX, attributeProperties.centerOfMassY);
+                        body.SetMassData(ref md);
+                    }
+                }
             }
             return body;
         }

@@ -44,6 +44,7 @@ namespace V2DRuntime.Audio
                 result = cueList[soundName];
                 if (!result.IsCreated)
                 {
+                    result.Dispose();
                     result = soundBank.GetCue(soundName);
                     cueList[soundName] = result;
                 }

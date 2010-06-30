@@ -51,6 +51,8 @@ namespace DDW.Display
 
         public bool isFinalLevel = false;
 
+        protected bool allowKeyboardOnly = true;
+
         public Screen()
         {
         }
@@ -287,6 +289,11 @@ namespace DDW.Display
 					}
 				}
 			}
+
+            if (allowKeyboardOnly && sessionGamerIndex == 0) // keyboard only
+            {
+				inputManagers[0] = new InputManager((PlayerIndex)0, moveList.LongestMoveLength);
+            }
 
             // Give each player a location to store their most recent move.
             playerMoves = new Move[inputManagers.Length];

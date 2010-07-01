@@ -22,6 +22,8 @@ using Box2D.XNA.TestBed.Framework;
 
 namespace DDW.V2D
 {
+    public delegate void ContactDelegate(object objA, object objB, Fixture fixtureA, Fixture fixtureB);
+
     [XmlRoot]
 	public class V2DScreen : Screen, IJointable, IContactListener
 	{
@@ -46,7 +48,10 @@ namespace DDW.V2D
 		private Box2D.XNA.TestBed.Framework.DebugDraw _debugDraw;
 		private BasicEffect simpleColorEffect;
 //#endif
-     
+
+        public Dictionary<Type, ContactDelegate> contactTypes = new Dictionary<Type, ContactDelegate>();
+        public Dictionary<Type, ContactDelegate> contactEndTypes = new Dictionary<Type, ContactDelegate>();
+
         public V2DScreen()
         {
 			CreateWorld();
@@ -132,6 +137,8 @@ namespace DDW.V2D
                 cursor.MouseUp -= MouseUp;
 #endif
             }
+
+            contactTypes.Clear();
         }
 		public override void SetStageAndScreen()
 		{
@@ -386,14 +393,55 @@ namespace DDW.V2D
 		internal int _pointCount;
 		public static int k_maxContactPoints = 2048;
 		internal ContactPoint[] _points = new ContactPoint[k_maxContactPoints];
-		public virtual void BeginContact(Contact contact) { }
-		public virtual void EndContact(Contact contact) { }
+		//public virtual void BeginContact(Contact contact) { }
+		//public virtual void EndContact(Contact contact) { }
+
+        public virtual void BeginContact(Contact contact)
+        {
+            object objA = contact.GetFixtureA().GetBody().GetUserData();
+            object objB = contact.GetFixtureB().GetBody().GetUserData();
+
+            foreach (Type t in contactTypes.Keys)
+            {
+                if (objA.GetType() == t)
+                {
+                    contactTypes[t](objA, objB, contact.GetFixtureA(), contact.GetFixtureB());
+                    break;
+                }
+                else if (objB.GetType() == t)
+                {
+                    contactTypes[t](objB, objA, contact.GetFixtureB(), contact.GetFixtureA());
+                    break;
+                }
+            }
+        }
+        public virtual void EndContact(Contact contact)
+        {
+            object objA = contact.GetFixtureA().GetBody().GetUserData();
+            object objB = contact.GetFixtureB().GetBody().GetUserData();
+
+            foreach (Type t in contactEndTypes.Keys)
+            {
+                if (objA.GetType() == t)
+                {
+                    contactEndTypes[t](objA, objB, contact.GetFixtureA(), contact.GetFixtureB());
+                    break;
+                }
+                else if (objB.GetType() == t)
+                {
+                    contactEndTypes[t](objB, objA, contact.GetFixtureB(), contact.GetFixtureA());
+                    break;
+                }
+            }
+        }
 		public virtual void PreSolve(Contact contact, ref Manifold oldManifold)
 		{
 			// call this in the base class if points are needed
 			// PreSolveCalcPoints(contact, ref oldManifold);
 		}
 		public virtual void PostSolve(Contact contact, ref ContactImpulse impulse) { }
+
+
 		protected void PreSolveCalcPoints(Contact contact, ref Manifold oldManifold)
 		{
 			Manifold manifold;

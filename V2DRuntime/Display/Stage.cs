@@ -7,6 +7,7 @@ using Microsoft.Xna.Framework;
 using DDW.V2D;
 using V2DRuntime.Shaders;
 using V2DRuntime.Audio;
+using Microsoft.Xna.Framework.GamerServices;
 
 namespace DDW.Display
 {
@@ -126,6 +127,7 @@ namespace DDW.Display
 		public virtual void SetBounds(float x, float y, float w, float h)
 		{
 		}
+
         public override void Update(GameTime gameTime)
         {
             //base.Update(gameTime); // dont update stage itself as it is fixed pos

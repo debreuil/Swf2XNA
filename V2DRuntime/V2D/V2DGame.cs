@@ -105,22 +105,30 @@ namespace DDW.V2D
             {
                 if (gamer.Privileges.AllowPurchaseContent)
                 {
-                    Guide.ShowMarketplace(V2DGame.activeController);
+                    ShowMarketPlace();
                 }
                 else
                 {
                     if (gamer != null)
                     {
+                        if (stage != null && stage.GetCurrentScreen() != null)
+                        {
+                            stage.GetCurrentScreen().SignInToLive();
+                        }
+                        else
+                        {
+                            ShowSignIn();
+                        }
                     }
                     else
                     {
-                        Guide.ShowSignIn(1, true);
+                        ShowSignIn();
                     }
                 }
             }
             else
             {
-                Guide.ShowSignIn(1, true);
+                ShowSignIn();
             }
         }
         public virtual void FullGameUnlocked()
@@ -131,6 +139,25 @@ namespace DDW.V2D
 			this.Exit();
         }
 
+        public virtual void ShowMarketPlace()
+        {
+            try
+            {
+                Guide.ShowMarketplace(V2DGame.activeController);
+            }
+            catch (Exception){}
+        }
+        public virtual void ShowSignIn()
+        {
+            if (!Guide.IsVisible)
+            {
+                try
+                {
+                    Guide.ShowSignIn(1, true);
+                }
+	            catch (Exception){}
+            }
+        }
         public static bool CanPlayerBuyGame(PlayerIndex player)
         {
             bool result = false;

@@ -279,20 +279,22 @@ namespace DDW.Display
 			{
 				if (GamePad.GetState((PlayerIndex)i).IsConnected)
 				{
-					inputManagers[i] = new InputManager((PlayerIndex)i, moveList.LongestMoveLength);
+                    AddInputManager(i);
+                    //inputManagers[i] = new InputManager((PlayerIndex)i, moveList.LongestMoveLength);
 
-					if (NetworkManager.Session != null && 
-						NetworkManager.Session.LocalGamers.Count > sessionGamerIndex)
-					{
-						inputManagers[i].NetworkGamer = NetworkManager.Session.LocalGamers[sessionGamerIndex];
-						sessionGamerIndex++;
-					}
+                    //if (NetworkManager.Session != null && 
+                    //    NetworkManager.Session.LocalGamers.Count > sessionGamerIndex)
+                    //{
+                    //    inputManagers[i].NetworkGamer = NetworkManager.Session.LocalGamers[sessionGamerIndex];
+                    //    sessionGamerIndex++;
+                    //}
 				}
 			}
 
             if (allowKeyboardOnly && sessionGamerIndex == 0) // keyboard only
             {
-				inputManagers[0] = new InputManager((PlayerIndex)0, moveList.LongestMoveLength);
+				//inputManagers[0] = new InputManager((PlayerIndex)0, moveList.LongestMoveLength);
+                AddInputManager(0);
             }
 
             // Give each player a location to store their most recent move.
@@ -300,6 +302,23 @@ namespace DDW.Display
             playerMoveTimes = new TimeSpan[inputManagers.Length];
 			SetKeyboardController();
         }
+        protected void AddInputManager(int playerIndex)
+        {
+            inputManagers[playerIndex] = new InputManager((PlayerIndex)playerIndex, moveList.LongestMoveLength);
+
+            if (NetworkManager.Session != null)
+            {
+                foreach (LocalNetworkGamer lng in NetworkManager.Session.LocalGamers)
+	            {
+                    if(lng.SignedInGamer != null && lng.SignedInGamer.PlayerIndex == (PlayerIndex)playerIndex)
+                    {
+                        inputManagers[playerIndex].NetworkGamer = lng;
+                        break;
+                    }
+	            }
+            }
+        }
+
 		protected void SetKeyboardController()
 		{
 			bool hasController = false;
@@ -313,41 +332,51 @@ namespace DDW.Display
 			}
 		}
 
+        public virtual void SignInToLive()
+        {
+            // override and don't call base to add dialog
+            V2DGame.instance.ShowSignIn();
+        }
+
         protected void ManageInput(GameTime gameTime)
         {
             if (inputManagers != null)
 			{
 				for (int i = 0; i < inputManagers.Length; ++i)
                 {
-					if (inputManagers[i] != null)
-					{
-						InputManager inputManager = inputManagers[i];
+                    if (inputManagers[i] != null)
+                    {
+                        InputManager inputManager = inputManagers[i];
 
-						// Expire old moves.
-						if (gameTime.TotalRealTime - playerMoveTimes[i] > MoveTimeOut)
-						{
-							playerMoves[i] = null;
-						}
+                        // Expire old moves.
+                        if (gameTime.TotalRealTime - playerMoveTimes[i] > MoveTimeOut)
+                        {
+                            playerMoves[i] = null;
+                        }
 
-						// Get the updated input manager.
-						inputManager.Update(gameTime);
+                        // Get the updated input manager.
+                        inputManager.Update(gameTime);
 
-						// Detection and record the current player's most recent move.
-						Move newMove = moveList.DetectMove(inputManager);
-						if (inputManager.Releases != 0)
-						{
-							newMove = new Move("");
-							newMove.Releases = inputManager.Releases;
-						}
+                        // Detection and record the current player's most recent move.
+                        Move newMove = moveList.DetectMove(inputManager);
+                        if (inputManager.Releases != 0)
+                        {
+                            newMove = new Move("");
+                            newMove.Releases = inputManager.Releases;
+                        }
 
-						if (newMove != null)
-						{
-							playerMoves[i] = newMove;
-							playerMoveTimes[i] = gameTime.TotalRealTime;
-							OnPlayerInput(i, playerMoves[i], playerMoveTimes[i]);
-							BroadcastMove(i, playerMoves[i], playerMoveTimes[i]);
-						}
-					}
+                        if (newMove != null)
+                        {
+                            playerMoves[i] = newMove;
+                            playerMoveTimes[i] = gameTime.TotalRealTime;
+                            OnPlayerInput(i, playerMoves[i], playerMoveTimes[i]);
+                            BroadcastMove(i, playerMoves[i], playerMoveTimes[i]);
+                        }
+                    }
+                    else if(GamePad.GetState((PlayerIndex)i).IsConnected)
+                    {
+                        AddInputManager(i);
+                    }
                 }
             }
 		}

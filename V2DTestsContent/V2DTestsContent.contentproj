@@ -1,0 +1,139 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+  <PropertyGroup>
+    <ProjectGuid>{1B45D52F-BD7D-4CF0-9D28-A0CBD5AA00B9}</ProjectGuid>
+    <ProjectTypeGuids>{96E2B04D-8817-42c6-938A-82C39BA4D311};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <XnaFrameworkVersion>v4.0</XnaFrameworkVersion>
+    <OutputPath>bin\$(Platform)\$(Configuration)</OutputPath>
+  </PropertyGroup>
+  <PropertyGroup>
+    <RootNamespace>V2DTestsContent</RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.Xna.Framework.Content.Pipeline.EffectImporter, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=MSIL">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Microsoft.Xna.Framework.Content.Pipeline.FBXImporter, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=MSIL">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Microsoft.Xna.Framework.Content.Pipeline.TextureImporter, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=MSIL">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Microsoft.Xna.Framework.Content.Pipeline.XImporter, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=MSIL">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Microsoft.Xna.Framework.Content.Pipeline.AudioImporters, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=MSIL">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Microsoft.Xna.Framework.Content.Pipeline.VideoImporters, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=MSIL">
+      <Private>False</Private>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Arial.spritefont">
+      <Name>Arial</Name>
+      <Importer>FontDescriptionImporter</Importer>
+      <Processor>FontDescriptionProcessor</Processor>
+    </Compile>
+    <Compile Include="ss0.X">
+      <Name>ss0</Name>
+      <Importer>XImporter</Importer>
+      <Processor>ModelProcessor</Processor>
+    </Compile>
+    <Compile Include="ss1.X">
+      <Name>ss1</Name>
+      <Importer>XImporter</Importer>
+      <Processor>ModelProcessor</Processor>
+    </Compile>
+    <Compile Include="ss2.X">
+      <Name>ss2</Name>
+      <Importer>XImporter</Importer>
+      <Processor>ModelProcessor</Processor>
+    </Compile>
+    <Compile Include="ss3.X">
+      <Name>ss3</Name>
+      <Importer>XImporter</Importer>
+      <Processor>ModelProcessor</Processor>
+    </Compile>
+    <Compile Include="ss4.X">
+      <Name>ss4</Name>
+      <Importer>XImporter</Importer>
+      <Processor>ModelProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="cursor.png">
+      <Name>cursor</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="DistanceJoint.swf">
+      <Name>DistanceJoint</Name>
+      <Importer>SwfImporter</Importer>
+      <Processor>SwfProcessor</Processor>
+    </Compile>
+    <Compile Include="GearJoint.swf">
+      <Name>GearJoint</Name>
+      <Importer>SwfImporter</Importer>
+      <Processor>SwfProcessor</Processor>
+    </Compile>
+    <Compile Include="germs.swf">
+      <Name>germs</Name>
+      <Importer>SwfImporter</Importer>
+      <Processor>SwfProcessor</Processor>
+    </Compile>
+    <Compile Include="PrismaticJoint.swf">
+      <Name>PrismaticJoint</Name>
+      <Importer>SwfImporter</Importer>
+      <Processor>SwfProcessor</Processor>
+    </Compile>
+    <Compile Include="PulleyJoint.swf">
+      <Name>PulleyJoint</Name>
+      <Importer>SwfImporter</Importer>
+      <Processor>SwfProcessor</Processor>
+    </Compile>
+    <Compile Include="RevoluteJoint.swf">
+      <Name>RevoluteJoint</Name>
+      <Importer>SwfImporter</Importer>
+      <Processor>SwfProcessor</Processor>
+    </Compile>
+    <Compile Include="Scene1Data.swf">
+      <Name>Scene1Data</Name>
+      <Importer>SwfImporter</Importer>
+      <Processor>SwfProcessor</Processor>
+    </Compile>
+    <Compile Include="Scene2Data.swf">
+      <Name>Scene2Data</Name>
+      <Importer>SwfImporter</Importer>
+      <Processor>SwfProcessor</Processor>
+    </Compile>
+    <Compile Include="Scene3Data.swf">
+      <Name>Scene3Data</Name>
+      <Importer>SwfImporter</Importer>
+      <Processor>SwfProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\VexPipelineReader\VexPipelineReader.csproj">
+      <Project>{D5D6310E-2D9D-4931-8D3B-4574F6625C6A}</Project>
+      <Name>VexPipelineReader</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\VexPipeline\VexPipeline.csproj">
+      <Project>{7118D9A5-616B-4329-831B-C42624D711CE}</Project>
+      <Name>VexPipeline</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\$(XnaFrameworkVersion)\Microsoft.Xna.GameStudio.ContentPipeline.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

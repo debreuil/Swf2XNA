@@ -115,7 +115,7 @@ namespace DDW.Input // these are ms supplied classes (and they are obtuse), name
 #endif            
 
             // Expire old input.
-            TimeSpan time = gameTime.TotalRealTime;
+            TimeSpan time = gameTime.TotalGameTime;
             TimeSpan timeSinceLast = time - LastInputTime;
             if (timeSinceLast > BufferTimeOut)
             {

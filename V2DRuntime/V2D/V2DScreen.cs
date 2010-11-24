@@ -18,7 +18,7 @@ using V2DRuntime.Components;
 using V2DRuntime.V2D;
 using V2DRuntime.Enums;
 using V2DRuntime.Attributes;
-using Box2D.XNA.TestBed.Framework;
+using V2DRuntime.Debug;
 
 namespace DDW.V2D
 {
@@ -45,7 +45,7 @@ namespace DDW.V2D
 		private bool firstTime = true;
 //#if !XBOX
 		internal MouseJoint _mouseJoint;
-		private Box2D.XNA.TestBed.Framework.DebugDraw _debugDraw;
+        private V2DRuntime.Debug.DebugDraw _debugDraw;
 		private BasicEffect simpleColorEffect;
 //#endif
 
@@ -265,15 +265,15 @@ namespace DDW.V2D
 
 			// Query the world for overlapping shapes.
 			world.QueryAABB(
-				(fixture) =>
+				(fixtureProxy) =>
 				{
-					Body body = fixture.GetBody();
+                    Body body = fixtureProxy.fixture.GetBody();
 					if (body.GetType() == BodyType.Dynamic)
 					{
-						bool inside = fixture.TestPoint(p);
+                        bool inside = fixtureProxy.fixture.TestPoint(p);
 						if (inside)
 						{
-							_fixture = fixture;
+                            _fixture = fixtureProxy.fixture;
 
 							// We are done, terminate the query.
 							return false;
@@ -392,7 +392,7 @@ namespace DDW.V2D
 		#region Contact
 		internal int _pointCount;
 		public static int k_maxContactPoints = 2048;
-		internal ContactPoint[] _points = new ContactPoint[k_maxContactPoints];
+        internal ContactPoint[] _points = new ContactPoint[k_maxContactPoints];
 		//public virtual void BeginContact(Contact contact) { }
 		//public virtual void EndContact(Contact contact) { }
 
@@ -488,23 +488,29 @@ namespace DDW.V2D
 			{
 				if (firstTime)
 				{
-					_debugDraw = new Box2D.XNA.TestBed.Framework.DebugDraw();
+                    _debugDraw = new V2DRuntime.Debug.DebugDraw();
 					_debugDraw.AppendFlags(DebugDrawFlags.AABB | DebugDrawFlags.CenterOfMass | DebugDrawFlags.Joint | DebugDrawFlags.Pair | DebugDrawFlags.Shape);
 					world.DebugDraw = _debugDraw;
-					simpleColorEffect = new BasicEffect(batch.GraphicsDevice, null);
+					simpleColorEffect = new BasicEffect(batch.GraphicsDevice);
 					simpleColorEffect.VertexColorEnabled = true;
-					simpleColorEffect.Parameters["Projection"].SetValue(Matrix.CreateOrthographicOffCenter(0, ClientSize.X / WorldScale, ClientSize.Y / WorldScale, 0, -1, 1));
+					simpleColorEffect.Projection = Matrix.CreateOrthographicOffCenter(0, ClientSize.X / WorldScale, ClientSize.Y / WorldScale, 0, -1, 1);
 
-					Box2D.XNA.TestBed.Framework.DebugDraw._batch = batch;
-					Box2D.XNA.TestBed.Framework.DebugDraw._device = batch.GraphicsDevice;
+                    V2DRuntime.Debug.DebugDraw._batch = batch;
+                    V2DRuntime.Debug.DebugDraw._device = batch.GraphicsDevice;
 					firstTime = false;
 				}
 
-				simpleColorEffect.Begin();
-				simpleColorEffect.Techniques[0].Passes[0].Begin();
+                simpleColorEffect.Techniques[0].Passes[0].Apply();
+                batch.Begin(
+                            SpriteSortMode.Deferred, 
+                            BlendState.NonPremultiplied, 
+                            null, //SamplerState.AnisotropicClamp, 
+                            null, //DepthStencilState.None, 
+                            null, //RasterizerState.CullNone, 
+                            simpleColorEffect, 
+                            Stage.SpriteBatchMatrix);
 				_debugDraw.FinishDrawShapes();
-				simpleColorEffect.Techniques[0].Passes[0].End();
-				simpleColorEffect.End();
+                batch.End();
 			}
 		}
 //#endif

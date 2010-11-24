@@ -24,20 +24,21 @@ using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Box2D.XNA;
 
-namespace Box2D.XNA.TestBed.Framework
+namespace V2DRuntime.Debug
 {
-	public struct ContactPoint
-	{
-		public Fixture fixtureA;
-		public Fixture fixtureB;
-		public Vector2 normal;
-		public Vector2 position;
-		public PointState state;
-	}
-
-    public class DebugDraw : XNA.DebugDraw
+    public struct ContactPoint
     {
+        public Fixture fixtureA;
+        public Fixture fixtureB;
+        public Vector2 normal;
+        public Vector2 position;
+        public PointState state;
+    }
+    public class DebugDraw : Box2D.XNA.DebugDraw
+    {
+
         public DebugDraw()
         {
             _stringData = new List<StringData>();
@@ -45,7 +46,7 @@ namespace Box2D.XNA.TestBed.Framework
 
         public override void DrawPolygon(ref FixedArray8<Vector2> vertices, int count, Color color)
         {
-            for (int i = 0; i < count - 1; i ++)
+            for (int i = 0; i < count - 1; i++)
             {
                 _vertsLines[_lineCount * 2].Position = new Vector3(vertices[i], 0.0f);
                 _vertsLines[_lineCount * 2].Color = color;
@@ -74,7 +75,7 @@ namespace Box2D.XNA.TestBed.Framework
                 return;
             }
 
-            Color colorFill = new Color(color, outline ? 0.5f : 1.0f);
+            Color colorFill = color * (outline ? 0.5f : 1.0f);
 
             for (int i = 1; i < count - 1; i++)
             {
@@ -84,7 +85,7 @@ namespace Box2D.XNA.TestBed.Framework
                 _vertsFill[_fillCount * 3 + 1].Position = new Vector3(vertices[i], 0.0f);
                 _vertsFill[_fillCount * 3 + 1].Color = colorFill;
 
-                _vertsFill[_fillCount * 3 + 2].Position = new Vector3(vertices[i+1], 0.0f);
+                _vertsFill[_fillCount * 3 + 2].Position = new Vector3(vertices[i + 1], 0.0f);
                 _vertsFill[_fillCount * 3 + 2].Color = colorFill;
 
                 _fillCount++;
@@ -123,7 +124,7 @@ namespace Box2D.XNA.TestBed.Framework
             double increment = Math.PI * 2.0 / (double)segments;
             double theta = 0.0;
 
-            Color colorFill = new Color(color, 0.5f);
+            Color colorFill = color * 0.5f;
 
             Vector2 v0 = center + radius * new Vector2((float)Math.Cos(theta), (float)Math.Sin(theta));
             theta += increment;
@@ -163,7 +164,7 @@ namespace Box2D.XNA.TestBed.Framework
         {
             float axisScale = 0.4f;
             Vector2 p1 = xf.Position;
-            
+
             Vector2 p2 = p1 + axisScale * xf.R.col1;
             DrawSegment(p1, p2, Color.Red);
 
@@ -176,11 +177,16 @@ namespace Box2D.XNA.TestBed.Framework
             FixedArray8<Vector2> verts = new FixedArray8<Vector2>();
             float hs = size / 2.0f;
             verts[0] = p + new Vector2(-hs, -hs);
-            verts[1] = p + new Vector2( hs, -hs);
-            verts[2] = p + new Vector2( hs,  hs);
-            verts[3] = p + new Vector2(-hs,  hs);
+            verts[1] = p + new Vector2(hs, -hs);
+            verts[2] = p + new Vector2(hs, hs);
+            verts[3] = p + new Vector2(-hs, hs);
 
             DrawSolidPolygon(ref verts, 4, color, true);
+        }
+
+        public void DrawString(int x, int y, string s)
+        {
+            _stringData.Add(new StringData(x, y, s, null));
         }
 
         public void DrawString(int x, int y, string s, params object[] args)
@@ -190,28 +196,16 @@ namespace Box2D.XNA.TestBed.Framework
 
         public void FinishDrawShapes()
         {
-            _device.RenderState.CullMode = CullMode.None;
-            _device.RenderState.AlphaBlendEnable = true;
+            _device.BlendState = BlendState.AlphaBlend;
 
-			if (_fillCount > 0)
-			{
-				//for (int i = 0; i < _vertsFill.Length; i++)
-				//{
-				//    Vector3 v = _vertsFill[i].Position;
-				//    _vertsFill[i].Position = new Vector3(v.X / (scale * 2) - 1, v.Y / 25 - 1, v.Z);
-				//}
-				_device.DrawUserPrimitives<VertexPositionColor>(PrimitiveType.TriangleList, _vertsFill, 0, _fillCount);
-			}
+            //_device.RenderState.CullMode = CullMode.None;
+            //_device.RenderState.AlphaBlendEnable = true;
 
-			if (_lineCount > 0)
-			{
-				//for (int i = 0; i < _vertsLines.Length; i++)
-				//{
-				//    Vector3 v = _vertsLines[i].Position;
-				//    _vertsLines[i].Position = new Vector3(v.X / 25 - 1, v.Y / 25 - 1, v.Z);
-				//}
-				_device.DrawUserPrimitives<VertexPositionColor>(PrimitiveType.LineList, _vertsLines, 0, _lineCount);
-			}
+            if (_fillCount > 0)
+                _device.DrawUserPrimitives<VertexPositionColor>(PrimitiveType.TriangleList, _vertsFill, 0, _fillCount);
+
+            if (_lineCount > 0)
+                _device.DrawUserPrimitives<VertexPositionColor>(PrimitiveType.LineList, _vertsLines, 0, _lineCount);
 
             _lineCount = _fillCount = 0;
         }
@@ -220,7 +214,8 @@ namespace Box2D.XNA.TestBed.Framework
         {
             for (int i = 0; i < _stringData.Count; i++)
             {
-                _batch.DrawString(_font, string.Format(_stringData[i].s, _stringData[i].args), new Vector2(_stringData[i].x, _stringData[i].y), new Color(0.9f, 0.6f, 0.6f));
+                var text = _stringData[i].args == null ? _stringData[i].s : string.Format(_stringData[i].s, _stringData[i].args);
+                _batch.DrawString(_font, text, new Vector2(_stringData[i].x, _stringData[i].y), new Color(0.9f, 0.6f, 0.6f));
             }
 
             _stringData.Clear();
@@ -237,8 +232,8 @@ namespace Box2D.XNA.TestBed.Framework
             DrawPolygon(ref verts, 4, color);
         }
 
-        public static VertexPositionColor[] _vertsLines = new VertexPositionColor[900000];
-        public static VertexPositionColor[] _vertsFill = new VertexPositionColor[900000];
+        public static VertexPositionColor[] _vertsLines = new VertexPositionColor[100000];
+        public static VertexPositionColor[] _vertsFill = new VertexPositionColor[100000];
         public static int _lineCount;
         public static int _fillCount;
         public static SpriteBatch _batch;

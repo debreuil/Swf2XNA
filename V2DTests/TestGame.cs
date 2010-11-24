@@ -16,6 +16,10 @@ namespace V2DTest
 
         public override bool HasCursor { get { return true; } }
 
+        public TestGame()
+        {
+            this.Content.RootDirectory = "V2DTestsContent";
+        }
 		protected override void CreateScreens()
         {
 			stage.AddScreen(new DistanceJointDemo(new SymbolImport("DistanceJoint")));
@@ -104,7 +108,7 @@ namespace V2DTest
         {
             base.Draw(gameTime);
 
-            GraphicsDevice.RenderState.DepthBufferEnable = true;
+            //GraphicsDevice.RenderState.DepthBufferEnable = true;
             if (show3D)
             {
                 DrawShips();

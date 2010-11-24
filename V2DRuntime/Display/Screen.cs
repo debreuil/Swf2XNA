@@ -18,7 +18,7 @@ using System.IO;
 using V2DRuntime.Shaders;
 using System.Reflection;
 using V2DRuntime.V2D;
-using Box2D.XNA.TestBed.Framework;
+using V2DRuntime.Debug;
 using Box2D.XNA;
 
 namespace DDW.Display
@@ -349,7 +349,7 @@ namespace DDW.Display
                         InputManager inputManager = inputManagers[i];
 
                         // Expire old moves.
-                        if (gameTime.TotalRealTime - playerMoveTimes[i] > MoveTimeOut)
+                        if (gameTime.TotalGameTime - playerMoveTimes[i] > MoveTimeOut)
                         {
                             playerMoves[i] = null;
                         }
@@ -368,7 +368,7 @@ namespace DDW.Display
                         if (newMove != null)
                         {
                             playerMoves[i] = newMove;
-                            playerMoveTimes[i] = gameTime.TotalRealTime;
+                            playerMoveTimes[i] = gameTime.TotalGameTime;
                             OnPlayerInput(i, playerMoves[i], playerMoveTimes[i]);
                             BroadcastMove(i, playerMoves[i], playerMoveTimes[i]);
                         }
@@ -540,8 +540,16 @@ namespace DDW.Display
                 lastShader = shaderEffect;
                 batch.End();
                 //batch.Begin(SpriteBlendMode.AlphaBlend, SpriteSortMode.Immediate, SaveStateMode.SaveState);
-                batch.Begin(SpriteBlendMode.AlphaBlend, SpriteSortMode.Immediate, SaveStateMode.None, Stage.SpriteBatchMatrix);
-
+                //batch.Begin(SpriteBlendMode.AlphaBlend, SpriteSortMode.Immediate, SaveStateMode.None, Stage.SpriteBatchMatrix);
+                //batch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, null, null, null); 
+                batch.Begin(
+                     SpriteSortMode.Deferred,
+                     BlendState.NonPremultiplied,
+                     null, //SamplerState.AnisotropicClamp, 
+                     null, //DepthStencilState.None, 
+                     null, //RasterizerState.CullNone, 
+                     null,
+                     Stage.SpriteBatchMatrix);
                 if (shaderEffect != null)
                 {
                     shaderEffect.Begin();

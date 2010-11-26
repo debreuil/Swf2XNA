@@ -50,6 +50,7 @@ namespace DDW.Display
         public Dictionary<int, V2DShader> shaderMap = new Dictionary<int, V2DShader>();
 
         public bool isFinalLevel = false;
+        public bool isPersistantScreen = false;
 
         protected bool allowKeyboardOnly = true;
 
@@ -112,6 +113,16 @@ namespace DDW.Display
 							((sa.backgroundColor & 0x00FF00) >> 8)  / 255f, 
 							((sa.backgroundColor & 0x0000FF) >> 0)  / 255f);
 					}
+
+                    if (sa.depthGroup != 0)
+                    {
+                        DepthGroup = sa.depthGroup;
+                    }
+
+                    if (sa.isPersistantScreen != false)
+                    {
+                        isPersistantScreen = sa.isPersistantScreen;
+                    }
 				}
 				if (attr is V2DShaderAttribute)
 				{
@@ -513,7 +524,7 @@ namespace DDW.Display
             // this needs to happen for screen (class) level shaders (vs depth group shaders)
             if (lastShader != null)
             {
-                lastShader.End();
+                lastShader.End(batch);
                 lastShader = null;
             }
         }
@@ -532,10 +543,10 @@ namespace DDW.Display
 
             if (shaderEffect != lastShader)
             {
-                if (lastShader != null)
-                {
-                    lastShader.End();
-                }
+                //if (lastShader != null)
+                //{
+                //    lastShader.End(batch);
+                //}
 
                 lastShader = shaderEffect;
                 batch.End();
@@ -552,7 +563,7 @@ namespace DDW.Display
                      Stage.SpriteBatchMatrix);
                 if (shaderEffect != null)
                 {
-                    shaderEffect.Begin();
+                    shaderEffect.Begin(batch);
                     shaderEffect = null;
                 }
             }

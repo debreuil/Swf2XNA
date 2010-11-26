@@ -8,8 +8,10 @@ namespace V2DRuntime.V2D
 {
 	[AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
 	public class ScreenAttribute : System.Attribute
-	{
-		public uint backgroundColor;
+    {
+        public uint backgroundColor;
+        public bool isPersistantScreen;
+        public short depthGroup;
 
 		public ScreenAttribute()
 		{

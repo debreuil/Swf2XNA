@@ -15,8 +15,8 @@ namespace V2DRuntime.Shaders
 		}
 		protected abstract void LoadContent();
 
-		public abstract void Begin();
-		public abstract void End();
+        public abstract void Begin(SpriteBatch batch);
+        public abstract void End(SpriteBatch batch);
 
 		public virtual void Update(Microsoft.Xna.Framework.GameTime gameTime)
 		{

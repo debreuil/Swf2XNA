@@ -56,6 +56,7 @@ namespace DDW.Display
 
         public Screen()
         {
+            SetAttributes();
         }
         public Screen(SymbolImport symbolImport)
         {
@@ -76,14 +77,57 @@ namespace DDW.Display
 			if (instanceDefinition != null)
 			{
 				definitionName = instanceDefinition.DefinitionName;
-			}
+            }
+            SetAttributes();
         }
         public Screen(V2DContent v2dContent)
         {
             this.v2dWorld = v2dContent.v2dWorld;
             this.textures = v2dContent.textures;
+            SetAttributes();
         }
 
+        private void SetAttributes()
+        {
+            System.Reflection.MemberInfo inf = this.GetType();
+            System.Attribute[] attrs = System.Attribute.GetCustomAttributes(inf);  // reflection
+            foreach (System.Attribute attr in attrs)
+            {
+                if (attr is ScreenAttribute)
+                {
+                    ScreenAttribute sa = (ScreenAttribute)attr;
+                    if (sa.backgroundColor != 0x000000)
+                    {
+                        this.color = new Color(
+                            ((sa.backgroundColor & 0xFF0000) >> 16) / 255f,
+                            ((sa.backgroundColor & 0x00FF00) >> 8) / 255f,
+                            ((sa.backgroundColor & 0x0000FF) >> 0) / 255f);
+                    }
+
+                    if (sa.depthGroup != 0)
+                    {
+                        DepthGroup = sa.depthGroup;
+                    }
+
+                    if (sa.isPersistantScreen != false)
+                    {
+                        isPersistantScreen = sa.isPersistantScreen;
+                    }
+                }
+                if (attr is V2DShaderAttribute)
+                {
+                    V2DShaderAttribute sa = (V2DShaderAttribute)attr;
+
+                    float[] parameters = new float[] { };
+                    ConstructorInfo ci = sa.shaderType.GetConstructor(new Type[] { parameters.GetType() });
+                    this.defaultShader = (V2DShader)ci.Invoke(
+                        new object[] 
+							{ 
+								new float[]{sa.param0, sa.param1, sa.param2, sa.param3, sa.param4} 
+							});
+                }
+            }
+        }
 		public void DestroyAfterUpdate(DisplayObject obj)
 		{
 			destructionList.Add(obj);
@@ -97,46 +141,7 @@ namespace DDW.Display
 
         public override void Initialize()
         {
-			base.Initialize(); 
-			
-			System.Reflection.MemberInfo inf = this.GetType();			
-			System.Attribute[] attrs = System.Attribute.GetCustomAttributes(inf);  // reflection
-			foreach (System.Attribute attr in attrs)
-			{
-				if (attr is ScreenAttribute)
-				{
-					ScreenAttribute sa = (ScreenAttribute)attr;
-					if (sa.backgroundColor != 0x000000)
-					{
-						this.color = new Color(
-							((sa.backgroundColor & 0xFF0000) >> 16) / 255f, 
-							((sa.backgroundColor & 0x00FF00) >> 8)  / 255f, 
-							((sa.backgroundColor & 0x0000FF) >> 0)  / 255f);
-					}
-
-                    if (sa.depthGroup != 0)
-                    {
-                        DepthGroup = sa.depthGroup;
-                    }
-
-                    if (sa.isPersistantScreen != false)
-                    {
-                        isPersistantScreen = sa.isPersistantScreen;
-                    }
-				}
-				if (attr is V2DShaderAttribute)
-				{
-					V2DShaderAttribute sa = (V2DShaderAttribute)attr;
-
-					float[] parameters = new float[] { };
-					ConstructorInfo ci = sa.shaderType.GetConstructor(new Type[] { parameters.GetType() });
-					this.defaultShader = (V2DShader)ci.Invoke(
-						new object[] 
-							{ 
-								new float[]{sa.param0, sa.param1, sa.param2, sa.param3, sa.param4} 
-							});
-				}
-			}
+			base.Initialize(); 			
 
             SetValidInput();
         }

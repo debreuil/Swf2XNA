@@ -46,7 +46,11 @@ namespace DDW.V2D
 		}
 		public override void SetBounds(float x, float y, float w, float h)
 		{
-			curScreen.SetBounds(x, y, w, h);
+            // curScreen may be null if there are only persistant screens added (huds etc)
+            if (curScreen != null)
+            {
+                curScreen.SetBounds(x, y, w, h);
+            }
 		}
     }
 }

@@ -46,10 +46,13 @@ namespace DDW.Display
 
         public void AddScreen(Screen scr)
         {
-            screens.Add(scr);
             if (scr.isPersistantScreen)
             {
                 this.AddChild(scr);
+            }
+            else
+            {
+                screens.Add(scr);
             }
         }
 

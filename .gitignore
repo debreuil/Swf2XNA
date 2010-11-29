@@ -9,7 +9,10 @@ Thumbs.db
 *.swp
 
 # Can also ignore all directories and files in a directory.
-**/bin/*
+**/bin/Debug/*
+**/bin/x86/Debug/*
+**/bin/Release/*.pdb
+**/bin/x86/Release/*.pdb
 **/obj/*
 **/exports/*
 **/**/obj/*

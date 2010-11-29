@@ -59,6 +59,11 @@ namespace DDW.Display
         public void RemoveScreen(Screen scr)
         {
             screens.Remove(scr);
+            if (scr == curScreen)
+            {
+                Screen nullScreen = null;
+                SetScreen(nullScreen);
+            }
         }
 
 		public Screen GetCurrentScreen()
@@ -82,17 +87,17 @@ namespace DDW.Display
         private bool screenChanged = true;
         public void SetScreen(Screen scr)
         {
+            if (curScreen != null)
+            {
+                prevScreen = curScreen;
+                // can remove on fade etc here
+                curScreen.isActive = false;
+                //stage.RemoveChild(curScreen);
+            }
+
             if (scr != null)
             {
-                if (curScreen != null)
-                {
-                    screenChanged = true;
-                    prevScreen = curScreen;
-                    // can remove on fade etc here
-                    curScreen.isActive = false;
-                    //stage.RemoveChild(curScreen);
-                }
-
+                screenChanged = true;
                 curScreenIndex = screens.IndexOf(scr);
                 curScreen = scr;
             }

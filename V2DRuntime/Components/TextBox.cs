@@ -59,6 +59,24 @@ namespace V2DRuntime.Components
 			sb.Append(value);
 			RecreateTextRuns(); 
 		}
+        public float DefinedWidth()
+        {
+            float result = 0;
+            if (instanceDefinition != null && instanceDefinition.Definition != null)
+            {
+                result = instanceDefinition.Definition.Width;
+            }
+            return result;
+        }
+        public float DefinedHeight()
+        {
+            float result = 0;
+            if (instanceDefinition != null && instanceDefinition.Definition != null)
+            {
+                result = instanceDefinition.Definition.Height;
+            }
+            return result;
+        }
 
 		//private void EnsureTextRuns()
 		//{
@@ -106,7 +124,7 @@ namespace V2DRuntime.Components
 			if (ta.Align == TextAlign.Center)
 			{
 				Vector2 tw = ta.Font.MeasureString(ta.Text);
-				ta.TopLeft.X = (this.Width - ta.Font.MeasureString(ta.Text).X) / 2;
+                ta.TopLeft.X = (DefinedWidth() - ta.Font.MeasureString(ta.Text).X) / 2;
 			}
 			else if (ta.Align == TextAlign.Right)
 			{
@@ -122,7 +140,6 @@ namespace V2DRuntime.Components
 		public override void Draw(Microsoft.Xna.Framework.Graphics.SpriteBatch batch)
 		{
 			//base.Draw(batch);
-
 			for (int i = 0; i < textAtoms.Count; i++)
 			{
 				batch.DrawString(

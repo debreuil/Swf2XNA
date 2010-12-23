@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.CodeDom.Compiler;
 using System.IO;
-using NZlib.Compression;
+using ICSharpCode.SharpZipLib.Zip.Compression;
 namespace DDW.Swf
 {
 	public class SwfReader

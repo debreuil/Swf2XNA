@@ -16,6 +16,7 @@ namespace DDW.VexPipeline
     {
 		public override V2DContentHolder Process(string fileName, ContentProcessorContext context)
         {
+            //System.Diagnostics.Debugger.Launch();
 			V2DContent result = null;
 			V2DContentHolder vch = null;
             //System.Diagnostics.Debugger.Launch();

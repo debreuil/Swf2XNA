@@ -9,12 +9,13 @@ using DDW.Vex;
 using DDW.V2D;
 using xgr = Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Content.Pipeline;
-using Microsoft.Xna.Framework.Content.Pipeline.Graphics;
+using Microsoft.Xna.Framework.Content;
 using DDW.V2D.Serialization;
 using System.Xml.Serialization;
 using DDW.Placeholder;
 using System.Diagnostics;
+using Microsoft.Xna.Framework.Content.Pipeline;
+using Microsoft.Xna.Framework.Content.Pipeline.Graphics;
 
 namespace DDW.VexTo2DPhysics
 {

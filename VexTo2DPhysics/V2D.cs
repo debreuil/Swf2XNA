@@ -10,8 +10,9 @@ using DDW.Swf;
 using DDW.Vex;
 using DDW.VexTo2DPhysics;
 using DDW.Gdi;
-using Microsoft.Xna.Framework.Content.Pipeline;
+using Microsoft.Xna.Framework.Content;
 using DDW.V2D;
+using Microsoft.Xna.Framework.Content.Pipeline;
 
 namespace DDW.VexTo2DPhysics
 {

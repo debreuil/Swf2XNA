@@ -33,6 +33,8 @@
     <IsWebBootstrapper>false</IsWebBootstrapper>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -112,6 +114,7 @@
     </Content>
     <Content Include="Library\SmuckLib.swf">
     </Content>
+    <None Include="app.config" />
     <None Include="Library\Demo.swf">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

@@ -44,7 +44,6 @@
   -->
   <ItemGroup>
     <Content Include="Lib\Newtonsoft.Json.dll" />
-    <Content Include="Lib\NZipLib.dll" />
     <Content Include="Lib\SwfDump.exe" />
     <Content Include="Lib\SwfReader.dll" />
     <Content Include="Lib\Vex.dll" />

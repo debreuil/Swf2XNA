@@ -8,12 +8,14 @@ using DDW.V2D;
 using DDW.V2D.Serialization;
 using DDW.Input;
 using Microsoft.Xna.Framework.Input;
+#if !(WINDOWS_PHONE)
 using Microsoft.Xna.Framework.Net;
 using V2DRuntime.Network;
+using Microsoft.Xna.Framework.Storage;
+#endif
 using V2DRuntime.Game;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.GamerServices;
-using Microsoft.Xna.Framework.Storage;
 using System.IO;
 using V2DRuntime.Shaders;
 using System.Reflection;
@@ -39,9 +41,10 @@ namespace DDW.Display
         protected Move[] playerMoves;
         protected TimeSpan[] playerMoveTimes;
 		readonly TimeSpan MoveTimeOut = TimeSpan.FromSeconds(1.0);
-
+#if !(WINDOWS_PHONE)
 		protected PacketWriter packetWriter = new PacketWriter();
 		protected PacketReader packetReader = new PacketReader();
+#endif
 		protected int framesBetweenPackets = 4;
 		protected int framesSinceLastSend;
 		protected bool enablePrediction = true;
@@ -305,6 +308,10 @@ namespace DDW.Display
                     //    sessionGamerIndex++;
                     //}
 				}
+                else
+                {
+                    inputManagers[i] = null;
+                }
 			}
 
             if (allowKeyboardOnly && sessionGamerIndex == 0) // keyboard only
@@ -322,6 +329,7 @@ namespace DDW.Display
         {
             inputManagers[playerIndex] = new InputManager((PlayerIndex)playerIndex, moveList.LongestMoveLength);
 
+#if !(WINDOWS_PHONE)
             if (NetworkManager.Session != null)
             {
                 foreach (LocalNetworkGamer lng in NetworkManager.Session.LocalGamers)
@@ -333,6 +341,7 @@ namespace DDW.Display
                     }
 	            }
             }
+#endif
         }
 
 		protected void SetKeyboardController()
@@ -386,7 +395,9 @@ namespace DDW.Display
                             playerMoves[i] = newMove;
                             playerMoveTimes[i] = gameTime.TotalGameTime;
                             OnPlayerInput(i, playerMoves[i], playerMoveTimes[i]);
+#if !(WINDOWS_PHONE)
                             BroadcastMove(i, playerMoves[i], playerMoveTimes[i]);
+#endif
                         }
                     }
                     else if(GamePad.GetState((PlayerIndex)i).IsConnected)
@@ -396,6 +407,8 @@ namespace DDW.Display
                 }
             }
 		}
+
+#if !(WINDOWS_PHONE)
 
 #region network
 		public virtual void BroadcastMove(int playerIndex, Move move, TimeSpan time)
@@ -493,6 +506,8 @@ namespace DDW.Display
 
 #endregion
 
+#endif
+
 		public virtual void SetBounds(float x, float y, float w, float h)
 		{
 		}
@@ -503,10 +518,12 @@ namespace DDW.Display
             base.Update(gameTime);
             if (isActive)
             {
+#if !(WINDOWS_PHONE)
                 if (NetworkManager.Session != null && NetworkManager.Session.SessionType != NetworkSessionType.Local)
 				{
 					UpdateNetworkSession(gameTime);
 				}
+#endif
 			}
 			OnUpdateComplete(gameTime);		
 		}

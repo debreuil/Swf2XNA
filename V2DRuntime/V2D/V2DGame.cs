@@ -6,8 +6,10 @@ using DDW.V2D.Serialization;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+#if !(WINDOWS_PHONE)
 using Microsoft.Xna.Framework.Net;
 using V2DRuntime.Network;
+#endif
 using Microsoft.Xna.Framework.GamerServices;
 
 namespace DDW.V2D 
@@ -28,7 +30,9 @@ namespace DDW.V2D
         protected bool keyDown = false;
         protected bool isFullScreen = false;
 
+#if !(WINDOWS_PHONE)
 		public List<NetworkGamer> gamers = new List<NetworkGamer>();
+#endif
 
         protected V2DGame()
         {
@@ -94,10 +98,15 @@ namespace DDW.V2D
         {
         }
 
+#if !(WINDOWS_PHONE)
+
 		public virtual void ExitToMainMenu()
         {
 			NetworkManager.Instance.LeaveSession();
         }
+
+#endif
+
         public virtual void UnlockTrial()
         {
             SignedInGamer gamer = Gamer.SignedInGamers[V2DGame.activeController];
@@ -169,6 +178,8 @@ namespace DDW.V2D
             return result;
         }
 
+#if !(WINDOWS_PHONE)
+
 		public virtual void AddGamer(NetworkGamer gamer, int gamerIndex)
 		{
 			if (!gamers.Contains(gamer))
@@ -183,6 +194,8 @@ namespace DDW.V2D
 				gamers.Remove(gamer);
 			}
 		}
+
+#endif
 
         protected override void Update(GameTime gameTime)
         {

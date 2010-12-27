@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+#if !(WINDOWS_PHONE)
 using Microsoft.Xna.Framework.Net;
+#endif
 using DDW.V2D;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework;
@@ -15,7 +17,9 @@ namespace V2DRuntime.Game
 	{
 		public bool isLocal;
 		public PlayerIndex gamePadIndex;
+#if !(WINDOWS_PHONE)
 		public NetworkGamer NetworkGamer;
+#endif
 		public byte NetworkId;
 
 
@@ -37,6 +41,7 @@ namespace V2DRuntime.Game
         }
         //private bool isAlive = true;
         //public virtual bool IsAlive { get { return isAlive; } set { isAlive = value; } }
+#if !(WINDOWS_PHONE)
 
 		public void WriteNetworkPacket(PacketWriter packetWriter, GameTime gameTime)
 		{
@@ -100,6 +105,7 @@ namespace V2DRuntime.Game
 			//    ApplyPrediction(gameTime, latency, packetSendTime);
 			//}
 		}
+#endif
 
 		public virtual void UpdateLocalPlayer(Microsoft.Xna.Framework.GameTime gameTime)
 		{

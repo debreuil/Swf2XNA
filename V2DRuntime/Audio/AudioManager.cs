@@ -1,4 +1,6 @@
-﻿using System;
+﻿#if !(WINDOWS_PHONE)
+
+using System;
 using System.Collections.Generic;
 using System.Text;
 using Microsoft.Xna.Framework;
@@ -153,3 +155,5 @@ namespace V2DRuntime.Audio
     }
 
 }
+
+#endif

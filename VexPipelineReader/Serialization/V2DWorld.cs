@@ -56,7 +56,9 @@ namespace DDW.V2D.Serialization
         }
         public V2DDefinition GetDefinitionByName(string name)
         {
-            return definitions.Find(d => d.Name == name);
+            //return definitions.Find(d => d.Name == name);
+            var definition = (from d in definitions where d.Name == name select d).Single();
+            return definition;
         }
     }
 }

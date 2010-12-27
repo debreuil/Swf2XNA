@@ -6,7 +6,9 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
 using DDW.V2D;
 using V2DRuntime.Shaders;
+#if !(WINDOWS_PHONE)
 using V2DRuntime.Audio;
+#endif
 using Microsoft.Xna.Framework.GamerServices;
 
 namespace DDW.Display
@@ -22,8 +24,10 @@ namespace DDW.Display
 		public bool pause = false;
         public V2DShader defaultEffect;
 
+#if !(WINDOWS_PHONE)
         public AudioManager audio;
         public AudioManager music;
+#endif
 
         public float MillisecondsPerFrame = 1000f / 12f;
 
@@ -34,6 +38,8 @@ namespace DDW.Display
             stage = this;
         }
 
+#if !(WINDOWS_PHONE)
+
         public void InitializeAudio(string audioEnginePath, string waveBankPath, string soundBankPath)
         {
             audio = new AudioManager(audioEnginePath, waveBankPath, soundBankPath);
@@ -43,6 +49,8 @@ namespace DDW.Display
         {
             music = new AudioManager(musicEnginePath, waveBankPath, soundBankPath);
         }
+
+#endif
 
         public void AddScreen(Screen scr)
         {
@@ -104,8 +112,11 @@ namespace DDW.Display
         }
         public void SetScreen(string screenName)
         {
-            Screen scr = screens.Find(sc => sc.InstanceName == screenName);
-            SetScreen(scr);
+			// change for WP7: Patrick Godwin 
+            //Screen scr = screens.Find(sc => sc.InstanceName == screenName);
+            //SetScreen(scr);
+            var screen = (from c in screens where c.InstanceName == screenName select c).Single();
+            SetScreen(screen);
         }
         public void SetScreen(int index)
         {

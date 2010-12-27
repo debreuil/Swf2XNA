@@ -13,7 +13,9 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
+#if !(WINDOWS_PHONE)
 using Microsoft.Xna.Framework.Net;
+#endif
 using V2DRuntime.Game;
 #endregion
 
@@ -22,7 +24,9 @@ namespace DDW.Input // these are ms supplied classes (and they are obtuse), name
     public class InputManager
 	{
 		public PlayerIndex PlayerIndex;
+#if !(WINDOWS_PHONE)
 		public NetworkGamer NetworkGamer;
+#endif
 		public Player Player;
 
 		public GamePadState GamePadState;

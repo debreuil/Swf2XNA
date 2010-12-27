@@ -1,4 +1,4 @@
-﻿
+﻿#if !(WINDOWS_PHONE)
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -147,12 +147,17 @@ namespace V2DRuntime.Network
 
 		public int GetGamerIndex(NetworkGamer gamer)
 		{
-			int result = -1;
-			if (networkSession != null)
-			{
-				result = networkSession.AllGamers.IndexOf(gamer);
-			}
-			return result;
+            int result = -1;
+            if (gamer is LocalNetworkGamer)
+            {
+                result = (int)((LocalNetworkGamer)gamer).SignedInGamer.PlayerIndex;
+            }
+            else
+            {
+                result = networkSession.AllGamers.IndexOf(gamer) + 0x10;
+            }
+            return result;
 		}
 	}
 }
+#endif

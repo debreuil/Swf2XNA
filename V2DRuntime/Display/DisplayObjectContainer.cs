@@ -126,7 +126,9 @@ namespace DDW.Display
         }
         public virtual DisplayObject GetChildByName(string name)
         {
-            return children.Find(n => n.InstanceName == name);
+			// change for WP7: Patrick Godwin 
+            //return children.Find(n => n.InstanceName == name);
+			return (from n in children where n.InstanceName == name select n).Single();
             //DisplayObject result = null;
             //for (int i = 0; i < children.Count; i++)
             //{

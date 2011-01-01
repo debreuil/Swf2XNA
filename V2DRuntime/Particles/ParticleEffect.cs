@@ -169,19 +169,9 @@ namespace V2DRuntime.Particles
 		}
 		public virtual void BeginDrawAllParticles(Microsoft.Xna.Framework.Graphics.SpriteBatch batch)
 		{
-			//V2DGame.defaultEffect.CurrentTechnique.Passes[0].End();
-			//V2DGame.defaultEffect.End();
-			batch.End();
-            //batch.Begin(SpriteBlendMode.Additive, SpriteSortMode.Immediate, SaveStateMode.None);
-            batch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, null, null, null, null, Stage.SpriteBatchMatrix);
 		}
 		public virtual void EndDrawAllParticles(Microsoft.Xna.Framework.Graphics.SpriteBatch batch)
 		{
-			batch.End();
-            //batch.Begin(SpriteBlendMode.AlphaBlend, SpriteSortMode.Immediate, SaveStateMode.None);
-            batch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, null, null, null, null, Stage.SpriteBatchMatrix);
-			//V2DGame.defaultEffect.Begin();
-			//V2DGame.defaultEffect.CurrentTechnique.Passes[0].Begin();
 		}
 		public override void Draw(Microsoft.Xna.Framework.Graphics.SpriteBatch batch)
 		{

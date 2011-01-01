@@ -497,7 +497,7 @@ namespace DDW.Display
 					if (fi.GetValue(this) == null)
 					{
 						ConstructorInfo ci = ft.GetConstructor(new Type[] { typeof(Texture2D), typeof(V2DInstance) });
-						result = (DisplayObject)ci.Invoke(new object[] { texture, inst });
+                        result = (DisplayObject)ci.Invoke(new object[] { texture, inst }); 
 						fi.SetValue(this, result);
 					}
 				}
@@ -534,7 +534,7 @@ namespace DDW.Display
 
 						// add element
 						ConstructorInfo elementCtor = gt.GetConstructor(new Type[] { typeof(Texture2D), typeof(V2DInstance) });
-						result = (DisplayObject)elementCtor.Invoke(new object[] { texture, inst });
+                        result = (DisplayObject)elementCtor.Invoke(new object[] { texture, inst });
 
 						PropertyInfo cm = collection.GetType().GetProperty("Count");
 						int cnt = (int)cm.GetValue(collection, new object[] { });
@@ -577,7 +577,8 @@ namespace DDW.Display
 
 			if (result != null)
 			{
-				result.Index = index; // set for all object, -1 if not in collection
+                result.Index = index; // set for all object, -1 if not in collection 
+                result.RootName = instName;
 
 				// apply attributes
 				System.Attribute[] attrs = System.Attribute.GetCustomAttributes(fi);  // reflection
@@ -657,7 +658,7 @@ namespace DDW.Display
 			}
 			return result;
 		}
-
+         
         public override bool OnPlayerInput(int playerIndex, Move move, TimeSpan time)
         {
             bool result = base.OnPlayerInput(playerIndex, move, time);

@@ -18,6 +18,7 @@ namespace DDW.Display
 		protected V2DInstance instanceDefinition;
 
 		protected string instanceName;
+        protected string rootName;
 		protected string definitionName;
         public static uint DepthCounter;
         public int Index = -1;
@@ -85,6 +86,20 @@ namespace DDW.Display
 					State.Position = new Vector2(0, 0);
                 }
                     
+            }
+        }
+        /// <summary>
+        /// Root of instance name, in case of arrays or collections, it is the root name without the index that is appended to the instance name.
+        /// </summary>
+        public string RootName
+        {
+            get
+            {
+                return rootName;
+            }
+            set
+            {
+                rootName = value;
             }
         }
         public string InstanceName

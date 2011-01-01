@@ -12,7 +12,10 @@ namespace V2DRuntime.Display
     public abstract class Panel : Sprite
     {
         public bool IsDialog;
-        public Panel(Texture2D texture, V2DInstance inst): base(texture, inst){}
+        public Panel(Texture2D texture, V2DInstance inst): base(texture, inst)
+        {
+            //isActive = false;
+        }
 
 		public override bool OnPlayerInput(int playerIndex, Move move, TimeSpan time)
 		{

@@ -11,6 +11,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.Xna.Framework.Input;
 #endregion
 
 namespace DDW.Input // these are ms supplied classes, namespace changed to fit
@@ -30,6 +31,29 @@ namespace DDW.Input // these are ms supplied classes, namespace changed to fit
             this.moves = moves.OrderByDescending(m => m.Sequence.Length).ToArray();
         }
 
+        public Move MatchButtons(Buttons[] b)
+        {
+            Move result = null;
+            for (int i = 0; i < moves.Length; i++)
+            {
+                Move m = moves[i];
+                for (int j = 0; j < b.Length; j++)
+                {
+                    if (j >= m.Sequence.Length || m.Sequence[j] != b[j])
+                    {
+                        m = null;
+                        break;
+                    }
+                }
+
+                if (m != null)
+                {
+                    result = m;
+                    break;
+                }
+            }
+            return result;
+        }
         /// <summary>
         /// Finds the longest Move which matches the given input, if any.
         /// </summary>

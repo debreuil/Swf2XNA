@@ -187,17 +187,16 @@ namespace DDW.Display
 
 				DepthCounter = 1;
                 batch.GraphicsDevice.Clear(clearColor);
-                //batch.Begin(SpriteBlendMode.AlphaBlend, SpriteSortMode.Immediate, SaveStateMode.None, Stage.SpriteBatchMatrix);
-                batch.Begin(
-                            SpriteSortMode.Deferred, 
-                            BlendState.NonPremultiplied, 
-                            null, //SamplerState.AnisotropicClamp, 
-                            null, //DepthStencilState.None, 
-                            null, //RasterizerState.CullNone, 
-                            null, 
-                            Stage.SpriteBatchMatrix);
+                //batch.Begin(
+                //            SpriteSortMode.Deferred, 
+                //            BlendState.NonPremultiplied, 
+                //            null, //SamplerState.AnisotropicClamp, 
+                //            null, //DepthStencilState.None, 
+                //            null, //RasterizerState.CullNone, 
+                //            null, 
+                //            Stage.SpriteBatchMatrix);
 				base.Draw(batch);
-				batch.End();
+				//batch.End();
 
 				curScreen.DrawDebugData(batch);
 			//}

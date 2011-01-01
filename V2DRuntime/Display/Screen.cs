@@ -140,7 +140,12 @@ namespace DDW.Display
 		{
 			V2DGame.currentRootName = instanceDefinition.InstanceName == null ? V2DGame.ROOT_NAME : instanceDefinition.InstanceName;
             base.Activate();
+            inputManagers = InputManager.Managers;
 		}
+        public override void Deactivate()
+        {
+            inputManagers = null;
+        }
 
         public override void Initialize()
         {
@@ -272,6 +277,7 @@ namespace DDW.Display
 
         public virtual void SetValidInput()
         {
+            inputManagers = InputManager.Managers;
             moveList = new MoveList(new Move[]
             {
                 Move.Up,
@@ -289,59 +295,16 @@ namespace DDW.Display
                 Move.LeftTrigger,
                 Move.RightTrigger,
             });
-
-			int maxLocalGamers = 4;
-			inputManagers = new InputManager[maxLocalGamers];
-
-			int sessionGamerIndex = 0;
-			for (int i = 0; i < maxLocalGamers; i++)
-			{
-				if (GamePad.GetState((PlayerIndex)i).IsConnected)
-				{
-                    AddInputManager(i);
-                    //inputManagers[i] = new InputManager((PlayerIndex)i, moveList.LongestMoveLength);
-
-                    //if (NetworkManager.Session != null && 
-                    //    NetworkManager.Session.LocalGamers.Count > sessionGamerIndex)
-                    //{
-                    //    inputManagers[i].NetworkGamer = NetworkManager.Session.LocalGamers[sessionGamerIndex];
-                    //    sessionGamerIndex++;
-                    //}
-				}
-                else
-                {
-                    inputManagers[i] = null;
-                }
-			}
-
-            if (allowKeyboardOnly && sessionGamerIndex == 0) // keyboard only
+            
+            if (allowKeyboardOnly && this.inputManagers.Length == 0) // keyboard only
             {
-				//inputManagers[0] = new InputManager((PlayerIndex)0, moveList.LongestMoveLength);
-                AddInputManager(0);
+                InputManager.AddInputManager(0);
             }
 
             // Give each player a location to store their most recent move.
             playerMoves = new Move[inputManagers.Length];
             playerMoveTimes = new TimeSpan[inputManagers.Length];
 			SetKeyboardController();
-        }
-        protected void AddInputManager(int playerIndex)
-        {
-            inputManagers[playerIndex] = new InputManager((PlayerIndex)playerIndex, moveList.LongestMoveLength);
-
-#if !(WINDOWS_PHONE)
-            if (NetworkManager.Session != null)
-            {
-                foreach (LocalNetworkGamer lng in NetworkManager.Session.LocalGamers)
-	            {
-                    if(lng.SignedInGamer != null && lng.SignedInGamer.PlayerIndex == (PlayerIndex)playerIndex)
-                    {
-                        inputManagers[playerIndex].NetworkGamer = lng;
-                        break;
-                    }
-	            }
-            }
-#endif
         }
 
 		protected void SetKeyboardController()
@@ -367,6 +330,7 @@ namespace DDW.Display
         {
             if (inputManagers != null)
 			{
+                InputManager.Update();
 				for (int i = 0; i < inputManagers.Length; ++i)
                 {
                     if (inputManagers[i] != null)
@@ -386,6 +350,7 @@ namespace DDW.Display
                         Move newMove = moveList.DetectMove(inputManager);
                         if (inputManager.Releases != 0)
                         {
+                            //Move m = moveList.MatchButtons(new Buttons[]{inputManager.Releases});
                             newMove = new Move("");
                             newMove.Releases = inputManager.Releases;
                         }
@@ -399,10 +364,6 @@ namespace DDW.Display
                             BroadcastMove(i, playerMoves[i], playerMoveTimes[i]);
 #endif
                         }
-                    }
-                    else if(GamePad.GetState((PlayerIndex)i).IsConnected)
-                    {
-                        AddInputManager(i);
                     }
                 }
             }
@@ -541,6 +502,22 @@ namespace DDW.Display
 		}
         public override void Draw(SpriteBatch batch)
         {
+            if (defaultShader != null)
+            {
+                defaultShader.Begin(batch);
+            }
+            else
+            {
+                batch.Begin(
+                   SpriteSortMode.Deferred,
+                   BlendState.NonPremultiplied,
+                   null, //SamplerState.AnisotropicClamp, 
+                   null, //DepthStencilState.None, 
+                   null, //RasterizerState.CullNone, 
+                   null,
+                   Stage.SpriteBatchMatrix);
+            }
+
             base.Draw(batch);
 
             // this needs to happen for screen (class) level shaders (vs depth group shaders)
@@ -548,6 +525,14 @@ namespace DDW.Display
             {
                 lastShader.End(batch);
                 lastShader = null;
+            }
+            else if (defaultShader != null)
+            {
+                defaultShader.End(batch);
+            }
+            else
+            {
+                batch.End();
             }
         }
 		public virtual void DrawDebugData(SpriteBatch batch)
@@ -570,23 +555,24 @@ namespace DDW.Display
                 //    lastShader.End(batch);
                 //}
 
-                lastShader = shaderEffect;
                 batch.End();
-                //batch.Begin(SpriteBlendMode.AlphaBlend, SpriteSortMode.Immediate, SaveStateMode.SaveState);
-                //batch.Begin(SpriteBlendMode.AlphaBlend, SpriteSortMode.Immediate, SaveStateMode.None, Stage.SpriteBatchMatrix);
-                //batch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, null, null, null); 
-                batch.Begin(
-                     SpriteSortMode.Deferred,
-                     BlendState.NonPremultiplied,
-                     null, //SamplerState.AnisotropicClamp, 
-                     null, //DepthStencilState.None, 
-                     null, //RasterizerState.CullNone, 
-                     null,
-                     Stage.SpriteBatchMatrix);
+
+                lastShader = shaderEffect;
                 if (shaderEffect != null)
                 {
                     shaderEffect.Begin(batch);
                     shaderEffect = null;
+                }
+                else
+                {               
+                    batch.Begin(
+                         SpriteSortMode.Deferred,
+                         BlendState.NonPremultiplied,
+                         null, //SamplerState.AnisotropicClamp, 
+                         null, //DepthStencilState.None, 
+                         null, //RasterizerState.CullNone, 
+                         null,
+                         Stage.SpriteBatchMatrix);
                 }
             }
 

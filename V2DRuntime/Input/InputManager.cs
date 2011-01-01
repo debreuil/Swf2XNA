@@ -17,12 +17,14 @@ using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Net;
 #endif
 using V2DRuntime.Game;
+using V2DRuntime.Enums;
+using V2DRuntime.Network;
 #endregion
 
 namespace DDW.Input // these are ms supplied classes (and they are obtuse), namespace changed to fit
 {
     public class InputManager
-	{
+    {
 		public PlayerIndex PlayerIndex;
 #if !(WINDOWS_PHONE)
 		public NetworkGamer NetworkGamer;
@@ -32,7 +34,9 @@ namespace DDW.Input // these are ms supplied classes (and they are obtuse), name
 		public GamePadState GamePadState;
 		public KeyboardState currentKeyboardState;
 		public bool IsActiveController = false;
-		public static KeyboardState EmptyKeyboardState = new KeyboardState();
+        public static KeyboardState EmptyKeyboardState = new KeyboardState();
+
+        public PlayerJoinState PlayerJoinState = PlayerJoinState.NotJoined;
 
 		public Buttons Releases;
 
@@ -227,6 +231,77 @@ namespace DDW.Input // these are ms supplied classes (and they are obtuse), name
             }
 
             return true;
+        }
+
+        private static int maxLocalGamers = 4;
+        private static InputManager[] inputManagers;
+        public static InputManager[] Managers
+        {
+            get
+            {
+                if (inputManagers == null)
+                {
+                    inputManagers = new InputManager[maxLocalGamers];
+
+                    for (int i = 0; i < maxLocalGamers; i++)
+                    {
+                        if (GamePad.GetState((PlayerIndex)i).IsConnected)
+                        {
+                            AddInputManager(i);
+                        }
+                        else
+                        {
+                            inputManagers[i] = null;
+                        }
+                    }
+
+                }
+                return inputManagers;
+            }
+        }
+        public static void ClearAll()
+        {
+            for (int i = 0; i < inputManagers.Length; i++)
+            {
+                if (inputManagers[i] != null)
+                {
+                    inputManagers[i].Buffer.Clear();
+                }
+            }
+        }
+
+        public static void Update()
+        {
+            for (int i = 0; i < maxLocalGamers; i++)
+            {
+                if (inputManagers[i] == null && GamePad.GetState((PlayerIndex)i).IsConnected)
+                {
+                    AddInputManager(i);
+                }
+                if (inputManagers[i] != null && !GamePad.GetState((PlayerIndex)i).IsConnected)
+                {
+                    inputManagers[i] = null;
+                }
+            }
+        }
+
+        public static void AddInputManager(int playerIndex)
+        {
+            inputManagers[playerIndex] = new InputManager((PlayerIndex)playerIndex, 2);//, moveList.LongestMoveLength);
+
+#if !(WINDOWS_PHONE)
+            if (NetworkManager.Session != null)
+            {
+                foreach (LocalNetworkGamer lng in NetworkManager.Session.LocalGamers)
+                {
+                    if (lng.SignedInGamer != null && lng.SignedInGamer.PlayerIndex == (PlayerIndex)playerIndex)
+                    {
+                        inputManagers[playerIndex].NetworkGamer = lng;
+                        break;
+                    }
+                }
+            }
+#endif
         }
     }
 }

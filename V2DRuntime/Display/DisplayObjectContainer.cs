@@ -126,19 +126,16 @@ namespace DDW.Display
         }
         public virtual DisplayObject GetChildByName(string name)
         {
-			// change for WP7: Patrick Godwin 
-            //return children.Find(n => n.InstanceName == name);
-			return (from n in children where n.InstanceName == name select n).Single();
-            //DisplayObject result = null;
-            //for (int i = 0; i < children.Count; i++)
-            //{
-            //    if (children[i].InstanceName == name)
-            //    {
-            //        result = children[i];
-            //        break;
-            //    }
-            //}
-            //return result;
+            DisplayObject result = null;
+            for (int i = 0; i < children.Count; i++)
+            {
+                if (children[i].InstanceName == name)
+                {
+                    result = children[i];
+                    break;
+                }
+            }
+            return result;
         }
         public virtual int GetChildIndex(DisplayObject o)
         {

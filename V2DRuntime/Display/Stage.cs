@@ -112,10 +112,15 @@ namespace DDW.Display
         }
         public void SetScreen(string screenName)
         {
-			// change for WP7: Patrick Godwin 
-            //Screen scr = screens.Find(sc => sc.InstanceName == screenName);
-            //SetScreen(scr);
-            var screen = (from c in screens where c.InstanceName == screenName select c).Single();
+            Screen s = null;
+            for (int i = 0; i < screens.Count; i++)
+            {
+                if (screens[i].InstanceName == screenName)
+                {
+                    s = screens[i];
+                    break;
+                }
+            }
             SetScreen(screen);
         }
         public void SetScreen(int index)

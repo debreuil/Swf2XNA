@@ -78,6 +78,7 @@ namespace DDW.SwfRenderer
                     colors.Add(new PixelData(0x80, 0x80, 0x80, 0xFF));
                 }
             }
+            //UnsafeBitmapP b = new UnsafeBitmapP(w, h);
             UnsafeBitmap b = new UnsafeBitmap(w, h);
             b.LockBitmap();
 

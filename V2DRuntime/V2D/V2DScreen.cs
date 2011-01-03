@@ -502,8 +502,8 @@ namespace DDW.V2D
 
                 simpleColorEffect.Techniques[0].Passes[0].Apply();
                 batch.Begin(
-                            SpriteSortMode.Deferred, 
-                            BlendState.NonPremultiplied, 
+                            SpriteSortMode.Deferred,
+                            BlendState.AlphaBlend, //BlendState.NonPremultiplied, 
                             null, //SamplerState.AnisotropicClamp, 
                             null, //DepthStencilState.None, 
                             null, //RasterizerState.CullNone, 

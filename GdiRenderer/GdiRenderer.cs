@@ -220,6 +220,29 @@ namespace DDW.Gdi
             }
             return result;
         }
+        public Dictionary<uint, string> ExportBitmapsAsPremultiplied(Dictionary<string, List<Bitmap>> bmps)
+        {
+            var result = new Dictionary<uint, string>();
+            UnsafeBitmap ub;
+            foreach (string key in bmps.Keys)
+            {
+                string[] nms = key.Split('#');
+                string dir = Path.GetDirectoryName(nms[0]);
+                if (!Directory.Exists(dir))
+                {
+                    Directory.CreateDirectory(dir);
+                }
+
+                ub = new UnsafeBitmap(bmps[key][0]);
+                ub.ConvertToPremultiplied();
+                bmps[key][0] = ub.Bitmap;
+
+                bmps[key][0].Save(nms[0], System.Drawing.Imaging.ImageFormat.Png);
+                bmps[key][0].Dispose();
+                result.Add(uint.Parse(nms[1]), nms[0]);
+            }
+            return result;
+        }
         public void Render(Symbol symbol, Graphics g)
         {
             this.g = g;

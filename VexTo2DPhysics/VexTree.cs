@@ -78,7 +78,8 @@ namespace DDW.VexTo2DPhysics
             Gdi.GdiRenderer gr = new Gdi.GdiRenderer();
             Dictionary<string, List<Bitmap>> bmps = new Dictionary<string, List<Bitmap>>();
             gr.GenerateFilteredBitmaps(vo, usedImages, bmps);
-            gr.ExportBitmaps(bmps);
+
+            gr.ExportBitmapsAsPremultiplied(bmps);
 
             genV2d = new GenV2DWorld(this, usedImages);
             genV2d.Generate();

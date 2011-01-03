@@ -187,24 +187,12 @@ namespace DDW.Display
 		}
         public override void Draw(SpriteBatch batch)
         {
-            //if (V2DGame.instance.IsActive)
-            //{
-
 				DepthCounter = 1;
                 batch.GraphicsDevice.Clear(clearColor);
-                //batch.Begin(
-                //            SpriteSortMode.Deferred, 
-                //            BlendState.NonPremultiplied, 
-                //            null, //SamplerState.AnisotropicClamp, 
-                //            null, //DepthStencilState.None, 
-                //            null, //RasterizerState.CullNone, 
-                //            null, 
-                //            Stage.SpriteBatchMatrix);
+
 				base.Draw(batch);
-				//batch.End();
 
 				curScreen.DrawDebugData(batch);
-			//}
         }
     }
 }

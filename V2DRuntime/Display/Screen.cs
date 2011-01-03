@@ -510,7 +510,7 @@ namespace DDW.Display
             {
                 batch.Begin(
                    SpriteSortMode.Deferred,
-                   BlendState.NonPremultiplied,
+                   BlendState.AlphaBlend, //BlendState.NonPremultiplied,
                    null, //SamplerState.AnisotropicClamp, 
                    null, //DepthStencilState.None, 
                    null, //RasterizerState.CullNone, 
@@ -567,7 +567,7 @@ namespace DDW.Display
                 {               
                     batch.Begin(
                          SpriteSortMode.Deferred,
-                         BlendState.NonPremultiplied,
+                         BlendState.AlphaBlend, //BlendState.NonPremultiplied,
                          null, //SamplerState.AnisotropicClamp, 
                          null, //DepthStencilState.None, 
                          null, //RasterizerState.CullNone, 

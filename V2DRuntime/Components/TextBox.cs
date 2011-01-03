@@ -139,7 +139,8 @@ namespace V2DRuntime.Components
 		}
 		public override void Draw(Microsoft.Xna.Framework.Graphics.SpriteBatch batch)
 		{
-			//base.Draw(batch);
+            //base.Draw(batch);
+
 			for (int i = 0; i < textAtoms.Count; i++)
 			{
 				batch.DrawString(

@@ -55,6 +55,11 @@
       <Importer>FontDescriptionImporter</Importer>
       <Processor>FontDescriptionProcessor</Processor>
     </Compile>
+    <Compile Include="DistanceJoint.swf">
+      <Name>DistanceJoint</Name>
+      <Importer>SwfImporter</Importer>
+      <Processor>SwfProcessor</Processor>
+    </Compile>
     <Compile Include="ss0.X">
       <Name>ss0</Name>
       <Importer>XImporter</Importer>
@@ -86,11 +91,6 @@
       <Name>cursor</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
-    </Compile>
-    <Compile Include="DistanceJoint.swf">
-      <Name>DistanceJoint</Name>
-      <Importer>SwfImporter</Importer>
-      <Processor>SwfProcessor</Processor>
     </Compile>
     <Compile Include="GearJoint.swf">
       <Name>GearJoint</Name>

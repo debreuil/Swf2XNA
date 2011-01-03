@@ -121,7 +121,7 @@ namespace DDW.Display
                     break;
                 }
             }
-            SetScreen(screen);
+            SetScreen(s);
         }
         public void SetScreen(int index)
         {

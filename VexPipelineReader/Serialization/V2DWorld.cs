@@ -32,15 +32,16 @@ namespace DDW.V2D.Serialization
         public V2DWorld()
         {
         }
+#if WINDOWS
         public static V2DWorld CreateFromXml(string xmlPath)
         {
             XmlSerializer s = new XmlSerializer(typeof(V2DWorld));
             TextReader r = new StreamReader(xmlPath);
             V2DWorld w = (V2DWorld)s.Deserialize(r);
             r.Close();
-
             return w;
         }
+#endif
         public V2DInstance RootInstance
         {
             get

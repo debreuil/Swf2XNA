@@ -40,7 +40,7 @@ namespace DDW.Input
         // know how big the viewport will be.
 #if XBOX360
         public override void Initialize()
-        {            
+        {
             base.Initialize();
 
             Viewport vp = GraphicsDevice.Viewport;

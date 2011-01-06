@@ -118,11 +118,11 @@ namespace DDW.V2D
 			if (V2DGame.instance.HasCursor)
 			{
 				cursor = V2DGame.instance.GetCursor();
-#if !XBOX
+//#if !XBOX
 				cursor.MouseDown += MouseDown;
 				cursor.MouseMove += MouseMove;
 				cursor.MouseUp += MouseUp;
-#endif
+//#endif
             }
 		}
         public override void Removed(EventArgs e)
@@ -131,11 +131,11 @@ namespace DDW.V2D
 			if (V2DGame.instance.HasCursor)
 			{
 				cursor = V2DGame.instance.GetCursor();
-#if !XBOX
+//#if !XBOX
 				cursor.MouseDown -= MouseDown;
 				cursor.MouseMove -= MouseMove;
                 cursor.MouseUp -= MouseUp;
-#endif
+//#endif
             }
 
             contactTypes.Clear();
@@ -246,7 +246,7 @@ namespace DDW.V2D
 		#endregion
 
 		#region Mouse
-#if !XBOX
+//#if !XBOX
 		public virtual void MouseDown(Vector2 p)
 		{
 			if (_mouseJoint != null)
@@ -312,7 +312,7 @@ namespace DDW.V2D
 				_mouseJoint.SetTarget(p);
 			}
 		}
-#endif
+//#endif
         #endregion
         #region Bounds
         Body[] boundsBodies = new Body[4];

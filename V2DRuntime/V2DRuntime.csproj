@@ -225,9 +225,9 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Box2D.XNA\Box2D.XNA - windows.csproj">
+    <ProjectReference Include="..\Box2D.XNA\Box2D.XNA.csproj">
       <Project>{22791486-E721-4511-AA4B-DA26CF5D0F2E}</Project>
-      <Name>Box2D.XNA - windows</Name>
+      <Name>Box2D.XNA</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

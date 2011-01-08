@@ -131,6 +131,7 @@
     <Compile Include="Components\ButtonTabGroup.cs" />
     <Compile Include="Components\Group.cs" />
     <Compile Include="Components\TextBox.cs" />
+    <Compile Include="Data\HighScoreDataItem.cs" />
     <Compile Include="Debug\Render.cs" />
     <Compile Include="Display\Delegates.cs" />
     <Compile Include="Display\DisplayObject.cs" />
@@ -154,6 +155,7 @@
     <Compile Include="Input\Move.cs" />
     <Compile Include="Input\MoveList.cs" />
     <Compile Include="Network\NetworkManager.cs" />
+    <Compile Include="Panels\HighScorePanel.cs" />
     <Compile Include="Tween\Easing.cs" />
     <Compile Include="Particles\FastRandom.cs" />
     <Compile Include="Particles\Particle.cs" />

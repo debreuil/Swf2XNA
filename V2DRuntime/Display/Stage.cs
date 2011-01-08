@@ -74,10 +74,14 @@ namespace DDW.Display
             }
         }
 
-		public Screen GetCurrentScreen()
-		{
-			return curScreen;
-		}
+        public Screen GetCurrentScreen()
+        {
+            return curScreen;
+        }
+        public Screen GetPreviousScreen()
+        {
+            return prevScreen;
+        }
 		public Screen GetNextScreen()
         {
             int indx = curScreenIndex + 1 >= screens.Count ? 0 : curScreenIndex + 1;

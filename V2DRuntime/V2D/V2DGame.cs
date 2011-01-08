@@ -104,6 +104,9 @@ namespace DDW.V2D
         {
 			NetworkManager.Instance.LeaveSession();
         }
+        public virtual void AllLevelsComplete()
+        {
+        }
 
 #endif
 

@@ -128,7 +128,7 @@ namespace V2DRuntime.Components
 			}
 			else if (ta.Align == TextAlign.Right)
 			{
-				ta.TopLeft.X = (this.Width - ta.Font.MeasureString(ta.Text).X);
+                ta.TopLeft.X = (DefinedWidth() - ta.Font.MeasureString(ta.Text).X);
 			}
 
 			textAtoms.Add(ta);

@@ -83,6 +83,8 @@
     <Compile Include="Components\Button.cs" />
     <Compile Include="Components\ButtonTabGroup.cs" />
     <Compile Include="Components\Group.cs" />
+    <Compile Include="Data\HighScoreDataItem.cs" />
+    <Compile Include="Panels\HighScorePanel.cs" />
     <Compile Include="Components\TextBox.cs" />
     <Compile Include="Debug\Render.cs" />
     <Compile Include="Display\Delegates.cs" />
@@ -224,6 +226,7 @@
     <Reference Include="System.Xml.Linq">
       <Private>False</Private>
     </Reference>
+    <Reference Include="System.Xml.Serialization, Version=2.0.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="VexPipelineReader">
       <HintPath>..\VexPipelineReader\bin\Xbox 360\Release\VexPipelineReader.dll</HintPath>
     </Reference>

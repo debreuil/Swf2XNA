@@ -52,21 +52,20 @@ namespace V2DRuntime.Panels
         public override void Deactivate()
         {
             base.Deactivate();
-            InsertIfHighScore(new HighScoreDataItem("ZZZ", r.Next(50, 200), true));
             SaveHighScores();
         }
 
         public void LoadDefaultHighScores()
         {
             highScores = new List<HighScoreDataItem> { 
-                    new HighScoreDataItem( "Sue", 67, false),
-                    new HighScoreDataItem( "Bob", 37, false),
-                    new HighScoreDataItem( "Kay", 38, false),
-                    new HighScoreDataItem( "Tom", 127, false),
-                    new HighScoreDataItem( "Blu", 142, false),
-                    new HighScoreDataItem( "Zed", 97, false),
-                    new HighScoreDataItem( "May", 34, false),
-                    new HighScoreDataItem( "Zoi", 55, false), };
+                    new HighScoreDataItem( "Sue", 670, false),
+                    new HighScoreDataItem( "Bob", 642, false),
+                    new HighScoreDataItem( "Kay", 580, false),
+                    new HighScoreDataItem( "Tom", 699, false),
+                    new HighScoreDataItem( "Blu", 703, false),
+                    new HighScoreDataItem( "Zed", 620, false),
+                    new HighScoreDataItem( "May", 546, false),
+                    new HighScoreDataItem( "Zoi", 556, false), };
         }
 
         public void InsertIfHighScore(HighScoreDataItem score)

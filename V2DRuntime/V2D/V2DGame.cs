@@ -40,6 +40,9 @@ namespace DDW.V2D
             {
                 throw new Exception("There can be only one game class.");
             }
+
+            Components.Add(new GamerServicesComponent(this));
+            SignedInGamer.SignedIn += new EventHandler<SignedInEventArgs>(OnGamerSignIn);
             instance = this;
             graphics = new GraphicsDeviceManager(this);
             contentManager = Content;
@@ -48,7 +51,7 @@ namespace DDW.V2D
 
             GetCursor();
         }
-
+        
         public virtual bool HasCursor { get { return false; } }
 
         private Cursor cursor;
@@ -109,10 +112,10 @@ namespace DDW.V2D
         }
 
 #endif
-
+        private bool unlockWhenSignedIn = false;
         public virtual void UnlockTrial()
         {
-            SignedInGamer gamer = Gamer.SignedInGamers[V2DGame.activeController];
+            SignedInGamer gamer = GetGamerWhoCanPurchase();
             if (gamer != null)
             {
                 if (gamer.Privileges.AllowPurchaseContent)
@@ -121,6 +124,7 @@ namespace DDW.V2D
                 }
                 else
                 {
+                    unlockWhenSignedIn = true;
                     if (gamer != null)
                     {
                         if (stage != null && stage.GetCurrentScreen() != null)
@@ -140,8 +144,35 @@ namespace DDW.V2D
             }
             else
             {
+                unlockWhenSignedIn = true;
                 ShowSignIn();
             }
+        }
+
+        protected void OnGamerSignIn(object sender, SignedInEventArgs e)
+        {
+            if (unlockWhenSignedIn)
+            {
+                if (!Guide.IsVisible)
+                {
+                    unlockWhenSignedIn = false;
+                    UnlockTrial();
+                }
+            }
+        }
+
+        public virtual SignedInGamer GetGamerWhoCanPurchase()
+        {
+            SignedInGamer result = null;
+            for (PlayerIndex pi = PlayerIndex.One; pi < PlayerIndex.Four; pi++)
+            {
+                if (Gamer.SignedInGamers[pi] != null &&
+                    Gamer.SignedInGamers[pi].Privileges.AllowPurchaseContent)
+                {
+                    result = Gamer.SignedInGamers[pi];
+                }
+            }
+            return result;
         }
         public virtual void FullGameUnlocked()
         {
@@ -159,6 +190,7 @@ namespace DDW.V2D
             }
             catch (Exception){}
         }
+
         public virtual void ShowSignIn()
         {
             if (!Guide.IsVisible)
@@ -204,6 +236,15 @@ namespace DDW.V2D
         {
 			stage.Update(gameTime);
             base.Update(gameTime);
+
+            if (unlockWhenSignedIn)
+            {
+                if (!Guide.IsVisible)
+                {
+                    unlockWhenSignedIn = false;
+                    UnlockTrial();
+                }
+            }
 
             if (!Guide.IsTrialMode && wasTrialMode)
             {

@@ -40,13 +40,13 @@ namespace V2DRuntime.Panels
         {
             base.Initialize();
 
-            LoadHighScores();
         }
 
         private Random r = new Random();
         public override void Activate()
         {
             base.Activate();
+            LoadHighScores();
         }
 
         public override void Deactivate()
@@ -67,9 +67,10 @@ namespace V2DRuntime.Panels
                     new HighScoreDataItem( "May", 546, false),
                     new HighScoreDataItem( "Zoi", 556, false), };
         }
-
+        protected bool scoresChanged = false;
         public void InsertIfHighScore(HighScoreDataItem score)
         {
+            scoresChanged = true;
             if (highScores != null)
             {
                 highScores.Add(score);
@@ -81,9 +82,15 @@ namespace V2DRuntime.Panels
                 Redraw();
             }
         }
+
         public void LoadHighScores()
         {
-            if (!Guide.IsVisible && !isBusy)
+            SignedInGamer sig = V2DGame.instance.GetSignedInGamer();
+            if (sig == null)
+            {
+                SignedInGamer.SignedIn += new EventHandler<SignedInEventArgs>(OnSignedIn);
+            }
+            else if (!Guide.IsVisible && !isBusy)
             {
                 isBusy = true;
                 device = null;
@@ -92,10 +99,17 @@ namespace V2DRuntime.Panels
                 StorageDevice.BeginShowSelector(playerIndex, this.GetXBoxDeviceAndLoad, stateobj);
             }
         }
+
+        void OnSignedIn(object sender, SignedInEventArgs e)
+        {
+            SignedInGamer.SignedIn -= new EventHandler<SignedInEventArgs>(OnSignedIn);
+            LoadHighScores();
+        }
+
         private bool isBusy;
         public void SaveHighScores()
         {
-            if (!Guide.IsVisible && !isBusy)
+            if (scoresChanged && !Guide.IsVisible && !isBusy)
             {
                 isBusy = true;
                 device = null;
@@ -144,7 +158,8 @@ namespace V2DRuntime.Panels
             device = StorageDevice.EndShowSelector(result);
             if (device != null && device.IsConnected)
             {
-                SaveToDevice(device);
+                SaveToDevice(device); 
+                scoresChanged = false;
             }
             isBusy = false;
         }

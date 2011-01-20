@@ -601,6 +601,13 @@ namespace DDW.Display
 				this.State.EndFrame = instanceDefinition.EndFrame;
 			}
 		}
+        /// <summary>
+        /// The input into this element, based on settings and inputManager.
+        /// </summary>
+        /// <param name="playerIndex">PlayerInput based on controller.</param>
+        /// <param name="move">The Move the user made.</param>
+        /// <param name="time">Time of input.</param>
+        /// <returns>Returns true if the event should bubble, false is the move should be consumed.</returns>
         public virtual bool OnPlayerInput(int playerIndex, Move move, TimeSpan time)
 		{
 			return true;

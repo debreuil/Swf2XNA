@@ -161,6 +161,24 @@ namespace DDW.V2D
             }
         }
 
+        public virtual SignedInGamer GetSignedInGamer()
+        {
+            SignedInGamer result = null;
+            for (PlayerIndex pi = PlayerIndex.One; pi < PlayerIndex.Four; pi++)
+            {
+                if (Gamer.SignedInGamers[pi] != null)
+                {
+                    result = Gamer.SignedInGamers[pi];
+                }
+            }
+
+            if (result == null)
+            {
+                ShowSignIn();
+            }
+
+            return result;
+        }
         public virtual SignedInGamer GetGamerWhoCanPurchase()
         {
             SignedInGamer result = null;
@@ -242,7 +260,10 @@ namespace DDW.V2D
                 if (!Guide.IsVisible)
                 {
                     unlockWhenSignedIn = false;
-                    UnlockTrial();
+                    if(GetGamerWhoCanPurchase() != null)
+                    {
+                        UnlockTrial();
+                    }
                 }
             }
 

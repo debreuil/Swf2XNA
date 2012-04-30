@@ -7,25 +7,19 @@ using System.Text;
 namespace DDW.Vex
 {
 	public class Symbol : IDefinition
-	{
-		private uint id;
-		public uint Id { get { return id; } set { id = value; } }
-
-		private string name;
-        public string Name { get { return name; } set { name = value; } }
-
-        private int userData;
-        public int UserData { get { return userData; } set { userData = value; } }
-
-		private Rectangle strokeBounds;
-		public Rectangle StrokeBounds { get { return strokeBounds; }set { strokeBounds = value; } }
+    {
+        public uint Id { get; set; }
+        public string Name { get; set; }
+        public int UserData { get; set; }
+        public Rectangle StrokeBounds { get; set; }
+        public string Path { get; set; }
 
 		public Rectangle Bounds;
 		public List<Shape> Shapes = new List<Shape>();
 
 		public Symbol(uint id)
 		{
-			this.id = id;
+			this.Id = id;
 		}
 	}
 }

@@ -36,5 +36,16 @@ namespace DDW.Vex
 		{
 			return this.Alpha != 1F;
 		}
+        public Point Location
+        {
+            get
+            {
+                return new Point(Matrix.TranslateX, Matrix.TranslateY);
+            }
+            set
+            {
+                Matrix = new Matrix(Matrix.ScaleX, Matrix.Rotate0, Matrix.Rotate1, Matrix.ScaleY, value.X, value.Y); 
+            }
+        }
 	}
 }

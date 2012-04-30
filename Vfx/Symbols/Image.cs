@@ -3,28 +3,40 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using Vex = DDW.Vex;
+using SysDraw = System.Drawing;
 
 namespace DDW.Vex
 {
 	public class Image : IDefinition
-	{
-		private uint id;
-		public uint Id { get { return id; } set { id = value; } }
+    {
+        private SysDraw.Bitmap image;
 
-		private string name;
-        public string Name { get { return name; } set { name = value; } }
+        public uint Id { get; set; }
+        public string Name { get; set; }
+        public int UserData { get; set; }
+        public Rectangle StrokeBounds { get; set; }
+        public string Path { get; set; }
 
-        private int userData;
-        public int UserData { get { return userData; } set { userData = value; } }
-
-		private Rectangle strokeBounds;
-		public Rectangle StrokeBounds { get { return strokeBounds; } set { strokeBounds = value; } }
-
-		public string Path;
-		public Image(string path, uint id)
-		{
-			this.id = id;
-			this.Path = path;
-		}
+        public Image(string path) : this(path, 0)
+        {
+        }
+        public Image(string path, uint id)
+        {
+            this.Path = path;
+            this.Id = id;
+            GetCachedBitmap();
+        }
+        public SysDraw.Bitmap GetCachedBitmap()
+        {
+            if (image == null)
+            {
+                SysDraw.Image img = SysDraw.Image.FromFile(Path);
+                image = new SysDraw.Bitmap(img);
+                image.SetResolution(96, 96);
+                StrokeBounds = new Vex.Rectangle(0, 0, image.Width, image.Height);
+            }
+            return image;
+        }
 	}
 }

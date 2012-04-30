@@ -8,9 +8,12 @@ namespace DDW.Vex
 {
 	public interface IInstance : IComparable
 	{
-		uint SortOrder { get;}
-		uint DefinitionId { get; set; }
-		uint StartTime { get; set; }
-		uint InstanceID{ get; set; }
+        uint DefinitionId { get; set; }
+        uint InstanceId { get; set; }
+        uint Depth { get; set; }
+        string Name { get; set; }
+        uint SortOrder { get; }
+        uint StartTime { get; set; }
+        List<Transform> Transformations { get; }
 	}
 }

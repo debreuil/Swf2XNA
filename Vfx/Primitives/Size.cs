@@ -8,6 +8,7 @@ namespace DDW.Vex
 {
 	public struct Size : IVexObject
 	{
+        public static Size Empty = new Size(0, 0);
 		public float Width;
 		public float Height;
 

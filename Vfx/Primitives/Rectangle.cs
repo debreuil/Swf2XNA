@@ -22,6 +22,13 @@ namespace DDW.Vex
 			this.Point = new Point(x, y);
 			this.Size = new Size(w, h);
 		}
+
+        public float Left { get { return Point.X; } }
+        public float Top { get { return Point.Y; } }
+        public float Width { get { return Size.Width; } }
+        public float Height { get { return Size.Height; } }
+
+        public bool IsEmpty { get { return this == Empty; } }
 		public Rectangle Union(Rectangle r)
 		{
 			float lf = Math.Min(this.Point.X, r.Point.X);
@@ -30,6 +37,7 @@ namespace DDW.Vex
 			float bt = Math.Max(this.Point.Y + this.Size.Height, r.Point.Y + r.Size.Height);
 			return new Rectangle(lf, tp, rt-lf, bt-tp);
 		}
+        public System.Drawing.Rectangle SystemRectangle { get { return new System.Drawing.Rectangle((int)Point.X, (int)Point.Y, (int)Size.Width, (int)Size.Height); } }
 		public override bool Equals(Object o)
 		{
 			bool result = false;

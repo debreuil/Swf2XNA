@@ -9,8 +9,9 @@ namespace DDW.Vex
 	public interface IDefinition
 	{
 		uint Id { get; set;}
-		Rectangle StrokeBounds { get; set;}
-		string Name { get; set; }
-		int UserData { get; set; }
+        Rectangle StrokeBounds { get; set; }
+        string Name { get; set; }
+        string Path { get; set; }
+        int UserData { get; set; }
 	}
 }

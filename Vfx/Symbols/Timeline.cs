@@ -11,12 +11,12 @@ namespace DDW.Vex
 	/// The activity is defined using one Lifetime per symbol used.
 	/// </summary>
 	public class Timeline : IDefinition
-	{
-		private uint id;
-		public uint Id { get { return id; } set {id = value; } }
-
-		private Rectangle strokeBounds;
-		public Rectangle StrokeBounds { get { return strokeBounds; } set { strokeBounds = value; } }
+    {
+        public uint Id { get; set; }
+        public string Name { get; set; }
+        public int UserData { get; set; }
+        public Rectangle StrokeBounds { get; set; }
+        public string Path { get; set; }
 
 		public uint Duration;
 		public uint FrameCount = 0;
@@ -24,18 +24,34 @@ namespace DDW.Vex
 		public List<IInstance> Instances = new List<IInstance>();
 		public Dictionary<uint, string> Labels = new Dictionary<uint, string>();
 
-		private string name;
-		public string Name { get { return name; } set { name = value; } }
-
-        private int userData;
-        public int UserData { get { return userData; } set { userData = value; } }
-
 		public Timeline(uint id)
 		{
-			this.id = id;
-			this.name = "$mc" + id.ToString();
+			this.Id = id;
+			this.Name = "$mc" + id.ToString();
 		}
 
+        public bool ContainsInstanceId(uint id)
+        {
+            bool result =false;
+            for (int i = 0; i < Instances.Count; i++)
+            {
+                if (Instances[i].InstanceId == id)
+                {
+                    result = true;
+                    break;
+                }
+            }
+            return result;
+        }
+        public uint[] GetInstanceIds()
+        {
+            uint[] result = new uint[Instances.Count];
+            for (int i = 0; i < Instances.Count; i++)
+            {
+                result[i] = Instances[i].InstanceId;
+            }
+            return result;
+        }
 		//public IDefinition LookupSymbol(float t, uint depth)
 		//{
 		//}

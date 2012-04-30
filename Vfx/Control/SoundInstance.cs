@@ -14,10 +14,16 @@ namespace DDW.Vex
 		public uint DefinitionId { get { return definitionId; } set { definitionId = value; } }
 
 		private uint instanceID;
-		public uint InstanceID { get { return instanceID; } set { instanceID = value; } }
+		public uint InstanceId { get { return instanceID; } set { instanceID = value; } }
 
 		private uint startTime;
-		public uint StartTime { get { return startTime; } set { startTime = value; } }
+        public uint StartTime { get { return startTime; } set { startTime = value; } }
+
+        public uint Depth { get; set; }
+        public string Name { get; set; }
+
+        private List<Transform> transformations = new List<Transform>();
+        public List<Transform> Transformations { get { return transformations; } }
 		
 		public string Path;
 

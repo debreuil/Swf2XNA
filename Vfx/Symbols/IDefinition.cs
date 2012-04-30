@@ -8,7 +8,6 @@ namespace DDW.Vex
 {
 	public interface IDefinition
 	{
-		bool IsDefined { get; set; }
 		uint Id { get; set;}
 		Rectangle StrokeBounds { get; set;}
 		string Name { get; set; }

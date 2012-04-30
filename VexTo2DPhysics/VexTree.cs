@@ -187,6 +187,7 @@ namespace DDW.VexTo2DPhysics
             GenerateJointData(parentStack.Peek().Definition);
         }
 
+        private HashSet<uint> isDefined = new HashSet<uint>();
         private void EnsureDefinition(Instance inst, IDefinition def)
         {
 			DefinitionKind dk = (DefinitionKind)def.UserData;
@@ -267,8 +268,9 @@ namespace DDW.VexTo2DPhysics
 				{
 					Definition2D d2d = GetDefinition2D(m, def);
 
-					if (!def.IsDefined)
+                    if (!isDefined.Contains(def.Id))
 					{
+                        isDefined.Add(def.Id);
 						d2d.AddShapes(curVo, def, m);
 						//parentStack.Peek().Definition.AddShapes(curVo, def, m);
 					}
@@ -290,7 +292,10 @@ namespace DDW.VexTo2DPhysics
 				}
 			}
 
-			def.IsDefined = true;
+            if (!isDefined.Contains(def.Id))
+            {
+                isDefined.Add(def.Id);
+            }
         }
         private Instance2D AddInstance(Instance inst, IDefinition def)
         {

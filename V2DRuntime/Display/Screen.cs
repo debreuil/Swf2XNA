@@ -322,8 +322,11 @@ namespace DDW.Display
 
         public virtual void SignInToLive()
         {
+        }
+        public virtual void SignInToLive(int playerIndex)
+        {
             // override and don't call base to add dialog
-            V2DGame.instance.ShowSignIn();
+            V2DGame.instance.ShowSignIn(playerIndex);
         }
 
         protected void ManageInput(GameTime gameTime)

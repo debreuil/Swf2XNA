@@ -12,9 +12,6 @@ namespace DDW.Vex
 	/// </summary>
 	public class Timeline : IDefinition
 	{
-		private bool isDefined = false;
-		public bool IsDefined { get { return isDefined; } set { isDefined = value; } }
-
 		private uint id;
 		public uint Id { get { return id; } set {id = value; } }
 

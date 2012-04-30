@@ -165,8 +165,8 @@ namespace V2DRuntime.Particles
 		{
 			batch.Draw(texture, pPosition, sourceRectangle, pColor,
 				pRotation, pOrigin, pScale, SpriteEffects.None, 1);
-
 		}
+
 		public virtual void BeginDrawAllParticles(Microsoft.Xna.Framework.Graphics.SpriteBatch batch)
 		{
 		}

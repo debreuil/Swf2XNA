@@ -76,7 +76,7 @@ namespace V2DRuntime.Panels
         {
             base.Draw(batch);
 
-            if (videoPlayer.State == MediaState.Playing)
+            if (videoPlayer != null && videoPlayer.State == MediaState.Playing)
             {
                 batch.Draw(videoPlayer.GetTexture(), videoRect, Color.White);
             }

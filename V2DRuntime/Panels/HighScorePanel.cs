@@ -30,6 +30,8 @@ namespace V2DRuntime.Panels
         protected string gameName;
         protected string containerName;
 
+        private PlayerIndex activePlayer = PlayerIndex.One;
+
         public HighScorePanel(Texture2D texture, V2DInstance inst) : base(texture, inst)
         {
             gameName = V2DGame.instance.GetType().Name;
@@ -42,11 +44,16 @@ namespace V2DRuntime.Panels
 
         }
 
+        public void SetActivePlayer(PlayerIndex activePlayer)
+        {
+            this.activePlayer = activePlayer;
+        }
+
         private Random r = new Random();
         public override void Activate()
         {
             base.Activate();
-            LoadHighScores();
+            LoadHighScores(activePlayer);
         }
 
         public override void Deactivate()
@@ -83,63 +90,105 @@ namespace V2DRuntime.Panels
             }
         }
 
-        public void LoadHighScores()
+        public void LoadHighScores(PlayerIndex playerIndex)
         {
-            SignedInGamer sig = V2DGame.instance.GetSignedInGamer();
+            SignedInGamer sig = V2DGame.instance.GetSignedInGamer((int)(playerIndex));
+
             if (sig == null)
             {
                 SignedInGamer.SignedIn += new EventHandler<SignedInEventArgs>(OnSignedIn);
             }
-            else if (!Guide.IsVisible && !isBusy)
+            else
             {
-                isBusy = true;
-                device = null;
-                PlayerIndex playerIndex = GetDefaultPlayerIndex();
-                stateobj = (Object)("Load for Player " + playerIndex);
-                StorageDevice.BeginShowSelector(playerIndex, this.GetXBoxDeviceAndLoad, stateobj);
+                tryLoadHighScores = true;
             }
         }
 
         void OnSignedIn(object sender, SignedInEventArgs e)
         {
-            SignedInGamer.SignedIn -= new EventHandler<SignedInEventArgs>(OnSignedIn);
-            LoadHighScores();
+            if (e.Gamer != null && e.Gamer.PlayerIndex == activePlayer)
+            {
+                SignedInGamer.SignedIn -= new EventHandler<SignedInEventArgs>(OnSignedIn);
+                tryLoadHighScores = true;
+            }
+        }
+
+        private bool tryLoadHighScores = false;
+        private void TryLoadHighScores()
+        {
+            try
+            {
+                if (!Guide.IsVisible && !isBusy)
+                {
+                    tryLoadHighScores = false;
+
+                    isBusy = true;
+                    device = null;
+                    stateobj = (Object)("Load for Player " + activePlayer);
+                    StorageDevice.BeginShowSelector((PlayerIndex)(activePlayer), this.GetXBoxDeviceAndLoad, stateobj);
+                }
+            }
+            catch (Exception)
+            {
+            }
+        }
+
+        public override void Update(GameTime gameTime)
+        {
+            base.Update(gameTime);
+
+            if (tryLoadHighScores)
+            {
+                TryLoadHighScores();
+            }
         }
 
         private bool isBusy;
         public void SaveHighScores()
         {
-            if (scoresChanged && !Guide.IsVisible && !isBusy)
+            try
             {
-                isBusy = true;
-                device = null;
-                PlayerIndex playerIndex = GetDefaultPlayerIndex();
-                stateobj = (Object)("Save for Player " + playerIndex);
-                StorageDevice.BeginShowSelector(playerIndex, this.GetXBoxDeviceAndSave, stateobj);
+                if (scoresChanged && !Guide.IsVisible && !isBusy)
+                {
+                    isBusy = true;
+                    device = null;
+                    PlayerIndex playerIndex = activePlayer;
+                    stateobj = (Object)("Save for Player " + playerIndex);
+                    StorageDevice.BeginShowSelector(playerIndex, this.GetXBoxDeviceAndSave, stateobj);
+                }
+            }
+            catch (Exception)
+            {
             }
         }
 
-        protected PlayerIndex GetDefaultPlayerIndex()
-        {
-            PlayerIndex result = PlayerIndex.One;
-            for (int i = 0; i < InputManager.Managers.Length; i++)
-            {
-                InputManager im = InputManager.Managers[i];
-                if (im != null)
-                {
-                    result = im.PlayerIndex;
-                    break;
-                }
-            }
-            return result;
-        }
+        //protected PlayerIndex GetDefaultPlayerIndex()
+        //{
+        //    PlayerIndex result = PlayerIndex.One;
+        //    for (int i = 0; i < InputManager.Managers.Length; i++)
+        //    {
+        //        InputManager im = InputManager.Managers[i];
+        //        if (im != null)
+        //        {
+        //            result = im.PlayerIndex;
+        //            break;
+        //        }
+        //    }
+        //    return result;
+        //}
 
         protected void GetXBoxDeviceAndLoad(IAsyncResult result)
         {
-            device = StorageDevice.EndShowSelector(result);
-            if (device != null && device.IsConnected)
+            try
             {
-                LoadFromDevice(device);
+                device = StorageDevice.EndShowSelector(result);
+                if (device != null && device.IsConnected)
+                {
+                    LoadFromDevice(device);
+                }
+            }
+            catch (Exception)
+            {
             }
 
             if (highScores == null)

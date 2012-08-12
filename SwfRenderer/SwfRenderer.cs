@@ -59,8 +59,10 @@ namespace DDW.SwfRenderer
             return result;
         }
 
-        Bitmap DrawShape(ShapeWithStyle s, Edge[] et, Rect r)
+        Bitmap DrawShape(ShapeWithStyle s, Edge[] edges, Rect r)
         {
+            int top = r.YMin / TWIP;
+            int left = r.XMin / TWIP;
             int w = (r.XMax - r.XMin) / TWIP;
             int h = (r.YMax - r.YMin) / TWIP;
 
@@ -79,56 +81,56 @@ namespace DDW.SwfRenderer
                 }
             }
             //UnsafeBitmapP b = new UnsafeBitmapP(w, h);
-            UnsafeBitmap b = new UnsafeBitmap(w, h);
+            UnsafeBitmap b = new UnsafeBitmap(w + left, h + top);
             b.LockBitmap();
 
-            List<Edge> aet = new List<Edge>();
-            int etIndex = 0;
+            List<Edge> activeEdges = new List<Edge>();
+            int edgeIndex = 0;
             byte[,] bytes = new byte[w, h];
 
             bool orderChanged = true;
 
             int syTwip = 0;
-            for (int sy = 0; sy < h; sy++)
+            for (int sy = 0; sy < h + top; sy++)
             {
                 syTwip += TWIP;
 
                 //AdjustActiveTable
                 //remove stale
-                for(int i = aet.Count - 1; i >= 0; i--)
+                for(int i = activeEdges.Count - 1; i >= 0; i--)
                 {
-                    if (aet[i].endY < sy * TWIP)
+                    if (activeEdges[i].endY < sy * TWIP)
                     {
-                        aet.RemoveAt(i);
+                        activeEdges.RemoveAt(i);
                     }
                 }
 
                 // add new elements
-                while (etIndex < et.Length && et[etIndex].startY <= sy * TWIP)
+                while (edgeIndex < edges.Length && edges[edgeIndex].startY <= sy * TWIP)
                 {
-                    aet.Add(et[etIndex]);
-                    etIndex++;
+                    activeEdges.Add(edges[edgeIndex]);
+                    edgeIndex++;
                     orderChanged = true;
                 }
 
                 // sort
                 if(orderChanged)
                 {
-                    aet.Sort(Edge.CurrentXComparer);
+                    activeEdges.Sort(Edge.CurrentXComparer);
                     orderChanged = false;
                 }
 
-                if (aet.Count > 0)
+                if (activeEdges.Count > 0)
                 {
                     int xIndex = 0;
                     byte curFill = 0;
-                    Edge edge = aet[xIndex];
+                    Edge edge = activeEdges[xIndex];
                     PixelData col = colors[0];
                     PixelData nextCol = colors[0];
                     int sxTwip = 0;
                     float pc = 0;
-
-                    for (int sx = 0; sx < w; sx++)
+                    
+                    for (int sx = 0; sx < w + left; sx++)
                     {
                         sxTwip += TWIP;
                         if (sxTwip >= edge.currentX)
@@ -143,20 +145,20 @@ namespace DDW.SwfRenderer
                             while (sxTwip >= edge.currentX)
                             {
                                 xIndex++;
-                                if (xIndex < aet.Count)
+                                if (xIndex < activeEdges.Count)
                                 {
-                                    if (xIndex > 0 && aet[xIndex - 1].currentX > aet[xIndex].currentX)
+                                    if (xIndex > 0 && activeEdges[xIndex - 1].currentX > activeEdges[xIndex].currentX)
                                     {
                                     }
                                     else
                                     {
-                                        edge = aet[xIndex];
+                                        edge = activeEdges[xIndex];
                                         curFill = edge.fill1;
                                     }
                                 }
                                 else
                                 {
-                                    //b.SetPixel(sx, sy, col);
+                                    b.SetPixel(sx, sy, col);
                                     goto ENDXLOOP;
                                 }
                             }
@@ -166,16 +168,20 @@ namespace DDW.SwfRenderer
                         {
                             //col.blue = 255;
                         }
-                        b.SetPixel(sx, sy, col);
+
+                        if (col.alpha > 0)
+                        {
+                            b.SetPixel(sx, sy, col);
+                        }
 
                         col = colors[curFill];
                     }
                 }
             ENDXLOOP:
 
-                for (int i = 0; i < aet.Count; i++)
+                for (int i = 0; i < activeEdges.Count; i++)
                 {
-                    aet[i].IncX(syTwip);
+                    activeEdges[i].IncX(syTwip);
                 }
             }
 

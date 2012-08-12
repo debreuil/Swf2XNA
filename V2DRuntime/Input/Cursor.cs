@@ -11,10 +11,11 @@ namespace DDW.Input
     public class Cursor : DrawableGameComponent
     {
         public delegate void MouseEvent(Vector2 position);
+#if !XBOX360
         public event MouseEvent MouseDown;
         public event MouseEvent MouseUp;
         public event MouseEvent MouseMove;
-
+#endif
         public bool isInitalized = false;
         public bool isMouseDown = false;
 
@@ -159,9 +160,9 @@ namespace DDW.Input
             if (!isMouseDown && mouseState.LeftButton == ButtonState.Pressed)
             {
                 isMouseDown = true;
-				if (MouseDown != null)
+                if (MouseDown != null)
 				{
-					MouseDown.Invoke(position);
+                    MouseDown.Invoke(position);
 				}
             }
             else if (isMouseDown && mouseState.LeftButton == ButtonState.Released)

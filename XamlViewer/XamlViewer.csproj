@@ -94,10 +94,6 @@
       <Project>{334C924E-219B-4DD5-BCCD-4AE6BEFBC364}</Project>
       <Name>SwfToXaml</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Vfx\Vex.csproj">
-      <Project>{9E0E5CBD-E7FC-4BD6-A9B0-DEEE4BA576C7}</Project>
-      <Name>Vex</Name>
-    </ProjectReference>
     <ProjectReference Include="..\XamlRenderer\XamlRenderer.csproj">
       <Project>{FB3073F6-2B0F-4D18-AEE3-EBFEAADFC848}</Project>
       <Name>XamlRenderer</Name>

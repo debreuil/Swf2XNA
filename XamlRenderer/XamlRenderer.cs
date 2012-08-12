@@ -82,10 +82,10 @@ namespace DDW.Xaml
 				Instance[] tls = timelineStack.ToArray();
 				for (int i = 0; i < tls.Length; i++)
 				{
-					result += timelineSeparator + tls[i].InstanceID;
+					result += timelineSeparator + tls[i].InstanceId;
 				}
 			}
-			result += timelineSeparator + inst.InstanceID;
+			result += timelineSeparator + inst.InstanceId;
 
 			return result;
 		}

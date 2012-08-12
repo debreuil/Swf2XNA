@@ -1,0 +1,145 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{9E0E5CBD-E7FC-4BD6-A9B0-DEEE4BA576C7}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>DDW.Vex</RootNamespace>
+    <AssemblyName>Vex</AssemblyName>
+    <SccProjectName>
+    </SccProjectName>
+    <SccLocalPath>
+    </SccLocalPath>
+    <SccAuxPath>
+    </SccAuxPath>
+    <SccProvider>
+    </SccProvider>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <OldToolsVersion>3.5</OldToolsVersion>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Bonds\Bond.cs" />
+    <Compile Include="Bonds\ChainType.cs" />
+    <Compile Include="Bonds\Guide.cs" />
+    <Compile Include="Bonds\BondType.cs" />
+    <Compile Include="Control\IInstance.cs" />
+    <Compile Include="Control\Instance.cs" />
+    <Compile Include="Control\SoundInstance.cs" />
+    <Compile Include="Bonds\BondAttachment.cs" />
+    <Compile Include="Bonds\GuideType.cs" />
+    <Compile Include="Enums\AspectConstraint.cs" />
+    <Compile Include="Primitives\Color.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Primitives\ColorTransform.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Primitives\CubicBezier.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Primitives\FillStyle.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Primitives\GradientFill.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Primitives\ImageFill.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Primitives\IShapeData.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Primitives\Label.cs" />
+    <Compile Include="Primitives\Line.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Primitives\Matrix.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Primitives\MatrixComponents.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Primitives\Point.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Primitives\QuadBezier.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Primitives\Rectangle.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Primitives\Size.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Primitives\SolidFill.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Primitives\SolidStroke.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Primitives\StrokeStyle.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Primitives\TextRun.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Symbols\Image.cs" />
+    <Compile Include="Symbols\IDefinition.cs" />
+    <Compile Include="Symbols\Text.cs" />
+    <Compile Include="Symbols\Timeline.cs" />
+    <Compile Include="Control\Transform.cs" />
+    <Compile Include="Enums\FillType.cs" />
+    <Compile Include="Enums\GradientType.cs" />
+    <Compile Include="Enums\SegmentType.cs" />
+    <Compile Include="IVexObject.cs" />
+    <Compile Include="Symbols\Drawing.cs" />
+    <Compile Include="Symbols\Shape.cs" />
+    <Compile Include="Symbols\Symbol.cs" />
+    <Compile Include="Utils\FontFilenameFinder.cs" />
+    <Compile Include="Utils\Utils.cs" />
+    <Compile Include="VexObject.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Animation\" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

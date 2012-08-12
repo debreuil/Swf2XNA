@@ -501,7 +501,7 @@ namespace DDW.Swf
 			inst.DefinitionId = tag.Character;
 			inst.StartTime = curTime;
 			inst.EndTime = totalTime;
-			inst.Depth = tag.Depth;
+			inst.Depth = (int)tag.Depth;
 
             // error from flashDevelop files
             if (curDepthChart.ContainsKey(tag.Depth))
@@ -536,7 +536,7 @@ namespace DDW.Swf
 				inst.DefinitionId = tag.Character;
 				inst.StartTime = curTime;
 				inst.EndTime = totalTime;
-				inst.Depth = tag.Depth;
+				inst.Depth = (int)tag.Depth;
 				curDepthChart.Add(tag.Depth, inst);
 				this.curTimeline.Instances.Add(inst);
 			}
@@ -571,7 +571,7 @@ namespace DDW.Swf
 				inst.DefinitionId = tag.Character;
 				inst.StartTime = curTime;
 				inst.EndTime = totalTime;
-				inst.Depth = tag.Depth;
+				inst.Depth = (int)tag.Depth;
 
 				curDepthChart.Add(tag.Depth, inst);
 				this.curTimeline.Instances.Add(inst);
@@ -778,7 +778,7 @@ namespace DDW.Swf
 
 			t.Id = tag.CharacterID;
 			t.StrokeBounds = ParseRect(tag.Bounds);
-			t.Matrix = Vex.Matrix.Identitiy;
+			t.Matrix = Vex.Matrix.Identity;
 
 			ConvertStringToTextRuns(tag, t.TextRuns);
 
@@ -1123,7 +1123,8 @@ namespace DDW.Swf
 					break;
 				case TagType.FrameLabel:
 					uint curTime = (uint)((curFrame * (1 / swf.Header.FrameRate)) * 1000);
-					curTimeline.Labels.Add(curTime, ((FrameLabelTag)tag).TargetName);
+                    Vex.Primitives.Label lbl = new Vex.Primitives.Label(curTime, ((FrameLabelTag)tag).TargetName);
+					curTimeline.Labels.Add(lbl);
                     break;
                 case TagType.DefineShape:
                     ParseDefineShapeTag((DefineShapeTag)tag);

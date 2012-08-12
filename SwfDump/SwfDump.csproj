@@ -60,7 +60,7 @@
       <Project>{7DAF775B-4772-473F-81D6-608B4DE681F2}</Project>
       <Name>VexTo2DPhysics</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Vfx\Vex.csproj">
+    <ProjectReference Include="..\Vex\Vex.csproj">
       <Project>{9E0E5CBD-E7FC-4BD6-A9B0-DEEE4BA576C7}</Project>
       <Name>Vex</Name>
     </ProjectReference>

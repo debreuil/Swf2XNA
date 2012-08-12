@@ -56,7 +56,7 @@
     <Compile Include="UnsafeBitmap.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Vfx\Vex.csproj">
+    <ProjectReference Include="..\Vex\Vex.csproj">
       <Project>{9E0E5CBD-E7FC-4BD6-A9B0-DEEE4BA576C7}</Project>
       <Name>Vex</Name>
     </ProjectReference>

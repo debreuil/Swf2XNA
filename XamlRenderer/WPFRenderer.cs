@@ -10,6 +10,8 @@ namespace DDW.Xaml
 {
 	public class WPFRenderer : XamlRenderer
 	{
+        private const bool INCLUDE_ANIMATION = false;
+
 		public override void GenerateXaml(VexObject v, out string xamlFileName)
 		{
 			this.v = v;
@@ -72,7 +74,7 @@ namespace DDW.Xaml
 			// Write a rectangle to hold this shape
 			Instance inst = new Instance();
 			inst.Name = instancePrefix + def.Id;
-			inst.InstanceID = 1;
+			inst.InstanceId = 1;
 			inst.DefinitionId = def.Id;
             inst.Transformations.Add(new Transform(0, 1000, Matrix.Identitiy, 1, ColorTransform.Identity));
 			WriteInstance(def, inst);
@@ -111,7 +113,10 @@ namespace DDW.Xaml
 				}
 			}
 			timeline.Instances.Sort();
-			WriteStoryboards(timeline.Instances, isRoot);
+            if (INCLUDE_ANIMATION)
+            {
+                WriteStoryboards(timeline.Instances, isRoot);
+            }
 			WriteInstances(timeline.Instances, isRoot);
 
 			xw.CloseFrameTag();
@@ -191,7 +196,7 @@ namespace DDW.Xaml
 				{
 					continue;
 				}
-				instances[i].InstanceID = (uint)i;
+				instances[i].InstanceId = (uint)i;
 				instName = GetInstanceName(instances[i]);// i + timelineSeparator + timelineStack.Peek().InstanceID;
 				if (instances[i] is Instance)
 				{

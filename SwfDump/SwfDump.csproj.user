@@ -3,7 +3,8 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <StartArguments>
     </StartArguments>
-    <StartWorkingDirectory>C:\csdev\SwfNetCodeplex\SwfDump\bin\Debug</StartWorkingDirectory>
+    <StartWorkingDirectory>
+    </StartWorkingDirectory>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <StartWorkingDirectory>C:\csdev\SwfNetCodeplex\SwfDump\bin\Debug</StartWorkingDirectory>
@@ -11,6 +12,6 @@
     </StartArguments>
   </PropertyGroup>
   <PropertyGroup>
-    <ProjectView>ShowAllFiles</ProjectView>
+    <ProjectView>ProjectFiles</ProjectView>
   </PropertyGroup>
 </Project>

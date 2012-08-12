@@ -4,18 +4,19 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.IO;
+using System.Xml.Serialization;
+using System.Diagnostics;
 using Bitmap = System.Drawing.Bitmap;
 using DDW.Vex;
 using DDW.V2D;
+
 using xgr = Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Content;
-using DDW.V2D.Serialization;
-using System.Xml.Serialization;
-using DDW.Placeholder;
-using System.Diagnostics;
 using Microsoft.Xna.Framework.Content.Pipeline;
 using Microsoft.Xna.Framework.Content.Pipeline.Graphics;
+using DDW.V2D.Serialization;
+using DDW.Placeholder;
 
 namespace DDW.VexTo2DPhysics
 {
@@ -192,7 +193,7 @@ namespace DDW.VexTo2DPhysics
         {
 			DefinitionKind dk = (DefinitionKind)def.UserData;
 			bool addInst = (inst != null);
-			Matrix m = (inst == null) ? Matrix.Identitiy : inst.Transformations[0].Matrix;
+			Matrix m = (inst == null) ? Matrix.Identity : inst.Transformations[0].Matrix;
 
 			if ((dk & DefinitionKind.Ignore) == 0)
 			{
@@ -329,7 +330,7 @@ namespace DDW.VexTo2DPhysics
             Instance2D result = new Instance2D(def.Name, def.Name, 0,0,0,1,1);
             result.Depth = 0;
             result.Transforms = new List<Transform>();
-            result.Transforms.Add(new Transform(0, 0, Matrix.Identitiy, 1, ColorTransform.Identity));
+            result.Transforms.Add(new Transform(0, 0, Matrix.Identity, 1, ColorTransform.Identity));
             result.Definition = definitions.Find(d => d.Id == def.Id);
             result.StartFrame = 0;
             result.TotalFrames = 0; 

@@ -92,7 +92,7 @@ namespace DDW.Xaml
 			// Write a rectangle to hold this shape
 			Instance inst = new Instance();
 			inst.Name = instancePrefix + def.Id;
-			inst.InstanceID = 1;
+			inst.InstanceId = 1;
 			inst.DefinitionId = def.Id;
 			inst.Transformations.Add(new Transform(0, 1000, Matrix.Identitiy, 1, ColorTransform.Identity));
 			WriteInstance(def, inst, true);
@@ -351,7 +351,7 @@ namespace DDW.Xaml
 				{
 					continue;
 				}
-				instances[i].InstanceID = (uint)i;
+				instances[i].InstanceId = (uint)i;
 			}
 		}
 		public void WriteStoryboard(IDefinition s, Instance inst, string fullName)

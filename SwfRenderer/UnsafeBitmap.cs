@@ -81,8 +81,8 @@ namespace DDW.SwfRenderer
 
 		public void SetPixel(int x, int y, PixelData colour)
 		{
-			PixelData* pixel = PixelAt(x, y);
-			*pixel = colour;
+            PixelData* pixel = PixelAt(x, y);
+            *pixel = colour;
 		}
 
 		public void UnlockBitmap()

@@ -42,12 +42,12 @@ namespace DDW.V2D
 		public Vector2 Gravity = new Vector2(0.0f, 10.0f);
 
 		public bool useDebugDraw = false;
+        internal MouseJoint _mouseJoint;
+#if !XBOX360
 		private bool firstTime = true;
-//#if !XBOX
-		internal MouseJoint _mouseJoint;
         private V2DRuntime.Debug.DebugDraw _debugDraw;
 		private BasicEffect simpleColorEffect;
-//#endif
+#endif
 
         public Dictionary<Type, ContactDelegate> contactTypes = new Dictionary<Type, ContactDelegate>();
         public Dictionary<Type, ContactDelegate> contactEndTypes = new Dictionary<Type, ContactDelegate>();
@@ -118,11 +118,11 @@ namespace DDW.V2D
 			if (V2DGame.instance.HasCursor)
 			{
 				cursor = V2DGame.instance.GetCursor();
-//#if !XBOX
+#if !XBOX360
 				cursor.MouseDown += MouseDown;
 				cursor.MouseMove += MouseMove;
 				cursor.MouseUp += MouseUp;
-//#endif
+#endif
             }
 		}
         public override void Removed(EventArgs e)
@@ -131,11 +131,11 @@ namespace DDW.V2D
 			if (V2DGame.instance.HasCursor)
 			{
 				cursor = V2DGame.instance.GetCursor();
-//#if !XBOX
+#if !XBOX360
 				cursor.MouseDown -= MouseDown;
 				cursor.MouseMove -= MouseMove;
                 cursor.MouseUp -= MouseUp;
-//#endif
+#endif
             }
 
             contactTypes.Clear();
@@ -479,7 +479,7 @@ namespace DDW.V2D
 		}
 		#endregion
 
-//#if !XBOX
+#if !XBOX360
 		public override void DrawDebugData(SpriteBatch batch)
 		{
 			base.DrawDebugData(batch);
@@ -513,7 +513,7 @@ namespace DDW.V2D
                 batch.End();
 			}
 		}
-//#endif
+#endif
         public override void Update(GameTime gameTime)
 		{
 			base.Update(gameTime);
@@ -546,12 +546,12 @@ namespace DDW.V2D
 		public override void Draw(SpriteBatch batch)
 		{
 			base.Draw(batch);
-//#if !XBOX
+#if !XBOX360
 			if(useDebugDraw)
 			{
 				world.DrawDebugData();
 			}
-//#endif
+#endif
         }
     }
 }

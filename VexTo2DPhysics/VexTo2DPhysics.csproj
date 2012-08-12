@@ -111,7 +111,7 @@
       <Project>{D5D6310E-2D9D-4931-8D3B-4574F6625C6A}</Project>
       <Name>VexPipelineReader</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Vfx\Vex.csproj">
+    <ProjectReference Include="..\Vex\Vex.csproj">
       <Project>{9E0E5CBD-E7FC-4BD6-A9B0-DEEE4BA576C7}</Project>
       <Name>Vex</Name>
     </ProjectReference>

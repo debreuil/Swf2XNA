@@ -127,6 +127,7 @@
     <Compile Include="Symbols\Shape.cs" />
     <Compile Include="Symbols\Symbol.cs" />
     <Compile Include="Utils\FontFilenameFinder.cs" />
+    <Compile Include="Utils\LoadFromUIL.cs" />
     <Compile Include="Utils\Utils.cs" />
     <Compile Include="VexObject.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

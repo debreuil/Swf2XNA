@@ -8,6 +8,11 @@ using Microsoft.Xna.Framework;
 using DDW.Display;
 using Microsoft.Xna.Framework.Input;
 
+#if(WINDOWS_PHONE)
+using Microsoft.Xna.Framework.Input.Touch;
+using Microsoft.Devices.Sensors;
+#endif
+
 namespace V2DTest
 {
     public class TestGame : V2DGame
@@ -15,6 +20,7 @@ namespace V2DTest
 		public bool show3D = false;
 
         public override bool HasCursor { get { return true; } }
+
 
         public TestGame()
         {
@@ -32,7 +38,6 @@ namespace V2DTest
             stage.AddScreen(new SpinnerDemo(new SymbolImport("Scene3Data")));
             stage.AddScreen(new V2DScreen(new SymbolImport("Scene1Data")));
             stage.AddScreen(new V2DScreen(new SymbolImport("Scene2Data")));
-
         }
         protected override void Initialize()
         {
@@ -57,7 +62,37 @@ namespace V2DTest
                 translations[i] = new Vector3();
             }
             progress = new float[] { 0, .2F, .4F, .6F, .8F };
+
+#if(WINDOWS_PHONE)
+            graphics.SupportedOrientations = DisplayOrientation.LandscapeLeft;
+            TouchPanel.EnabledGestures = GestureType.Tap | GestureType.HorizontalDrag | GestureType.DragComplete;
+            accelSensor = new Accelerometer();
+            accelSensor.CurrentValueChanged += new EventHandler<SensorReadingEventArgs<AccelerometerReading>>(accelSensor_CurrentValueChanged);
+            try
+            {
+                accelSensor.Start();
+            }
+            catch (AccelerometerFailedException e)
+            {
+            }
+            catch (UnauthorizedAccessException e)
+            {
+            }
+#endif
         }
+
+
+#if(WINDOWS_PHONE)
+        private float swipeDir = 0;
+        Accelerometer accelSensor;
+        Vector3 accelReading = new Vector3();
+
+        void accelSensor_CurrentValueChanged(object sender, SensorReadingEventArgs<AccelerometerReading> e)
+        {
+            accelReading = e.SensorReading.Acceleration;
+        }
+#endif
+
         protected override void LoadContent()
         {
 			base.LoadContent();
@@ -71,6 +106,8 @@ namespace V2DTest
             players[3] = contentManager.Load<Model>(@"ss3");
             players[4] = contentManager.Load<Model>(@"ss4");
         }
+
+
         protected override void Update(Microsoft.Xna.Framework.GameTime gameTime)
         {
             base.Update(gameTime);
@@ -98,12 +135,51 @@ namespace V2DTest
 			{
 				keyDown = false;
 			}
+            
+#if(WINDOWS_PHONE)
+            while (TouchPanel.IsGestureAvailable)
+            {
+                GestureSample gs = TouchPanel.ReadGesture();
+                switch (gs.GestureType)
+                {
+                    case GestureType.Tap:
+                        show3D = !show3D;
+                        break;
+
+                    case GestureType.HorizontalDrag:
+                        swipeDir = gs.Delta.X;
+                        break;
+
+                    case GestureType.DragComplete:
+                        if (swipeDir > 4)
+                        {
+                            stage.NextScreen();
+                        }
+                        else if(swipeDir < 4)
+                        {
+                            stage.PreviousScreen();
+                        }
+                        swipeDir = 0;
+                        break;
+                }
+            }
+
+            if (accelReading != Vector3.Zero)
+            {
+                Screen cs = stage.GetCurrentScreen();
+                if (cs is V2DScreen)
+                {
+                    ((V2DScreen)cs).Gravity = new Vector2(accelReading.Y * -10, accelReading.X * -10);
+                }
+            }
+#endif
 
             if (show3D)
             {
                 UpdateShips(gameTime);
             }
         }
+
         protected override void Draw(Microsoft.Xna.Framework.GameTime gameTime)
         {
             base.Draw(gameTime);

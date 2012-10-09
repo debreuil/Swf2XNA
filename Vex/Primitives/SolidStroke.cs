@@ -10,9 +10,6 @@ namespace DDW.Vex
 {
     public class SolidStroke : StrokeStyle, IXmlSerializable
 	{
-		public float LineWidth = 1.0F;
-		public Color Color;
-
         public SolidStroke()
         {
         }

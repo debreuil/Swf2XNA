@@ -6,11 +6,12 @@ using System.Text;
 using System.IO;
 using System.Drawing;
 using System.Drawing.Drawing2D;
-using DDW.Vex;
+using System.Drawing.Text;
 
+using DDW.Vex;
+using DDW.Utils;
 using Ms = System.Drawing;
 using Vex = DDW.Vex;
-using System.Drawing.Text;
 
 namespace DDW.Gdi
 {
@@ -279,7 +280,6 @@ namespace DDW.Gdi
                 }
             }
         }
-
         private void DrawFilteredSymbol(Symbol sy)
         {
             foreach (Shape sh in sy.Shapes)
@@ -346,7 +346,6 @@ namespace DDW.Gdi
                 b.Dispose();
             }
         }
-
         private void DrawShape(Shape sh)
         {
             List<GraphicsPath> paths;
@@ -436,7 +435,6 @@ namespace DDW.Gdi
             }
             return result;
         }
-
         private void FillPaths(FillStyle fill, List<GraphicsPath> paths)
         {
             Brush b = null;
@@ -452,7 +450,7 @@ namespace DDW.Gdi
 
                     case FillType.Linear:
                         GradientFill lf = (GradientFill)fill;
-                        RectangleF rect = GetRectangleF(lf.Rectangle);
+                        RectangleF rect = Vex.GradientFill.GradientVexRect.SysRectangleF();
                         LinearGradientBrush lgb = new LinearGradientBrush(
                             rect,
                             Ms.Color.White,
@@ -477,7 +475,7 @@ namespace DDW.Gdi
 
                         // radial fill part
                         GraphicsPath gp = new GraphicsPath();
-                        gp.AddEllipse(GetRectangleF(rf.Rectangle));
+                        gp.AddEllipse(Vex.GradientFill.GradientVexRect.SysRectangleF());
 
                         PathGradientBrush pgb = new PathGradientBrush(gp);
                         pgb.InterpolationColors = GetColorBlend(rf);
@@ -503,7 +501,6 @@ namespace DDW.Gdi
             }
 
         }
-
         private ColorBlend GetColorBlend(GradientFill fill)
         {
             List<float> positions = new List<float>();
@@ -557,10 +554,9 @@ namespace DDW.Gdi
                 p.Dispose();
             }
         }
-
         private Ms.Color GetColor(Vex.Color c)
         {
-            return Ms.Color.FromArgb(c.ARGB);
+            return Ms.Color.FromArgb((int)c.ARGB);
         }
         private RectangleF GetRectangleF(Vex.Rectangle rect)
         {

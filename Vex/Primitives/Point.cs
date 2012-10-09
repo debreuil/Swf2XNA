@@ -111,11 +111,14 @@ namespace DDW.Vex
             Y = float.Parse(r.GetAttribute("Y"), NumberStyles.Any);
             r.Read();
         }
-
         public void WriteXml(System.Xml.XmlWriter writer)
         {
             writer.WriteAttributeString("X", X.ToString());
             writer.WriteAttributeString("Y", Y.ToString());
+        }
+        public string GetSVG()
+        {
+            return X.ToString("0.##") + "," + Y.ToString("0.##");
         }
 	}
 }

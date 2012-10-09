@@ -14,11 +14,11 @@ namespace V2DTest
     public class SpinnerDemo : V2DScreen
     {
         [V2DSpriteAttribute(fixedRotation = false)]
-        protected V2DSprite pivot;
+        public V2DSprite pivot;
         [V2DSpriteAttribute(fixedRotation = false)]
-        protected V2DSprite anchor;
+        public V2DSprite anchor;
         [V2DSpriteAttribute(isSensor=true)]
-        protected V2DSprite arm;
+        public V2DSprite arm;
 
         [RevoluteJointAttribute(enableMotor=true, maxMotorTorque=50000, motorSpeed=4)]
         public RevoluteJoint rPivot;

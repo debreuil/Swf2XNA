@@ -18,6 +18,7 @@ namespace DDW.Vex
         public int UserData { get; set; }
         [XmlIgnore]
         public bool HasSaveableChanges { get; set; }
+        public string WorkingPath { get; set; }
 
 		public Rectangle Bounds;
 		public List<Shape> Shapes = new List<Shape>();

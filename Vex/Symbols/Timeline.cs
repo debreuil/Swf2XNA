@@ -16,7 +16,8 @@ namespace DDW.Vex
 	public class Timeline : IDefinition
     {
         public uint Id { get; set; }
-        public string Name { get; set; }
+        private string name;
+        public string Name{ get; set; }
         public Rectangle StrokeBounds { get; set; }
         public string Path { get; set; }
         public Point Center { get { return new Point(-StrokeBounds.Left, -StrokeBounds.Top); } }
@@ -24,6 +25,7 @@ namespace DDW.Vex
         public int UserData { get; set; }
         [XmlIgnore]
         public bool HasSaveableChanges { get; set; }
+        public string WorkingPath { get; set; }
 
 		public uint Duration;
 		public uint FrameCount = 0;

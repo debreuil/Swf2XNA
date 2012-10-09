@@ -128,7 +128,8 @@
     <Compile Include="Symbols\Symbol.cs" />
     <Compile Include="Utils\FontFilenameFinder.cs" />
     <Compile Include="Utils\LoadFromUIL.cs" />
-    <Compile Include="Utils\Utils.cs" />
+    <Compile Include="Utils\IOUtils.cs" />
+    <Compile Include="Utils\VexExtensions.cs" />
     <Compile Include="VexObject.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

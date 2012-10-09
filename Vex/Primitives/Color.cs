@@ -32,32 +32,39 @@ namespace DDW.Vex
 			this.A = 0xFF;
 		}
 
-        public int ARGB
+        public uint ARGB
         {
             get
             {
-                return (this.A << 24) + (this.R << 16) + (this.G << 8) + (this.B);
+                return (uint)((this.A << 24) + (this.R << 16) + (this.G << 8) + (this.B));
             }
         }
-        public void SetARGB(int val)
+        public uint AFlipRGB
+        {
+            get
+            {
+                return (uint)(((0xFF - this.A) << 24) + (this.R << 16) + (this.G << 8) + (this.B));
+            }
+        }
+        public void SetARGB(uint val)
         {
             A = (byte)((val & 0xFF000000) >> 24);
             R = (byte)((val & 0x00FF0000) >> 16);
             G = (byte)((val & 0x0000FF00) >> 8);
             B = (byte)((val & 0x000000FF) >> 0);
         }
-		public int RGBA
+		public uint RGBA
 		{
 			get
 			{
-				return (this.R << 24) + (this.G << 16) + (this.B << 8) + (this.A);
+				return (uint)((this.R << 24) + (this.G << 16) + (this.B << 8) + (this.A));
 			}
 		}
-		public int RGB
+		public uint RGB
 		{
 			get
 			{
-                return (this.R << 16) + (this.G << 8) + (this.B);
+                return (uint)((this.R << 16) + (this.G << 8) + (this.B));
 			}
 		}
 
@@ -121,7 +128,7 @@ namespace DDW.Vex
         public void FromString(string s)
         {
             string sx = s.Substring(1);
-            SetARGB(int.Parse(sx, System.Globalization.NumberStyles.HexNumber));
+            SetARGB(uint.Parse(sx, System.Globalization.NumberStyles.HexNumber));
         }
         public System.Xml.Schema.XmlSchema GetSchema()
         {
@@ -132,7 +139,7 @@ namespace DDW.Vex
         {
             string s = r.GetAttribute("Value");
             string sx = s.Substring(1);
-            SetARGB(int.Parse(sx, System.Globalization.NumberStyles.HexNumber));
+            SetARGB(uint.Parse(sx, System.Globalization.NumberStyles.HexNumber));
             r.Read();
         }
 

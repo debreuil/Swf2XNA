@@ -14,7 +14,7 @@ namespace V2DTest
     public class Scene2Data : V2DScreen
     {
         [V2DSpriteAttribute(fixedRotation=false)]
-        protected V2DSprite triangleBase;
+        public V2DSprite triangleBase;
 
         public Scene2Data(V2DContent v2dContent) : base(v2dContent) { }
         public Scene2Data(SymbolImport si) : base(si) { }

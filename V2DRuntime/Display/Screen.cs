@@ -15,7 +15,6 @@ using Microsoft.Xna.Framework.Storage;
 #endif
 using V2DRuntime.Game;
 using Microsoft.Xna.Framework.Content;
-using Microsoft.Xna.Framework.GamerServices;
 using System.IO;
 using V2DRuntime.Shaders;
 using System.Reflection;
@@ -320,6 +319,7 @@ namespace DDW.Display
 			}
 		}
 
+#if !(WINDOWS_PHONE)
         public virtual void SignInToLive()
         {
         }
@@ -328,6 +328,7 @@ namespace DDW.Display
             // override and don't call base to add dialog
             V2DGame.instance.ShowSignIn(playerIndex);
         }
+#endif
 
         protected void ManageInput(GameTime gameTime)
         {

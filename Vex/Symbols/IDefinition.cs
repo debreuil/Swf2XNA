@@ -14,6 +14,7 @@ namespace DDW.Vex
         Point Center { get; }
         string Name { get; set; }
         string Path { get; set; }
+        string WorkingPath { get; set; }
         [XmlIgnore]
         int UserData { get; set; }
         [XmlIgnore]

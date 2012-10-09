@@ -113,6 +113,10 @@ namespace DDW.Vex
 		{
 			return "[r:" + this.Point + "-" + this.Size + "]";
 		}
+        public string GetSerializedString()
+        {
+            return Point.X + "," + Point.Y + "," + Size.Width + "," + Size.Height;
+        }
 
         public System.Xml.Schema.XmlSchema GetSchema()
         {

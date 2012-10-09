@@ -103,10 +103,6 @@
       <Project>{04BB0485-133C-4B56-94C0-D1D9B3D6EC95}</Project>
       <Name>SwfFormat</Name>
     </ProjectReference>
-    <ProjectReference Include="..\V2DRuntime\V2DRuntime.csproj">
-      <Project>{269A1048-DA2C-475A-9C10-564A7D8A071D}</Project>
-      <Name>V2DRuntime</Name>
-    </ProjectReference>
     <ProjectReference Include="..\VexPipelineReader\VexPipelineReader.csproj">
       <Project>{D5D6310E-2D9D-4931-8D3B-4574F6625C6A}</Project>
       <Name>VexPipelineReader</Name>

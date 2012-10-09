@@ -36,6 +36,24 @@ namespace DDW.Vex
 			return new CubicBezier(Anchor0, c1, c2, Anchor1);
 		}
 
+        public void CheckExtremas(ref float left, ref float right, ref float top, ref float bottom)
+        {
+            if (Anchor0.X < left) left = Anchor0.X;
+            if (Control.X < left) left = Control.X;
+            if (Anchor1.X < left) left = Anchor1.X;
+
+            if (Anchor0.X > right) right = Anchor0.X;
+            if (Control.X > right) right = Control.X;
+            if (Anchor1.X > right) right = Anchor1.X;
+
+            if (Anchor0.Y < top) top = Anchor0.Y;
+            if (Control.Y < top) top = Control.Y;
+            if (Anchor1.Y < top) top = Anchor1.Y;
+
+            if (Anchor0.Y > bottom) bottom = Anchor0.Y;
+            if (Control.Y > bottom) bottom = Control.Y;
+            if (Anchor1.Y > bottom) bottom = Anchor1.Y;
+        }
 		public void Reverse()
 		{
 			Point temp = this.Anchor0;

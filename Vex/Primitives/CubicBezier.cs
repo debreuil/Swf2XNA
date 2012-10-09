@@ -24,6 +24,28 @@ namespace DDW.Vex
 		public Point StartPoint { get { return Anchor0; } }
 		public Point EndPoint { get { return Anchor1; } }
 
+        public void CheckExtremas(ref float left, ref float right, ref float top, ref float bottom)
+        {
+            if (Anchor0.X < left) left = Anchor0.X;
+            if (Control0.X < left) left = Control0.X;
+            if (Control1.X < left) left = Control1.X;
+            if (Anchor1.X < left) left = Anchor1.X;
+
+            if (Anchor0.X > right) right = Anchor0.X;
+            if (Control0.X > right) right = Control0.X;
+            if (Control1.X > right) right = Control1.X;
+            if (Anchor1.X > right) right = Anchor1.X;
+
+            if (Anchor0.Y < top) top = Anchor0.Y;
+            if (Control0.Y < top) top = Control0.Y;
+            if (Control1.Y < top) top = Control1.Y;
+            if (Anchor1.Y < top) top = Anchor1.Y;
+
+            if (Anchor0.Y > bottom) bottom = Anchor0.Y;
+            if (Control0.Y > bottom) bottom = Control0.Y;
+            if (Control1.Y > bottom) bottom = Control1.Y;
+            if (Anchor1.Y > bottom) bottom = Anchor1.Y;
+        }
 		public void Reverse()
 		{
 			Point temp = this.Anchor0;

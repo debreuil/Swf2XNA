@@ -6,7 +6,6 @@ using DDW.Display;
 using Microsoft.Xna.Framework.Graphics;
 using DDW.V2D;
 using DDW.Input;
-using Microsoft.Xna.Framework.GamerServices;
 using V2DRuntime.Display;
 
 namespace V2DRuntime.Components

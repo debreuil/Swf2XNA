@@ -276,19 +276,20 @@
     <Compile Include="Tags\SoundStreamHeadTag.cs" />
     <Compile Include="Tags\StartSoundTag.cs" />
     <Compile Include="Tags\SwfHeader.cs" />
+    <Compile Include="Tags\SymbolClassTag.cs" />
     <Compile Include="Tags\UnsupportedDefinitionTag.cs" />
     <Compile Include="Utils\FillPath.cs" />
     <Compile Include="Utils\StrokePath.cs" />
     <Compile Include="Utils\Utils.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="lib\ICSharpCode.SharpZipLib.dll" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\Vex\Vex.csproj">
       <Project>{9E0E5CBD-E7FC-4BD6-A9B0-DEEE4BA576C7}</Project>
       <Name>Vex</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="lib\ICSharpCode.SharpZipLib.dll" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

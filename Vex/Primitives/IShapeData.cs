@@ -13,5 +13,6 @@ namespace DDW.Vex
 		Point EndPoint { get;}
 		void Reverse();
         string Serialize();
+        void CheckExtremas(ref float left, ref float right, ref float top, ref float bottom);
 	}
 }

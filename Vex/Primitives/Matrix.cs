@@ -49,6 +49,11 @@ namespace DDW.Vex
             }
         }
 
+        public bool HasScaleOrRotation()
+        {
+            return ScaleX != 1 || Rotate0 != 0 || Rotate1 != 0 || ScaleY != 1;
+        }
+
         public System.Drawing.Drawing2D.Matrix GetDrawing2DMatrix()
         {
             return new System.Drawing.Drawing2D.Matrix(
@@ -241,6 +246,12 @@ namespace DDW.Vex
                 "," + this.Rotate0.ToString("0.####") + "," + this.Rotate1.ToString("0.####") +
                 "," + this.ScaleY.ToString("0.####") +
                 "," + this.TranslateX.ToString("0.####") + "," + this.TranslateY.ToString("0.####");
+        }
+        public string GetScaleRotationString()
+        {
+            return this.ScaleX.ToString("0.####") +
+                "," + this.Rotate0.ToString("0.####") + "," + this.Rotate1.ToString("0.####") +
+                "," + this.ScaleY.ToString("0.####");
         }
         public void DeserializeString(string s)
         {

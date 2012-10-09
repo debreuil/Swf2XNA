@@ -11,8 +11,19 @@ Thumbs.db
 # Can also ignore all directories and files in a directory.
 **/bin/Debug/*
 **/bin/x86/Debug/*
-**/bin/Release/*.pdb
-**/bin/x86/Release/*.pdb
+**/bin/XBox 360/Debug/*
+**/bin/Windows Phone/Debug/*
+**/bin/Zune/Debug/*
+
+**/bin/Release/*
+**/bin/x86/Release/*
+**/bin/XBox 360/Release/*
+**/bin/Windows Phone/Release/*
+**/bin/Zune/Release/*
+
+**/PerformanceLogs/*
+
+
 **/obj/*
 **/exports/*
 **/**/obj/*

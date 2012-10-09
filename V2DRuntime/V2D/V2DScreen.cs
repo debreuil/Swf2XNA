@@ -39,7 +39,19 @@ namespace DDW.V2D
 		public int positionIterations = 10;
 		public int enableWarmStarting = 1;
 		public int enableTOI = 1;
-		public Vector2 Gravity = new Vector2(0.0f, 10.0f);
+		private Vector2 gravity = new Vector2(0.0f, 10.0f);
+        public Vector2 Gravity
+        {
+            get { return gravity; }
+            set
+            {
+                gravity = value;
+                if (world != null)
+                {
+                    world.Gravity = gravity;
+                }
+            }
+        }
 
 		public bool useDebugDraw = false;
         internal MouseJoint _mouseJoint;
@@ -105,7 +117,6 @@ namespace DDW.V2D
 					if (a.gravityX != 0 | a.gravityY != 10)
 					{
 						Gravity = new Vector2(a.gravityX, a.gravityY);
-						world.Gravity = Gravity;
 					}
 
 					useDebugDraw = a.debugDraw;

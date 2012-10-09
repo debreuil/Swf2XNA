@@ -59,7 +59,7 @@ namespace DDW.Swf
 			jpg.UnlockBits(jpgData);
 			png.UnlockBits(pngData);
 
-			DDW.Vex.Utils.EnsurePath(pngDest);
+			DDW.Vex.IOUtils.EnsurePath(pngDest);
 			png.Save(pngDest);
 			png.Dispose();
 		}

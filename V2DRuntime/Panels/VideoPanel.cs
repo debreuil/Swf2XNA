@@ -1,4 +1,6 @@
-﻿using System;
+﻿#if !(WINDOWS_PHONE)
+
+using System;
 using DDW.V2D;
 using Microsoft.Xna.Framework.Graphics;
 using V2DRuntime.Components;
@@ -90,3 +92,4 @@ namespace V2DRuntime.Panels
         }
 	}
 }
+#endif

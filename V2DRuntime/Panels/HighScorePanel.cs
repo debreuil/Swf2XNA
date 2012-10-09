@@ -1,3 +1,5 @@
+#if !(WINDOWS_PHONE)
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,10 +11,10 @@ using DDW.V2D;
 using V2DRuntime.Data;
 using Microsoft.Xna.Framework.GamerServices;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Storage;
 using System.Xml.Serialization;
 using System.IO;
 using DDW.Input;
+using Microsoft.Xna.Framework.Storage;
 
 namespace V2DRuntime.Panels
 {
@@ -24,13 +26,15 @@ namespace V2DRuntime.Panels
 
         protected int scoreCount= 20;
         protected List<HighScoreDataItem> highScores;
-        private StorageDevice device;
         private Object stateobj;
 
         protected string gameName;
         protected string containerName;
 
         private PlayerIndex activePlayer = PlayerIndex.One;
+#if !(WINDOWS_PHONE)
+        private StorageDevice device;
+#endif
 
         public HighScorePanel(Texture2D texture, V2DInstance inst) : base(texture, inst)
         {
@@ -123,9 +127,10 @@ namespace V2DRuntime.Panels
                     tryLoadHighScores = false;
 
                     isBusy = true;
-                    device = null;
                     stateobj = (Object)("Load for Player " + activePlayer);
+                    device = null;
                     StorageDevice.BeginShowSelector((PlayerIndex)(activePlayer), this.GetXBoxDeviceAndLoad, stateobj);
+
                 }
             }
             catch (Exception)
@@ -151,9 +156,9 @@ namespace V2DRuntime.Panels
                 if (scoresChanged && !Guide.IsVisible && !isBusy)
                 {
                     isBusy = true;
-                    device = null;
                     PlayerIndex playerIndex = activePlayer;
                     stateobj = (Object)("Save for Player " + playerIndex);
+                    device = null;
                     StorageDevice.BeginShowSelector(playerIndex, this.GetXBoxDeviceAndSave, stateobj);
                 }
             }
@@ -314,3 +319,4 @@ namespace V2DRuntime.Panels
         }
     }
 }
+#endif

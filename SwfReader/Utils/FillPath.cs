@@ -117,6 +117,8 @@ namespace DDW.Swf
 				}
 			}
 
+            result.CalcuateBounds();
+
 			return result;
 		}
 

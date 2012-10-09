@@ -89,6 +89,20 @@ namespace DDW.VexTo2DPhysics
             return result;
         }
 
+		public static V2DContentHolder UilToV2DContent(string path, ContentProcessorContext context)
+        {
+			V2DContentHolder result = null;
+
+            VexObject vo = LoadFromUIL.Load(path);
+            VexTree vt = new VexTree();
+            vt.Convert(vo, null);
+            vt.WriteToXml();
+
+            result = vt.GetV2DContent(context);
+
+            return result;
+        }
+
         public static VexTree ProcessFile(string fileName)
         {
             VexTree v2tree = null;

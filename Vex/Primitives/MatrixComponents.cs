@@ -14,6 +14,7 @@ namespace DDW.Vex
 		public float Shear;
 		public float TranslateX;
 		public float TranslateY;
+
 		public MatrixComponents(float scaleX, float scaleY, float rotation, float shear, float translateX, float translateY)
 		{
 			this.ScaleX = scaleX;

@@ -22,6 +22,7 @@ namespace DDW.Swf
 		public SwfHeader Header;
 		public List<ISwfTag> Tags = new List<ISwfTag>();
 		public JPEGTables JpegTable;
+		public Dictionary<uint, string> SymbolClasses = new Dictionary<uint,string>();
 
 		public bool IsValid;
 		public List<byte[]> TimelineStream = new List<byte[]>();
@@ -277,6 +278,15 @@ namespace DDW.Swf
 						r.SkipBytes(curTagLen); 
                         break;
                         // todo: ImportAssets tags
+
+                    case TagType.SymbolClass:
+                        SymbolClassTag tag = new SymbolClassTag(r, curTagLen);
+                        Tags.Add(tag);
+                        for (int i = 0; i < tag.Ids.Length; i++)
+                        {
+                            SymbolClasses.Add(tag.Ids[i], tag.Names[i]);
+                        }
+                        break;
 
 					default:
 						// skip if unknown

@@ -11,7 +11,6 @@ namespace DDW.Vex
 		public List<Color> Fills = new List<Color>();
 		public List<float> Stops = new List<float>();
 		public GradientType GradientType = GradientType.Linear;
-		public Rectangle Rectangle;
 		public Matrix Transform;
 
         public uint TagId;
@@ -33,7 +32,16 @@ namespace DDW.Vex
 				}
 			} 
 		}
-
+        public void ReverseStops(List<Color> colors, List<float> positions)
+        {
+            // flash and gdi store colors & pos in opposite order for radials
+            colors.Reverse();
+            positions.Reverse();
+            for (int i = 0; i < positions.Count; i++)
+            {
+                positions[i] = 1 - positions[i];
+            }
+        }
 		public override bool Equals(Object o)
 		{
 			bool result = false;
@@ -68,7 +76,6 @@ namespace DDW.Vex
 				result += this.Fills[i].GetHashCode();
 				result += (int)(this.Stops[i] * 17);
 			}
-			result += this.Rectangle.GetHashCode();
 			result += this.Transform.GetHashCode();
 			return result;
 		}
@@ -122,11 +129,7 @@ namespace DDW.Vex
 					}
 					if (result == 0)
 					{
-						if (this.Rectangle != co.Rectangle)
-						{
-							result = this.Rectangle.CompareTo(co.Rectangle);
-						}
-						else if (this.Transform != co.Transform)
+                        if (this.Transform != co.Transform)
 						{
 							result = this.Transform.CompareTo(co.Transform);
 						}
@@ -151,7 +154,6 @@ namespace DDW.Vex
 					result.Append(" r:" + this.Stops[i]);
 				}
 			}
-			result.Append(this.Rectangle);
 			result.Append(this.Transform);
 
 			return result.ToString();

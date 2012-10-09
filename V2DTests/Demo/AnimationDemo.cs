@@ -13,7 +13,7 @@ namespace V2DTest
     [ScreenAttribute(backgroundColor=0x222222)]
     public class AnimationDemo : Screen
     {
-        protected Sprite sneeze;
+        public Sprite sneeze;
 
         public AnimationDemo(SymbolImport si) : base(si) { }
 

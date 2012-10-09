@@ -18,6 +18,7 @@ namespace DDW.Vex
         public int UserData { get; set; }
         [XmlIgnore]
         public bool HasSaveableChanges { get; set; }
+        public string WorkingPath { get; set; }
 
 		public List<TextRun> TextRuns = new List<TextRun>();
 		public Matrix Matrix;

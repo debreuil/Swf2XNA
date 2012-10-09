@@ -9,7 +9,6 @@ using V2DRuntime.Shaders;
 #if !(WINDOWS_PHONE)
 using V2DRuntime.Audio;
 #endif
-using Microsoft.Xna.Framework.GamerServices;
 
 namespace DDW.Display
 {

@@ -41,5 +41,50 @@ namespace DDW.Vex
         {
             return (uint)Math.Round(time / (1000 / FrameRate));
         }
+
+        public List<Symbol> GetAllSymbols()
+        {
+            List<Symbol> result = new List<Symbol>();
+
+            foreach (uint key in Definitions.Keys)
+            {
+                if (Definitions[key] is Symbol)
+                {
+                    result.Add((Symbol)Definitions[key]);
+                }
+            }
+
+            return result;
+        }
+
+        public List<Image> GetAllImages()
+        {
+            List<Image> result = new List<Image>();
+
+            foreach (uint key in Definitions.Keys)
+            {
+                if (Definitions[key] is Image)
+                {
+                    result.Add((Image)Definitions[key]);
+                }
+            }
+
+            return result;
+        }
+
+        public List<Timeline> GetAllTimelines()
+        {
+            List<Timeline> result = new List<Timeline>();
+
+            foreach (uint key in Definitions.Keys)
+            {
+                if (Definitions[key] is Timeline)
+                {
+                    result.Add((Timeline)Definitions[key]);
+                }
+            }
+
+            return result;
+        }
 	}
 }

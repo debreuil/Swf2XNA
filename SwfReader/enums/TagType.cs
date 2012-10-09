@@ -84,6 +84,7 @@ namespace DDW.Swf
 		DefineFont3			= 0x4B,
 
 		// **** Flash 9 ****
+        SymbolClass         = 0x4C,
 		DefineFontName		= 0x58,
 
 		// Tags greater than 255

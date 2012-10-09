@@ -23,7 +23,6 @@ namespace DDW.V2D
         public static string currentRootName = V2DWorld.ROOT_NAME;
 
         public static PlayerIndex activeController = PlayerIndex.One;
-        private bool wasTrialMode;
 
         protected GraphicsDeviceManager graphics;
         public SpriteBatch spriteBatch;
@@ -31,6 +30,7 @@ namespace DDW.V2D
         protected bool isFullScreen = false;
 
 #if !(WINDOWS_PHONE)
+        private bool wasTrialMode;
 		public List<NetworkGamer> gamers = new List<NetworkGamer>();
 #endif
 
@@ -41,8 +41,10 @@ namespace DDW.V2D
                 throw new Exception("There can be only one game class.");
             }
 
+#if !(WINDOWS_PHONE)
             Components.Add(new GamerServicesComponent(this));
             SignedInGamer.SignedIn += new EventHandler<SignedInEventArgs>(OnGamerSignIn);
+#endif
             instance = this;
             graphics = new GraphicsDeviceManager(this);
             contentManager = Content;
@@ -100,6 +102,10 @@ namespace DDW.V2D
         protected override void UnloadContent()
         {
         }
+        public virtual void ExitGame()
+        {
+            this.Exit();
+        }
 
 #if !(WINDOWS_PHONE)
 
@@ -111,7 +117,6 @@ namespace DDW.V2D
         {
         }
 
-#endif
         private bool unlockWhenSignedIn = false;
         public virtual void UnlockTrial(int playerIndex)
         {
@@ -208,10 +213,6 @@ namespace DDW.V2D
         public virtual void FullGameUnlocked()
         {
         }
-        public virtual void ExitGame()
-        {
-			this.Exit();
-        }
 
         public virtual void ShowMarketPlace(int playerIndex)
         {
@@ -246,7 +247,6 @@ namespace DDW.V2D
             return result;
         }
 
-#if !(WINDOWS_PHONE)
 
 		public virtual void AddGamer(NetworkGamer gamer, int gamerIndex)
 		{
@@ -270,22 +270,13 @@ namespace DDW.V2D
 			stage.Update(gameTime);
             base.Update(gameTime);
 
-            //if (unlockWhenSignedIn)
-            //{
-            //    if (!Guide.IsVisible)
-            //    {
-            //        unlockWhenSignedIn = false;
-            //        if(GamerCanPurchase() != null)
-            //        {
-            //            UnlockTrial();
-            //        }
-            //}
-
+#if !(WINDOWS_PHONE)
             if (!Guide.IsTrialMode && wasTrialMode)
             {
                 FullGameUnlocked();
             }
             wasTrialMode = Guide.IsTrialMode;
+#endif
         }
 
         protected override void Draw(GameTime gameTime)

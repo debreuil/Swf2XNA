@@ -7,6 +7,7 @@ using System.Text;
 using System.IO;
 //using System.Drawing;
 using DDW.Vex;
+using DDW.Vex.Primitives;
 
 namespace DDW.Swf
 {
@@ -288,6 +289,7 @@ namespace DDW.Swf
 			strokePaths.Sort();
 			List<DDW.Vex.Shape> sshapes = StrokePath.ConvertToShapes(strokePaths);
 
+            fshapes.Sort();
 			// order is important here, as strokes go on top
 			curSymbol.Shapes.AddRange(fshapes);
 			curSymbol.Shapes.AddRange(sshapes);
@@ -375,7 +377,6 @@ namespace DDW.Swf
 					result.GradientType = GradientType.Radial;
 					break;
 			}
-			result.Rectangle = DDW.Vex.GradientFill.GradientVexRect;
 			result.Transform = ParseMatrix(tag.GradientMatrix);
 
 			// bug in flash, can add two stops at 1.0
@@ -501,7 +502,7 @@ namespace DDW.Swf
 			inst.DefinitionId = tag.Character;
 			inst.StartTime = curTime;
 			inst.EndTime = totalTime;
-			inst.Depth = (int)tag.Depth;
+            inst.Depth = (int)tag.Depth;
 
             // error from flashDevelop files
             if (curDepthChart.ContainsKey(tag.Depth))
@@ -509,7 +510,7 @@ namespace DDW.Swf
                 curDepthChart.Remove(tag.Depth);
             }
 			curDepthChart.Add(tag.Depth, inst);
-			this.curTimeline.Instances.Add(inst);
+			this.curTimeline.AddInstance(inst);
 
 			if (tag.HasColorTransform && (tag.ColorTransform.HasAddTerms || tag.ColorTransform.HasMultTerms))
 			{
@@ -538,7 +539,7 @@ namespace DDW.Swf
 				inst.EndTime = totalTime;
 				inst.Depth = (int)tag.Depth;
 				curDepthChart.Add(tag.Depth, inst);
-				this.curTimeline.Instances.Add(inst);
+				this.curTimeline.AddInstance(inst);
 			}
 			else if (!tag.HasCharacter && tag.Move) // an old symbol is modified
 			{
@@ -571,10 +572,10 @@ namespace DDW.Swf
 				inst.DefinitionId = tag.Character;
 				inst.StartTime = curTime;
 				inst.EndTime = totalTime;
-				inst.Depth = (int)tag.Depth;
+                inst.Depth = (int)tag.Depth;
 
 				curDepthChart.Add(tag.Depth, inst);
-				this.curTimeline.Instances.Add(inst);
+                this.curTimeline.AddInstance(inst);
 			}
 			else
 			{
@@ -707,7 +708,7 @@ namespace DDW.Swf
 				snd.StartTime = curTime;
 				lastSoundDef = snd;
 
-				this.curTimeline.Instances.Add(snd);
+                this.curTimeline.AddInstance(snd);
 			}
 
 		}
@@ -749,11 +750,11 @@ namespace DDW.Swf
 				uint curTime = (uint)((curFrame * (1 / swf.Header.FrameRate)) * 1000);
 				SoundInstance snd = new SoundInstance(path, v.NextId());
 				snd.StartTime = curTime;
-				this.curTimeline.Instances.Add(snd);
+                this.curTimeline.AddInstance(snd);
 			}
 			else
 			{
-				this.curTimeline.Instances.Add(null);
+                this.curTimeline.AddInstance(null);
 			}
 		}
 		#endregion
@@ -938,7 +939,7 @@ namespace DDW.Swf
 
 		private void WriteJpegToDisk(string path, DefineBitsTag tag)
 		{
-			Vex.Utils.EnsurePath(path);
+            IOUtils.EnsurePath(path);
 			FileStream fs = new FileStream(path, FileMode.Create, FileAccess.Write);
 			if (!tag.HasOwnTable)
 			{
@@ -955,14 +956,14 @@ namespace DDW.Swf
 		}	
 		private void WriteLosslessBitmapToDisk(string path, DefineBitsLosslessTag tag)
 		{
-			DDW.Vex.Utils.EnsurePath(path);
+            IOUtils.EnsurePath(path);
 			System.Drawing.Bitmap bmp = tag.GetBitmap();
 			bmp.Save(path);
 			bmp.Dispose();
 		}
 		private void WriteSoundToDisk(string path, List<byte[]> tag)
 		{
-			DDW.Vex.Utils.EnsurePath(path);
+            IOUtils.EnsurePath(path);
 			FileStream fs = new FileStream(path, FileMode.Create, FileAccess.Write);
 			int skipHeader = 2;
 			for (int i = 0; i < tag.Count; i++)
@@ -975,7 +976,7 @@ namespace DDW.Swf
 		{
 			byte[] bytes = tag.SoundData;
 
-			DDW.Vex.Utils.EnsurePath(path);
+            IOUtils.EnsurePath(path);
 			FileStream fs = new FileStream(path, FileMode.Create, FileAccess.Write);
 			if (tag.SoundFormat == SoundCompressionType.MP3)
 			{
@@ -1123,8 +1124,7 @@ namespace DDW.Swf
 					break;
 				case TagType.FrameLabel:
 					uint curTime = (uint)((curFrame * (1 / swf.Header.FrameRate)) * 1000);
-                    Vex.Primitives.Label lbl = new Vex.Primitives.Label(curTime, ((FrameLabelTag)tag).TargetName);
-					curTimeline.Labels.Add(lbl);
+					curTimeline.Labels.Add(new Label(curTime, ((FrameLabelTag)tag).TargetName));
                     break;
                 case TagType.DefineShape:
                     ParseDefineShapeTag((DefineShapeTag)tag);

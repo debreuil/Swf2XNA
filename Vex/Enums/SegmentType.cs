@@ -6,9 +6,10 @@ using System.Text;
 
 namespace DDW.Vex
 {
-	public enum SegmentType
-	{
-		Line,
+	public enum SegmentType : int
+    {
+        Move,
+        Line,
 		QuadraticBezier,
 		CubicBezier,
 	}

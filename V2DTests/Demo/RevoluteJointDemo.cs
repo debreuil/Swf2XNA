@@ -12,7 +12,7 @@ namespace V2DTest
     [V2DScreenAttribute(backgroundColor=0x222222, gravityX=0, gravityY=50,debugDraw=false)]
     public class RevoluteJointDemo : V2DScreen
     {
-        protected V2DSprite ghostThing;
+        public V2DSprite ghostThing;
 
         [RevoluteJointAttribute(enableMotor=true, maxMotorTorque=10000, motorSpeed=4)]
         public RevoluteJoint rFlower;

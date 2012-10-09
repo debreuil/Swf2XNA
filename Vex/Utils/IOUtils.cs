@@ -8,7 +8,7 @@ using System.IO;
 
 namespace DDW.Vex
 {
-	public class Utils
+	public class IOUtils
 	{
 		public static void CopyFontToResources(string fontName, string resourceFolder)
 		{
@@ -16,7 +16,7 @@ namespace DDW.Vex
 			string fontPath = FontUtil.GetInstance().FontMap[fontName];
 			string fileName = fontPath.Substring(fontPath.LastIndexOf(ds));
 			string targetPath = resourceFolder + ds + fileName;
-			Utils.EnsurePath(targetPath);
+            IOUtils.EnsurePath(targetPath);
 			if(!File.Exists(targetPath))
 			{
 				File.Copy(fontPath, targetPath);

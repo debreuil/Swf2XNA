@@ -13,12 +13,14 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
-#if !(WINDOWS_PHONE)
-using Microsoft.Xna.Framework.Net;
-#endif
 using V2DRuntime.Game;
 using V2DRuntime.Enums;
+
+#if !(WINDOWS_PHONE)
+using Microsoft.Xna.Framework.Net;
 using V2DRuntime.Network;
+#endif
+
 #endregion
 
 namespace DDW.Input // these are ms supplied classes (and they are obtuse), namespace changed to fit

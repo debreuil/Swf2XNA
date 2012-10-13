@@ -17,6 +17,8 @@ namespace DDW.SwfBitmapPacker
             Console.WriteLine("");
 
             string fileName = (args.Length < 1) ? "test.swf" : args[0];
+            bool packBitmapsOnly = (args.Length < 2) ? false : args[1].ToUpperInvariant() == "-B";
+
             if (File.Exists(fileName))
             {
                 fileName = Path.GetFullPath(fileName);
@@ -29,28 +31,42 @@ namespace DDW.SwfBitmapPacker
                 SwfCompilationUnit scu = new SwfCompilationUnit(r, name);
                 if (scu.IsValid)
                 {
+                    UnsafeBitmap fullBitmap;
+                    Dictionary<uint, System.Drawing.Rectangle> rectResult = new Dictionary<uint, System.Drawing.Rectangle>();
+
                     SwfToVex s2v = new SwfToVex();
                     VexObject vo = s2v.Convert(scu);
-                    Dictionary<uint, string> bitmapPaths = s2v.bitmapPaths;
-                    Dictionary<uint, System.Drawing.Rectangle> rectResult = new Dictionary<uint, System.Drawing.Rectangle>();
-                    UnsafeBitmap fullBitmap = BitmapPacker.PackBitmaps(bitmapPaths, rectResult);
+
+                    if (packBitmapsOnly)
+                    {
+                        Dictionary<uint, string> bitmapPaths = s2v.bitmapPaths;
+                        fullBitmap = BitmapPacker.PackBitmaps(bitmapPaths, rectResult);
+                    }
+                    else
+                    {
+                        fullBitmap = BitmapPacker.PackBitmaps(vo, rectResult);
+                    }
+
                     foreach (var rect in rectResult)
                     {
                         Console.WriteLine("\t" + rect.Value + ",");                        
                     }
                     fullBitmap.Bitmap.Save("fullBitmap.png");
 
-                    BitmapSwapper bs = new BitmapSwapper();
-                    bs.Convert(scu, fullBitmap, rectResult);
+                    if (packBitmapsOnly)
+                    {
+                        BitmapSwapper bs = new BitmapSwapper();
+                        bs.Convert(scu, fullBitmap, rectResult);
 
-                    MemoryStream ms = new MemoryStream();
-                    SwfWriter swfWriter = new SwfWriter(ms);
-                    scu.ToSwf(swfWriter);
-                    byte[] swfBytes = swfWriter.ToArray();
-                    FileStream fsw = new FileStream("result.swf", FileMode.Create, FileAccess.Write);
-                    fsw.Write(swfBytes, 0, swfBytes.Length);
-                    fsw.Close();
-                    ms.Close();
+                        MemoryStream ms = new MemoryStream();
+                        SwfWriter swfWriter = new SwfWriter(ms);
+                        scu.ToSwf(swfWriter);
+                        byte[] swfBytes = swfWriter.ToArray();
+                        FileStream fsw = new FileStream("result.swf", FileMode.Create, FileAccess.Write);
+                        fsw.Write(swfBytes, 0, swfBytes.Length);
+                        fsw.Close();
+                        ms.Close();
+                    }
                 }
                 else
                 {

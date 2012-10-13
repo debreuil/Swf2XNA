@@ -23,7 +23,7 @@ namespace DDW.Gdi
         public List<Bitmap> GenerateBitmaps(VexObject v)
         {
             List<Bitmap> result = new List<Bitmap>();
-            Dictionary<uint, Bitmap> dbmp = GenerateMappedBitmaps(v);
+            Dictionary<uint, Bitmap> dbmp = GenerateMappedBitmaps(v, false);
             result.AddRange(dbmp.Values);
             return result;
         }
@@ -32,7 +32,7 @@ namespace DDW.Gdi
         /// </summary>
         /// <param name="v"></param>
         /// <returns></returns>
-        public Dictionary<uint, Bitmap> GenerateMappedBitmaps(VexObject v)
+        public Dictionary<uint, Bitmap> GenerateMappedBitmaps(VexObject v, bool includeImages)
         {
             Dictionary<uint, Bitmap> result = new Dictionary<uint, Bitmap>();
 
@@ -59,6 +59,11 @@ namespace DDW.Gdi
 
                     result.Add(symbol.Id, myBitmap);
                     translateMatrix.Dispose();
+                }
+                else if (includeImages && def is Vex.Image)
+                {
+                    Bitmap bmp = new Bitmap(def.Path);
+                    result.Add(def.Id, bmp);
                 }
             }
             return result;

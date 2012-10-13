@@ -61,6 +61,10 @@
     <Compile Include="UnsafeBitmap.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\GdiRenderer\GdiRenderer.csproj">
+      <Project>{9D6E1765-D1AA-4606-BE55-B54BF31BC57E}</Project>
+      <Name>GdiRenderer</Name>
+    </ProjectReference>
     <ProjectReference Include="..\SwfReader\SwfFormat.csproj">
       <Project>{04BB0485-133C-4B56-94C0-D1D9B3D6EC95}</Project>
       <Name>SwfFormat</Name>

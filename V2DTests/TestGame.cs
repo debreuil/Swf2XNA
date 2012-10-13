@@ -72,10 +72,10 @@ namespace V2DTest
             {
                 accelSensor.Start();
             }
-            catch (AccelerometerFailedException e)
+            catch (AccelerometerFailedException)
             {
             }
-            catch (UnauthorizedAccessException e)
+            catch (UnauthorizedAccessException)
             {
             }
 #endif

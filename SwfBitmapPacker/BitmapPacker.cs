@@ -3,70 +3,98 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Drawing;
+using Vex = DDW.Vex;
+using System.Diagnostics;
 
 namespace DDW.SwfBitmapPacker
 {
     // based on SpriteSheetWindows for XNA
     public class BitmapPacker
     {
+        public static UnsafeBitmap PackBitmaps(Vex.VexObject vo, Dictionary<uint, Rectangle> outputBitmaps)
+        {
+            Gdi.GdiRenderer renderer = new Gdi.GdiRenderer();
+            Dictionary<uint, Bitmap> sourceBitmaps = renderer.GenerateMappedBitmaps(vo, true);
+
+            if (sourceBitmaps.Count == 0)
+            {
+                throw new Exception("There are no symbols to arrange");
+            }
+            
+            List<ArrangedBitmap> bitmaps = new List<ArrangedBitmap>();
+            foreach (uint key in sourceBitmaps.Keys)
+            {
+                Vex.IDefinition def = vo.Definitions[key];
+                Bitmap sbmp = sourceBitmaps[key];
+                ArrangedBitmap bitmap = new ArrangedBitmap();
+                bitmap.Width = sbmp.Width + 2;
+                bitmap.Height = sbmp.Height + 2;
+                bitmap.Id = def.Id;
+                bitmaps.Add(bitmap);
+            }
+
+            Size bmpSize = ProcessRectangles(bitmaps);
+
+            return CopyBitmapsToOutput(bitmaps, sourceBitmaps, outputBitmaps, bmpSize.Width, bmpSize.Height);
+        }
+
         public static UnsafeBitmap PackBitmaps(Dictionary<uint, string> sourceBitmapPaths, Dictionary<uint, Rectangle> outputBitmaps)
         {
             if (sourceBitmapPaths.Count == 0)
             {
                 throw new Exception("There are no bitmaps to arrange");
             }
-            List<Bitmap> sourceBitmaps = new List<Bitmap>(sourceBitmapPaths.Count);
+            Dictionary<uint, Bitmap> sourceBitmaps = new Dictionary<uint, Bitmap>();
             List<ArrangedBitmap> bitmaps = new List<ArrangedBitmap>();
-            //for (int i = 0; i < sourceBitmapPaths.Count; i++)
-            int index = 0;
-            foreach(KeyValuePair<uint, string> pair in sourceBitmapPaths)
+
+            foreach (KeyValuePair<uint, string> pair in sourceBitmapPaths)
             {
                 ArrangedBitmap bitmap = new ArrangedBitmap();
-                sourceBitmaps.Add(new Bitmap(pair.Value));
-                bitmap.Width = sourceBitmaps[index].Width + 2;
-                bitmap.Height = sourceBitmaps[index].Height + 2;
-                bitmap.Index = index;
-                bitmap.Id = pair.Key;
+                uint id = pair.Key;
+                sourceBitmaps.Add(id, new Bitmap(pair.Value));
+                bitmap.Width = sourceBitmaps[id].Width + 2;
+                bitmap.Height = sourceBitmaps[id].Height + 2;
+                bitmap.Id = id;
                 bitmaps.Add(bitmap);
-                index++;
             }
 
-            // Sort so the largest bitmaps get arranged first.
+            Size bmpSize = ProcessRectangles(bitmaps);
+
+            return CopyBitmapsToOutput(bitmaps, sourceBitmaps, outputBitmaps, bmpSize.Width, bmpSize.Height);
+        }
+
+        private static Size ProcessRectangles(List<ArrangedBitmap> bitmaps)
+        {
+            // Sort so the largest bitmaps get arranged first (by height then width).
             bitmaps.Sort(CompareBitmapSizes);
 
             // Work out how big the output bitmap should be.
-            int outputWidth = GuessOutputWidth(bitmaps);
-            int outputHeight = 0;
+            Size result = new Size(GuessOutputWidth(bitmaps), 0);
             int totalBitmapSize = 0;
 
             // Choose positions for each bitmap, one at a time.
             for (int i = 0; i < bitmaps.Count; i++)
             {
-                PositionBitmap(bitmaps, i, outputWidth);
+                PositionBitmap(bitmaps, i, result.Width);
 
-                outputHeight = Math.Max(outputHeight, bitmaps[i].Y + bitmaps[i].Height);
+                result.Height = Math.Max(result.Height, bitmaps[i].Y + bitmaps[i].Height);
 
                 totalBitmapSize += bitmaps[i].Width * bitmaps[i].Height;
             }
 
-            // Sort the bitmaps back into index order.
-            bitmaps.Sort(CompareBitmapIndices);
+            Console.WriteLine("\n**** Packed {0} symbols into a {1}x{2} sheet, {3}% efficiency.\n",
+                bitmaps.Count, result.Width, result.Height,
+                totalBitmapSize * 100 / result.Width / result.Height);
 
-            Console.WriteLine("Packed {0} bitmaps into a {1}x{2} sheet, {3}% efficiency",
-                bitmaps.Count, outputWidth, outputHeight,
-                totalBitmapSize * 100 / outputWidth / outputHeight);
-
-            return CopyBitmapsToOutput(bitmaps, sourceBitmaps, outputBitmaps,
-                                       outputWidth, outputHeight);
+            return result;
         }
-
 
         /// <summary>
         /// Once the arranging is complete, copies the bitmap data for each
         /// bitmap to its chosen position in the single larger output bitmap.
         /// </summary>
         static UnsafeBitmap CopyBitmapsToOutput(List<ArrangedBitmap> bitmaps,
-                                                 IList<Bitmap> sourceBitmaps,
+                                                 Dictionary<uint, Bitmap> sourceBitmaps,
                                                  Dictionary<uint, Rectangle> outputBitmaps,
                                                  int width, int height)
         {
@@ -74,7 +102,7 @@ namespace DDW.SwfBitmapPacker
 
             foreach (ArrangedBitmap bitmap in bitmaps)
             {
-                Bitmap source = sourceBitmaps[bitmap.Index];
+                Bitmap source = sourceBitmaps[bitmap.Id];
 
                 int x = bitmap.X;
                 int y = bitmap.Y;
@@ -128,7 +156,6 @@ namespace DDW.SwfBitmapPacker
         /// </summary>
         class ArrangedBitmap
         {
-            public int Index;
             public uint Id;
 
             public int X;
@@ -142,8 +169,7 @@ namespace DDW.SwfBitmapPacker
         /// <summary>
         /// Works out where to position a single bitmap.
         /// </summary>
-        static void PositionBitmap(List<ArrangedBitmap> bitmaps,
-                                   int index, int outputWidth)
+        static void PositionBitmap(List<ArrangedBitmap> bitmaps, int index, int outputWidth)
         {
             int x = 0;
             int y = 0;
@@ -179,8 +205,7 @@ namespace DDW.SwfBitmapPacker
         /// Checks if a proposed bitmap position collides with anything
         /// that we already arranged.
         /// </summary>
-        static int FindIntersectingBitmap(List<ArrangedBitmap> bitmaps,
-                                          int index, int x, int y)
+        static int FindIntersectingBitmap(List<ArrangedBitmap> bitmaps, int index, int x, int y)
         {
             int w = bitmaps[index].Width;
             int h = bitmaps[index].Height;
@@ -215,15 +240,6 @@ namespace DDW.SwfBitmapPacker
             int bSize = b.Height * 1024 + b.Width;
 
             return bSize.CompareTo(aSize);
-        }
-
-
-        /// <summary>
-        /// Comparison function for sorting bitmaps by their original indices.
-        /// </summary>
-        static int CompareBitmapIndices(ArrangedBitmap a, ArrangedBitmap b)
-        {
-            return a.Index.CompareTo(b.Index);
         }
 
 
